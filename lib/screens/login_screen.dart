@@ -1,6 +1,8 @@
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'user_screen.dart';
+import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -15,7 +17,9 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _passwordController = TextEditingController();
 
   // La URL de tu backend
-  final String apiUrl = 'http://localhost:9090/users/login';
+  final String apiUrl = 'http://localhost:9090/users/login/login/login';
+
+  get reponse => null;
 
   // Método para realizar la solicitud de inicio de sesión al backend
   Future<void> _loginUser() async {
@@ -23,23 +27,22 @@ class _LoginScreenState extends State<LoginScreen> {
       final response = await http.post(
         Uri.parse(apiUrl),
         body: {
-          'username': _usernameController.text,
+          'name': _usernameController.text,
           'password': _passwordController.text,
         },
       );
 
       // Verifica si la solicitud fue exitosa (código 201)
-      if (response.statusCode == 201) {
-        // Inicio de sesión exitoso, redirige a la pantalla de usuario
-        // ignore: use_build_context_synchronously
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> responseData = json.decode(response.body);
+        final String token = responseData['token'];
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        prefs.setString('token', token);
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => UserScreen(
-              username: _usernameController.text,
-              email:
-                  'usuario@ejemplo.com', // Puedes obtener más detalles del backend si es necesario
-            ),
+            builder: (context) =>
+                UserScreen(username: _usernameController.text),
           ),
         );
       } else {
