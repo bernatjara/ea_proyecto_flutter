@@ -34,7 +34,7 @@ class _UserScreenState extends State<UserScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: NavBar(storedName),
+      drawer: NavBar(),
       appBar: AppBar(
         title: Text('Perfil de Usuario'),
         backgroundColor: Color.fromRGBO(0, 125, 204, 1.0),
