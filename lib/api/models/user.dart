@@ -3,10 +3,7 @@ class User {
   String? name;
   String? email;
   String? password;
+  String? rol;
 
-  User(
-      {this.id,
-      this.name,
-      this.email,
-      this.password});
+  User({this.id, this.name, this.email, this.password, this.rol});
 }

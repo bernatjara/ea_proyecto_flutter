@@ -1,8 +1,10 @@
+import 'dart:developer';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'user_screen.dart';
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../api/models/user.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -36,14 +38,22 @@ class _LoginScreenState extends State<LoginScreen> {
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = json.decode(response.body);
         final String token = responseData['token'];
+        final Map<String, dynamic> userData = responseData['user'];
+        final String name = userData['name'];
+        final String password = userData['password'];
+        final String email = userData['email'];
+        final String rol = userData['rol'];
+        final String id = userData['_id'];
         SharedPreferences prefs = await SharedPreferences.getInstance();
         prefs.setString('token', token);
+        prefs.setString('id', id);
+        prefs.setString('name', name);
+        prefs.setString('email', email);
+        prefs.setString('password', password);
+        prefs.setString('rol', rol);
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(
-            builder: (context) =>
-                UserScreen(username: _usernameController.text),
-          ),
+          MaterialPageRoute(builder: (context) => UserScreen()),
         );
       } else {
         // Muestra un mensaje de error si las credenciales son incorrectas o la solicitud no fue exitosa
