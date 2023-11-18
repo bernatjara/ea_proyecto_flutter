@@ -1,107 +1,175 @@
-import 'dart:developer';
+import 'package:ea_proyecto_flutter/widgets/button.dart';
+import 'package:ea_proyecto_flutter/widgets/text_field.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'user_screen.dart';
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../api/models/user.dart';
 
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+  final Function()? onTap;
+  const LoginScreen({super.key, this.onTap});
 
   @override
-  // ignore: library_private_types_in_public_api
-  _LoginScreenState createState() => _LoginScreenState();
+  State<LoginScreen> createState() => _LoginScreenState();
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final TextEditingController _usernameController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
+  @override
+  Widget build(BuildContext context) {
+    // text editing controllers
+    final usernameTextController = TextEditingController();
+    final passwordTextController = TextEditingController();
 
-  // La URL de tu backend
-  final String apiUrl = 'http://localhost:9090/users/login/login/login';
+    const String apiUrl = 'http://localhost:9090/users/login/login/login';
 
-  get reponse => null;
-
-  // Método para realizar la solicitud de inicio de sesión al backend
-  Future<void> _loginUser() async {
-    try {
-      final response = await http.post(
-        Uri.parse(apiUrl),
-        body: {
-          'name': _usernameController.text,
-          'password': _passwordController.text,
-        },
-      );
-
-      // Verifica si la solicitud fue exitosa (código 201)
-      if (response.statusCode == 200) {
-        final Map<String, dynamic> responseData = json.decode(response.body);
-        final String token = responseData['token'];
-        final Map<String, dynamic> userData = responseData['user'];
-        final String name = userData['name'];
-        final String password = userData['password'];
-        final String email = userData['email'];
-        final String rol = userData['rol'];
-        final String id = userData['_id'];
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        prefs.setString('token', token);
-        prefs.setString('id', id);
-        prefs.setString('name', name);
-        prefs.setString('email', email);
-        prefs.setString('password', password);
-        prefs.setString('rol', rol);
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => UserScreen()),
+    Future<void> _loginUser() async {
+      if (usernameTextController.text.isEmpty ||
+          passwordTextController.text.isEmpty) {
+        // Muestra un mensaje de error si algún campo está vacío
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            backgroundColor: Colors.red,
+            content: Text('Por favor, completa todos los campos'),
+          ),
         );
-      } else {
-        // Muestra un mensaje de error si las credenciales son incorrectas o la solicitud no fue exitosa
+        return; // Sale de la función si algún campo está vacío
+      }
+
+      try {
+        final response = await http.post(
+          Uri.parse(apiUrl),
+          body: {
+            'name': usernameTextController.text,
+            'password': passwordTextController.text,
+          },
+        );
+
+        // Verifica si la solicitud fue exitosa (código 201)
+        if (response.statusCode == 200) {
+          final Map<String, dynamic> responseData = json.decode(response.body);
+          final String token = responseData['token'];
+          final Map<String, dynamic> userData = responseData['user'];
+          final String name = userData['name'];
+          final String password = userData['password'];
+          final String email = userData['email'];
+          final String rol = userData['rol'];
+          final String id = userData['_id'];
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          prefs.setString('token', token);
+          prefs.setString('id', id);
+          prefs.setString('name', name);
+          prefs.setString('email', email);
+          prefs.setString('password', password);
+          prefs.setString('rol', rol);
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => UserScreen(),
+            ),
+          );
+        } else {
+          // Muestra un mensaje de error si las credenciales son incorrectas o la solicitud no fue exitosa
+          // ignore: use_build_context_synchronously
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              backgroundColor: Colors.red,
+              content: Text('Usuario o contraseña incorrectos'),
+            ),
+          );
+        }
+      } catch (e) {
+        // Maneja errores de conexión o cualquier otra excepción
+        // ignore: avoid_print
+        print('Error: $e');
         // ignore: use_build_context_synchronously
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Usuario o contraseña incorrectos'),
+            backgroundColor: Colors.red,
+            content: Text('Error al conectar con el servidor'),
           ),
         );
       }
-    } catch (e) {
-      // Maneja errores de conexión o cualquier otra excepción
-      // ignore: avoid_print
-      print('Error: $e');
-      // ignore: use_build_context_synchronously
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Error al conectar con el servidor'),
-        ),
-      );
     }
-  }
 
-  @override
-  Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Iniciar Sesión')),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            TextField(
-              controller: _usernameController,
-              decoration: const InputDecoration(labelText: 'Usuario'),
+      backgroundColor: Colors.grey[300],
+      body: SafeArea(
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 25.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                //logo
+                const Icon(
+                  Icons.lock_person_rounded,
+                  color: Color.fromRGBO(0, 125, 204, 1.0),
+                  size: 100,
+                ),
+
+                const SizedBox(height: 35),
+
+                //welcome back message
+                Text(
+                  "¡Hola de nuevo! Estamos felices de verte",
+                  style: TextStyle(
+                    color: Colors.grey[700],
+                  ),
+                ),
+
+                const SizedBox(height: 30),
+
+                //email textfield
+                MyTextField(
+                    controller: usernameTextController,
+                    hintText: 'Nombre de usuario',
+                    obscureText: false),
+
+                const SizedBox(height: 25),
+
+                //password textfield
+                MyTextField(
+                    controller: passwordTextController,
+                    hintText: 'Contraseña',
+                    obscureText: true),
+
+                const SizedBox(height: 25),
+
+                //Sign in button
+                MyButton(
+                  onTap: _loginUser,
+                  text: 'INICIAR SESIÓN',
+                ),
+
+                const SizedBox(height: 20),
+
+                //go to register page
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "¿No tienes cuenta?",
+                      style: TextStyle(
+                        color: Colors.grey[700],
+                      ),
+                    ),
+                    const SizedBox(width: 4),
+                    GestureDetector(
+                      onTap: widget.onTap,
+                      child: Text(
+                        "Regístrate",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.blue,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ),
-            const SizedBox(height: 20),
-            TextField(
-              controller: _passwordController,
-              obscureText: true,
-              decoration: const InputDecoration(labelText: 'Contraseña'),
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _loginUser,
-              child: const Text('Iniciar Sesión'),
-            ),
-          ],
+          ),
         ),
       ),
     );

@@ -35,7 +35,10 @@ class _UserScreenState extends State<UserScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: NavBar(storedName),
-      appBar: AppBar(title: Text('Perfil de Usuario')),
+      appBar: AppBar(
+        title: Text('Perfil de Usuario'),
+        backgroundColor: Color.fromRGBO(0, 125, 204, 1.0),
+      ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -46,17 +49,6 @@ class _UserScreenState extends State<UserScreen> {
             Text('Correo: $storedEmail'),
             Text('Rol: $storedRol'),
           ],
-        ),
-      ),
-      floatingActionButton: Container(
-        margin: EdgeInsets.only(bottom: 700.0, right: 30.0),
-        child: FloatingActionButton(
-          backgroundColor: Color.fromARGB(255, 47, 40, 109),
-          child: const Icon(Icons.add, color: Color(0xFFFFFCEA)),
-          onPressed: () {
-            Navigator.pushNamed(context, '/navigation_drawer.dart');
-          },
-          shape: CircleBorder(),
         ),
       ),
     );
