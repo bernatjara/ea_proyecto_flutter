@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../widgets/navigation_drawer.dart';
 
 class UserScreen extends StatelessWidget {
   final String username;
@@ -8,6 +9,7 @@ class UserScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: NavBar(username),
       appBar: AppBar(title: Text('Perfil de Usuario')),
       body: Center(
         child: Column(
