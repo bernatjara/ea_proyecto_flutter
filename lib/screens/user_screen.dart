@@ -36,7 +36,7 @@ class _UserScreenState extends State<UserScreen> {
     return Scaffold(
       drawer: NavBar(),
       appBar: AppBar(
-        title: Text('Perfil de Usuario'),
+        title: Text('Perfil de Usuari'),
         backgroundColor: Color.fromRGBO(0, 125, 204, 1.0),
       ),
       body: Center(
@@ -45,8 +45,8 @@ class _UserScreenState extends State<UserScreen> {
           children: [
             SizedBox(height: 20),
             // Muestra los valores recuperados de SharedPreferences
-            Text('Nombre: $storedName'),
-            Text('Correo: $storedEmail'),
+            Text('Nom: $storedName'),
+            Text('Correu: $storedEmail'),
             Text('Rol: $storedRol'),
           ],
         ),

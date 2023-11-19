@@ -32,7 +32,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             backgroundColor: Colors.red,
-            content: Text('Por favor, completa todos los campos'),
+            content: Text('Sisplau, completa tots els camps'),
           ),
         );
         return; // Sale de la función si algún campo está vacío
@@ -41,7 +41,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               backgroundColor: Colors.red,
-              content: Text('Las contraseñas no coinciden'),
+              content: Text('Les contrasenyes no coincideixen'),
             ),
           );
           return;
@@ -53,7 +53,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               'name': usernameTextController.text,
               'email': emailTextController.text,
               'password': passwordTextController.text,
-              'rol': 'cliente',
+              'rol': 'client',
             },
           );
 
@@ -71,7 +71,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
                 backgroundColor: Colors.red,
-                content: Text('Error al registrar al usuario'),
+                content: Text('Error al registrar el usuari'),
               ),
             );
           }
@@ -81,7 +81,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               backgroundColor: Colors.red,
-              content: Text('Error al conectar con el servidor'),
+              content: Text('Error al conectar amb el servidor'),
             ),
           );
         }
@@ -108,7 +108,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
                 //welcome back message
                 Text(
-                  "Completa el siguiente formulario y disfruta de todas las funciones que tenemos preparadas para ti.",
+                  "Completa el seguent formularo i disfruta de totes les funcions que tenim preparades per a tu.",
                   style: TextStyle(
                     color: Colors.grey[700],
                   ),
@@ -119,7 +119,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 //username textfield
                 MyTextField(
                     controller: usernameTextController,
-                    hintText: 'Nombre de usuario',
+                    hintText: 'Nom de usuari',
                     obscureText: false),
 
                 const SizedBox(height: 25),
@@ -135,7 +135,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 //password textfield
                 MyTextField(
                     controller: passwordTextController,
-                    hintText: 'Contraseña',
+                    hintText: 'Contrasenya',
                     obscureText: true),
 
                 const SizedBox(height: 25),
@@ -143,7 +143,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 //confirm password textfield
                 MyTextField(
                     controller: confirmPasswordTextController,
-                    hintText: 'Confirmar contraseña',
+                    hintText: 'Confirmar contrasenya',
                     obscureText: true),
 
                 const SizedBox(height: 25),
@@ -151,7 +151,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 //Sign up button
                 MyButton(
                   onTap: _registerUser,
-                  text: 'CREAR CUENTA',
+                  text: 'CREAR COMPTE',
                 ),
 
                 const SizedBox(height: 20),
@@ -161,7 +161,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      "¿Ya tienes cuenta?",
+                      "¿Ja tens compte?",
                       style: TextStyle(
                         color: Colors.grey[700],
                       ),
@@ -170,7 +170,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     GestureDetector(
                       onTap: widget.onTap,
                       child: Text(
-                        "Inicia sesión",
+                        "Inicia sessió",
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           color: Colors.blue,

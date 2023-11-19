@@ -30,7 +30,7 @@ class _LoginScreenState extends State<LoginScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             backgroundColor: Colors.red,
-            content: Text('Por favor, completa todos los campos'),
+            content: Text('Sisplau, completa tots els camps'),
           ),
         );
         return; // Sale de la función si algún campo está vacío
@@ -74,7 +74,7 @@ class _LoginScreenState extends State<LoginScreen> {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               backgroundColor: Colors.red,
-              content: Text('Usuario o contraseña incorrectos'),
+              content: Text('Usuari o contrasenya incorrectes'),
             ),
           );
         }
@@ -86,7 +86,7 @@ class _LoginScreenState extends State<LoginScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             backgroundColor: Colors.red,
-            content: Text('Error al conectar con el servidor'),
+            content: Text('Error al conectar amb el servidor'),
           ),
         );
       }
@@ -112,7 +112,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                 //welcome back message
                 Text(
-                  "¡Hola de nuevo! Estamos felices de verte",
+                  "Hola de nou! Estem feliços de veure't",
                   style: TextStyle(
                     color: Colors.grey[700],
                   ),
@@ -123,7 +123,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 //email textfield
                 MyTextField(
                     controller: usernameTextController,
-                    hintText: 'Nombre de usuario',
+                    hintText: 'Nom de usuari',
                     obscureText: false),
 
                 const SizedBox(height: 25),
@@ -131,7 +131,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 //password textfield
                 MyTextField(
                     controller: passwordTextController,
-                    hintText: 'Contraseña',
+                    hintText: 'Contrasenya',
                     obscureText: true),
 
                 const SizedBox(height: 25),
@@ -139,7 +139,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 //Sign in button
                 MyButton(
                   onTap: _loginUser,
-                  text: 'INICIAR SESIÓN',
+                  text: 'INICIAR SESSIÓ',
                 ),
 
                 const SizedBox(height: 20),
@@ -149,7 +149,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      "¿No tienes cuenta?",
+                      "¿No tens compte?",
                       style: TextStyle(
                         color: Colors.grey[700],
                       ),
@@ -158,7 +158,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     GestureDetector(
                       onTap: widget.onTap,
                       child: Text(
-                        "Regístrate",
+                        "Registra't",
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           color: Colors.blue,
