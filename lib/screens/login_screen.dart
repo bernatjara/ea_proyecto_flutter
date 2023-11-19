@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'user_screen.dart';
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:ea_proyecto_flutter/screens/news_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   final Function()? onTap;
@@ -65,7 +66,7 @@ class _LoginScreenState extends State<LoginScreen> {
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-              builder: (context) => UserScreen(),
+              builder: (context) => NewsScreen(),
             ),
           );
         } else {

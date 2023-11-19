@@ -1,6 +1,7 @@
 import 'package:ea_proyecto_flutter/screens/user_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:ea_proyecto_flutter/screens/news_screen.dart';
 
 class NavBar extends StatefulWidget {
   @override
@@ -47,12 +48,21 @@ class _NavBarScreenState extends State<NavBar> {
             ),
           ),
           ListTile(
-              leading: Icon(Icons.account_circle),
-              title: Text('Perfil'),
-              onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => UserScreen()),
-                  )),
+            leading: Icon(Icons.account_circle),
+            title: Text('Perfil'),
+            onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => UserScreen()),
+            ),
+          ),
+          ListTile(
+            leading: Icon(Icons.newspaper),
+            title: Text('Notícies'),
+            onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => NewsScreen()),
+            ),
+          )
         ],
       ),
     );

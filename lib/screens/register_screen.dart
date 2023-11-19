@@ -58,7 +58,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           );
 
           // Verifica si la solicitud fue exitosa (código 200)
-          if (response.statusCode == 201) {
+          if (response.statusCode == 200) {
             // Registro exitoso, redirige a la pantalla de inicio de sesión
             Navigator.pushReplacement(
               context,
