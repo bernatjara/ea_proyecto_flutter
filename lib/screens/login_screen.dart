@@ -1,6 +1,6 @@
+import 'package:ea_proyecto_flutter/api/services/userService.dart';
 import 'package:ea_proyecto_flutter/widgets/button.dart';
 import 'package:ea_proyecto_flutter/widgets/text_field.dart';
-import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'user_screen.dart';
 import 'dart:convert';
@@ -16,83 +16,69 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  @override
-  Widget build(BuildContext context) {
-    // text editing controllers
-    final usernameTextController = TextEditingController();
-    final passwordTextController = TextEditingController();
+  // api controller
+  final UserApiService userApiService = UserApiService();
 
-    const String apiUrl = 'http://localhost:9090/users/login/login/login';
+  // text editing controllers
+  final usernameTextController = TextEditingController();
+  final passwordTextController = TextEditingController();
 
-    Future<void> _loginUser() async {
-      if (usernameTextController.text.isEmpty ||
-          passwordTextController.text.isEmpty) {
-        // Muestra un mensaje de error si algún campo está vacío
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            backgroundColor: Colors.red,
-            content: Text('Sisplau, completa tots els camps'),
-          ),
-        );
-        return; // Sale de la función si algún campo está vacío
-      }
-
-      try {
-        final response = await http.post(
-          Uri.parse(apiUrl),
-          body: {
-            'name': usernameTextController.text,
-            'password': passwordTextController.text,
-          },
-        );
-
-        // Verifica si la solicitud fue exitosa (código 201)
-        if (response.statusCode == 200) {
-          final Map<String, dynamic> responseData = json.decode(response.body);
-          final String token = responseData['token'];
-          final Map<String, dynamic> userData = responseData['user'];
-          final String name = userData['name'];
-          final String password = userData['password'];
-          final String email = userData['email'];
-          final String rol = userData['rol'];
-          final String id = userData['_id'];
-          SharedPreferences prefs = await SharedPreferences.getInstance();
-          prefs.setString('token', token);
-          prefs.setString('id', id);
-          prefs.setString('name', name);
-          prefs.setString('email', email);
-          prefs.setString('password', password);
-          prefs.setString('rol', rol);
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => NewsScreen(),
-            ),
-          );
-        } else {
-          // Muestra un mensaje de error si las credenciales son incorrectas o la solicitud no fue exitosa
-          // ignore: use_build_context_synchronously
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              backgroundColor: Colors.red,
-              content: Text('Usuari o contrasenya incorrectes'),
-            ),
-          );
-        }
-      } catch (e) {
-        // Maneja errores de conexión o cualquier otra excepción
-        // ignore: avoid_print
-        print('Error: $e');
-        // ignore: use_build_context_synchronously
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            backgroundColor: Colors.red,
-            content: Text('Error al conectar amb el servidor'),
-          ),
-        );
-      }
+  Future<void> _loginUser() async {
+    if (usernameTextController.text.isEmpty ||
+        passwordTextController.text.isEmpty) {
+      // Muestra un mensaje de error si algún campo está vacío
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          backgroundColor: Colors.red,
+          content: Text('Sisplau, completa tots els camps'),
+        ),
+      );
+      return; // Sale de la función si algún campo está vacío
     }
 
+    try {
+      final responseData = await userApiService.loginUser(
+        usernameTextController.text,
+        passwordTextController.text,
+      );
+
+      // Si la solicitud fue exitosa (código 201)
+      final String token = responseData['token'];
+      final Map<String, dynamic> userData = responseData['user'];
+      final String name = userData['name'];
+      final String password = userData['password'];
+      final String email = userData['email'];
+      final String rol = userData['rol'];
+      final String id = userData['_id'];
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.setString('token', token);
+      prefs.setString('id', id);
+      prefs.setString('name', name);
+      prefs.setString('email', email);
+      prefs.setString('password', password);
+      prefs.setString('rol', rol);
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => NewsScreen(),
+        ),
+      );
+    } catch (e) {
+      // Maneja errores de conexión o cualquier otra excepción
+      // ignore: avoid_print
+      print('Error: $e');
+      // ignore: use_build_context_synchronously
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Colors.red,
+          content: Text(e.toString()),
+        ),
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[300],
       body: SafeArea(
