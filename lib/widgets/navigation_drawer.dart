@@ -47,20 +47,36 @@ class _NavBarScreenState extends State<NavBar> {
               color: Color.fromRGBO(0, 125, 204, 1.0),
             ),
           ),
-          ListTile(
-            leading: Icon(Icons.account_circle),
-            title: Text('Perfil'),
-            onTap: () => Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => UserScreen()),
+          Padding(
+            padding: const EdgeInsets.only(left: 25.0),
+            child: ListTile(
+              leading: Icon(Icons.account_circle),
+              title: Text('Perfil'),
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => UserScreen()),
+              ),
             ),
           ),
-          ListTile(
-            leading: Icon(Icons.newspaper),
-            title: Text('Notícies'),
-            onTap: () => Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => NewsScreen()),
+          Padding(
+            padding: const EdgeInsets.only(left: 25.0),
+            child: ListTile(
+              leading: Icon(Icons.newspaper),
+              title: Text('Notícies'),
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => NewsScreen()),
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 25.0),
+            child: ListTile(
+              leading: Icon(Icons.logout),
+              title: Text("Logout"),
+              onTap: () {
+                Navigator.pop(context);
+              },
             ),
           )
         ],
