@@ -1,3 +1,4 @@
+import 'package:ea_proyecto_flutter/api/services/userService.dart';
 import 'package:flutter/material.dart';
 import 'package:ea_proyecto_flutter/widgets/button.dart';
 import 'package:ea_proyecto_flutter/widgets/text_field.dart';
@@ -15,13 +16,14 @@ class RegisterScreen extends StatefulWidget {
 class _RegisterScreenState extends State<RegisterScreen> {
   @override
   Widget build(BuildContext context) {
+    // api controller
+    final UserApiService userApiService = UserApiService();
+
     // text editing controllers
     final usernameTextController = TextEditingController();
     final emailTextController = TextEditingController();
     final passwordTextController = TextEditingController();
     final confirmPasswordTextController = TextEditingController();
-
-    const String apiUrl = 'http://localhost:9090/users';
 
     Future<void> _registerUser() async {
       if (usernameTextController.text.isEmpty ||
@@ -47,41 +49,27 @@ class _RegisterScreenState extends State<RegisterScreen> {
           return;
         }
         try {
-          final response = await http.post(
-            Uri.parse(apiUrl),
-            body: {
-              'name': usernameTextController.text,
-              'email': emailTextController.text,
-              'password': passwordTextController.text,
-              'rol': 'client',
-            },
+          final responseData = await userApiService.registerUser(
+            username: usernameTextController.text,
+            email: emailTextController.text,
+            password: passwordTextController.text,
           );
 
-          // Verifica si la solicitud fue exitosa (código 200)
-          if (response.statusCode == 200) {
-            // Registro exitoso, redirige a la pantalla de inicio de sesión
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const LoginScreen(),
-              ),
-            );
-          } else {
-            // Muestra un mensaje de error si la solicitud no fue exitosa
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                backgroundColor: Colors.red,
-                content: Text('Error al registrar el usuari'),
-              ),
-            );
-          }
+          // Si la solicitud fue exitosa (código 200)
+          // Registro exitoso, redirige a la pantalla de inicio de sesión
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const LoginScreen(),
+            ),
+          );
         } catch (e) {
           // Maneja errores de conexión o cualquier otra excepción
           print('Error: $e');
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
+            SnackBar(
               backgroundColor: Colors.red,
-              content: Text('Error al conectar amb el servidor'),
+              content: Text(e.toString()),
             ),
           );
         }
@@ -108,7 +96,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
                 //welcome back message
                 Text(
-                  "Completa el seguent formularo i disfruta de totes les funcions que tenim preparades per a tu.",
+                  "Completa el següent formulari i disfruta de totes les funcions que tenim preparades per a tu.",
                   style: TextStyle(
                     color: Colors.grey[700],
                   ),

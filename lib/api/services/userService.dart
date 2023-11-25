@@ -3,11 +3,11 @@ import 'package:http/http.dart' as http;
 import '../models/user.dart'; // Encara no està implementat el model
 
 class UserApiService {
-  static const String _baseUrl = 'http://localhost:9090/users/';
+  static const String _baseUrl = 'http://localhost:9090/users';
 
   Future<Map<String, dynamic>> loginUser(
       String username, String password) async {
-    String endpoint = 'login/login/login';
+    String endpoint = '/login/login/login';
     try {
       final response = await http.post(
         Uri.parse(_baseUrl + endpoint),
@@ -25,6 +25,32 @@ class UserApiService {
       }
     } catch (e) {
       throw Exception('Error al conectar amb el servidor');
+    }
+  }
+
+  Future<Map<String, dynamic>> registerUser({
+    required String username,
+    required String email,
+    required String password,
+  }) async {
+    try {
+      final response = await http.post(
+        Uri.parse(_baseUrl),
+        body: {
+          'name': username,
+          'email': email,
+          'password': password,
+          'rol': 'client',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        return json.decode(response.body);
+      } else {
+        throw Exception('Error al registrar el usuario');
+      }
+    } catch (e) {
+      throw Exception('Error al conectar con el servidor');
     }
   }
 }
