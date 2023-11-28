@@ -1,4 +1,3 @@
-import 'package:ea_proyecto_flutter/screens/login_screen.dart';
 import 'package:ea_proyecto_flutter/screens/user_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -30,13 +29,6 @@ class _NavBarScreenState extends State<NavBar> {
 
     // Notifica al framework que el estado ha cambiado, para que se actualice en la pantalla
     setState(() {});
-  }
-
-  // Función para hacer el logout y borrar el token
-  Future<void> logout() async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    //preferences.remove('token');
-    preferences.clear();
   }
 
   @override
@@ -75,21 +67,6 @@ class _NavBarScreenState extends State<NavBar> {
                 context,
                 MaterialPageRoute(builder: (context) => NewsScreen()),
               ),
-            ),
-          ),
-          Spacer(), // Agrega un Spacer para empujar el ListTile de "Logout" hacia la parte inferior
-          Padding(
-            padding: const EdgeInsets.only(left: 25.0, bottom: 25.0),
-            child: ListTile(
-              leading: Icon(Icons.logout),
-              title: Text("Logout"),
-              onTap: () async {
-                await logout();
-                Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(builder: (context) => LoginScreen()),
-                    (route) => false);
-              },
             ),
           ),
         ],
