@@ -13,13 +13,12 @@ class _NavBarScreenState extends State<NavBar> {
   String storedName = '';
   String storedEmail = '';
   String storedRol = '';
-  String adminMode = '0';
+  String adminMode = '';
 
   @override
   void initState() {
     super.initState();
     _loadNavData();
-    _loadAdminMode();
   }
 
   Future<void> _loadNavData() async {
@@ -29,6 +28,7 @@ class _NavBarScreenState extends State<NavBar> {
         ''; // Puedes establecer un valor predeterminado si es nulo
     storedEmail = prefs.getString('email') ?? '';
     storedRol = prefs.getString('rol') ?? '';
+    adminMode = prefs.getString('adminMode') ?? '';
     // Notifica al framework que el estado ha cambiado, para que se actualice en la pantalla
     setState(() {});
   }
@@ -38,16 +38,6 @@ class _NavBarScreenState extends State<NavBar> {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     //preferences.remove('token');
     preferences.clear();
-  }
-
-  Future<void> _loadAdminMode() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    if (storedRol == 'admin') {
-      adminMode = '1';
-    }
-    setState(() {
-      prefs.setString('adminMode', adminMode);
-    });
   }
 
   @override
@@ -89,7 +79,7 @@ class _NavBarScreenState extends State<NavBar> {
               ),
             ),
           ),
-          if (adminMode == '1')
+          if (storedRol == 'admin')
             Padding(
               padding: const EdgeInsets.only(left: 25.0),
               child: ListTile(
