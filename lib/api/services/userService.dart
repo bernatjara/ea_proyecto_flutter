@@ -53,4 +53,32 @@ class UserApiService {
       throw Exception('Error al conectar con el servidor');
     }
   }
+
+  Future<Map<String, dynamic>> updateUser({
+    required String userId,
+    required String username,
+    required String email,
+    required String password,
+    required String newPassword,
+  }) async {
+    try {
+      final response = await http.put(
+        Uri.parse('$_baseUrl/$userId'),
+        body: {
+          'name': username,
+          'email': email,
+          'password': password,
+          'newPassword': newPassword,
+        },
+      );
+
+      if (response.statusCode == 200) {
+        return json.decode(response.body);
+      } else {
+        throw Exception('Error al actualizar el usuario');
+      }
+    } catch (e) {
+      throw Exception('Error al conectar con el servidor');
+    }
+  }
 }
