@@ -5,23 +5,25 @@ import '../models/asignatura.dart'; // Encara no està implementat el model
 class AsignaturaApiService {
   static const String _baseUrl = 'http://localhost:9090/asignaturas';
 
-  Future<List<dynamic>> GetAsignaturasById(String id) async {
+  Future<List<NewItem>> GetAsignaturasById(String id) async {
     String endpoint = '/user/$id';
     List<NewItem> newList = [];
 
-    try {
-      final response = await http.get(Uri.parse(_baseUrl + endpoint));
-      if (response.statusCode == 200) {
-        final List<dynamic> responseData = json.decode(response.body);
-        print(responseData);
-        return responseData;
-      } else {
-        throw Exception('Usuario no encontrado');
-      }
-    } catch (e) {
+    //try {
+    final response = await http.get(Uri.parse(_baseUrl + endpoint));
+    if (response.statusCode == 200) {
+      print(json.decode(response.body));
+      //newList = json.decode(response.body);
+      final List<dynamic> responseData = json.decode(response.body);
+      newList = responseData.map((data) => NewItem.fromJson(data)).toList();
+      return newList;
+    } else {
+      throw Exception('Usuario no encontrado');
+    }
+  } /*catch (e) {
       throw Exception('Error al conectar amb el servidor');
     }
-  }
+  }*/
 }
 
 class NewItem {

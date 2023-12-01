@@ -12,48 +12,50 @@ class SubjectsScreen extends StatefulWidget {
 
 class _SubjectsScreenState extends State<SubjectsScreen> {
   final AsignaturaApiService asignaturaApiService = AsignaturaApiService();
-  final List<NewItem> newList = [];
+  late Future<List<NewItem>> futureAsignaturas;
 
   @override
   void initState() {
-    _getasignaturas();
+    futureAsignaturas = _getasignaturas();
     super.initState();
   }
 
-  void _getasignaturas() async {
+  Future<List<NewItem>> _getasignaturas() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String storedId = prefs.getString('id') ?? '';
-    final newList = await asignaturaApiService.GetAsignaturasById(storedId);
-    print(newList);
+    return await asignaturaApiService.GetAsignaturasById(storedId);
   }
 
   @override
   Widget build(BuildContext context) {
-    print(newList);
     return Scaffold(
-        drawer: NavBar(),
-        appBar: AppBar(
-          title: Text('Asignatures'),
-          backgroundColor: Color.fromRGBO(0, 125, 204, 1.0),
-        ),
-        body: ListView.builder(
-            itemCount: newList.length,
-            itemBuilder: (context, index) {
-              Card(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        newList[index].name,
-                        style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            }));
+      appBar: AppBar(
+        title: Text('Asignaturas'),
+      ),
+      body: FutureBuilder(
+        future: futureAsignaturas,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            // While waiting for the data to be fetched
+            return Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            // If there's an error
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else {
+            // If the data has been successfully fetched
+            List<NewItem> newList = snapshot.data as List<NewItem>;
+            return ListView.builder(
+              itemCount: newList.length,
+              itemBuilder: (context, index) {
+                return ListTile(
+                  title: Text(newList[index].name),
+                  // Customize the ListTile as needed
+                );
+              },
+            );
+          }
+        },
+      ),
+    );
   }
 }
