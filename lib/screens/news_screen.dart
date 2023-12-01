@@ -13,7 +13,7 @@ class NewsScreen extends StatefulWidget {
 
 class _NewsScreenState extends State<NewsScreen> {
   List<NewsItem> newsList = [];
-
+  String? adminMode = '';
   @override
   void initState() {
     super.initState();
@@ -22,9 +22,10 @@ class _NewsScreenState extends State<NewsScreen> {
 
   static const String apiUrl = 'http://localhost:9090/news';
   Future<void> _loadNewsData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    adminMode = prefs.getString('adminMode');
     try {
       final response = await http.get(Uri.parse(apiUrl));
-
       if (response.statusCode == 200) {
         final List<dynamic> responseData = json.decode(response.body);
 
@@ -61,18 +62,19 @@ class _NewsScreenState extends State<NewsScreen> {
         title: Text('Notícies'),
         backgroundColor: Color.fromRGBO(0, 125, 204, 1.0),
         actions: [
-          IconButton(
-            icon: Icon(Icons.add),
-            onPressed: () {
-              // Navega a la pantalla de creación de noticias cuando se hace clic en el botón
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => CreateNewsScreen(),
-                ),
-              );
-            },
-          ),
+          if (adminMode == '1')
+            IconButton(
+              icon: Icon(Icons.add),
+              onPressed: () {
+                // Navega a la pantalla de creación de noticias cuando se hace clic en el botón
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => CreateNewsScreen(),
+                  ),
+                );
+              },
+            ),
         ],
       ),
       body: ListView.builder(

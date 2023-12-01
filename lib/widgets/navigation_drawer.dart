@@ -12,6 +12,7 @@ class _NavBarScreenState extends State<NavBar> {
   String storedName = '';
   String storedEmail = '';
   String storedRol = '';
+  String adminMode = '';
 
   @override
   void initState() {
@@ -21,12 +22,12 @@ class _NavBarScreenState extends State<NavBar> {
 
   Future<void> _loadNavData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-
     // Recupera los valores almacenados en SharedPreferences
     storedName = prefs.getString('name') ??
         ''; // Puedes establecer un valor predeterminado si es nulo
     storedEmail = prefs.getString('email') ?? '';
-
+    storedRol = prefs.getString('rol') ?? '';
+    adminMode = prefs.getString('adminMode') ?? '';
     // Notifica al framework que el estado ha cambiado, para que se actualice en la pantalla
     setState(() {});
   }
@@ -34,6 +35,7 @@ class _NavBarScreenState extends State<NavBar> {
   @override
   Widget build(BuildContext context) {
     //String username = widget.username;
+
     return Drawer(
       child: Column(
         children: [
@@ -69,6 +71,22 @@ class _NavBarScreenState extends State<NavBar> {
               ),
             ),
           ),
+          if (storedRol == 'admin')
+            Padding(
+              padding: const EdgeInsets.only(left: 25.0),
+              child: ListTile(
+                  leading: Icon(Icons.admin_panel_settings),
+                  title: Text('Modo admin'),
+                  onTap: () async {
+                    SharedPreferences prefs =
+                        await SharedPreferences.getInstance();
+                    prefs.setString('adminMode', adminMode == '1' ? '0' : '1');
+                    // Actualiza el estado con el nuevo valor
+                    setState(() {
+                      adminMode = prefs.getString('adminMode') ?? '0';
+                    });
+                  }),
+            ),
         ],
       ),
     );
