@@ -50,7 +50,6 @@ class _LoginScreenState extends State<LoginScreen> {
       final String email = userData['email'];
       final String rol = userData['rol'];
       final String id = userData['_id'];
-      final String adminMode = responseData['adminMode'];
       SharedPreferences prefs = await SharedPreferences.getInstance();
       prefs.setString('token', token);
       prefs.setString('id', id);
@@ -58,7 +57,6 @@ class _LoginScreenState extends State<LoginScreen> {
       prefs.setString('email', email);
       prefs.setString('password', password);
       prefs.setString('rol', rol);
-      prefs.setString('adminMode', adminMode);
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(

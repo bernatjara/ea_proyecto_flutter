@@ -13,7 +13,7 @@ class _NavBarScreenState extends State<NavBar> {
   String storedName = '';
   String storedEmail = '';
   String storedRol = '';
-  String adminMode = '';
+  String adminMode = '0';
 
   @override
   void initState() {
@@ -36,17 +36,17 @@ class _NavBarScreenState extends State<NavBar> {
   // Función para hacer el logout y borrar el token
   Future<void> logout() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
-    if (storedRol == 'admin') {
-      adminMode = '1';
-    }
     //preferences.remove('token');
     preferences.clear();
   }
 
   Future<void> _loadAdminMode() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (storedRol == 'admin') {
+      adminMode = '1';
+    }
     setState(() {
-      adminMode = prefs.getString('adminMode') ?? '0';
+      prefs.setString('adminMode', adminMode);
     });
   }
 
@@ -89,21 +89,22 @@ class _NavBarScreenState extends State<NavBar> {
               ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.only(left: 25.0),
-            child: ListTile(
-                leading: Icon(Icons.admin_panel_settings),
-                title: Text('Modo admin'),
-                onTap: () async {
-                  SharedPreferences prefs =
-                      await SharedPreferences.getInstance();
-                  prefs.setString('adminMode', adminMode == '1' ? '0' : '1');
-                  // Actualiza el estado con el nuevo valor
-                  setState(() {
-                    adminMode = prefs.getString('adminMode') ?? '0';
-                  });
-                }),
-          ),
+          if (adminMode == '1')
+            Padding(
+              padding: const EdgeInsets.only(left: 25.0),
+              child: ListTile(
+                  leading: Icon(Icons.admin_panel_settings),
+                  title: Text('Modo admin'),
+                  onTap: () async {
+                    SharedPreferences prefs =
+                        await SharedPreferences.getInstance();
+                    prefs.setString('adminMode', adminMode == '1' ? '0' : '1');
+                    // Actualiza el estado con el nuevo valor
+                    setState(() {
+                      adminMode = prefs.getString('adminMode') ?? '0';
+                    });
+                  }),
+            ),
           Spacer(), // Agrega un Spacer para empujar el ListTile de "Logout" hacia la parte inferior
           Padding(
             padding: const EdgeInsets.only(left: 25.0, bottom: 25.0),
