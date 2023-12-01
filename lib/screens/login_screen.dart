@@ -40,7 +40,7 @@ class _LoginScreenState extends State<LoginScreen> {
         passwordTextController.text,
       );
 
-      // Si la solicitud fue exitosa (código 201)
+      // Si la solicitud fue exitosa (código 200)
       final String token = responseData['token'];
       final Map<String, dynamic> userData = responseData['user'];
       final String name = userData['name'];
