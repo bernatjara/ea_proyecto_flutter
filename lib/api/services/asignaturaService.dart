@@ -3,22 +3,18 @@ import 'package:http/http.dart' as http;
 import '../models/asignatura.dart'; // Encara no està implementat el model
 
 class AsignaturaApiService {
-  static const String _baseUrl = 'http://localhost:9090/asignatura';
+  static const String _baseUrl = 'http://localhost:9090/asignaturas';
 
-  Future<List<NewItem>> GetAsignaturasById(String id) async {
+  Future<List<dynamic>> GetAsignaturasById(String id) async {
     String endpoint = '/user/$id';
-    try {
-      final response = await http.get(
-        Uri.parse(_baseUrl + endpoint),
-      );
+    List<NewItem> newList = [];
 
-      // Verifica si la solicitud fue exitosa (código 201)
+    try {
+      final response = await http.get(Uri.parse(_baseUrl + endpoint));
       if (response.statusCode == 200) {
         final List<dynamic> responseData = json.decode(response.body);
-        // Mapea la respuesta a objetos NewsItem
-        List<NewItem> newList = [];
-        newList = responseData.map((data) => NewItem.fromJson(data)).toList();
-        return newList;
+        print(responseData);
+        return responseData;
       } else {
         throw Exception('Usuario no encontrado');
       }
