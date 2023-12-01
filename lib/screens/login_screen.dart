@@ -4,6 +4,7 @@ import 'package:ea_proyecto_flutter/widgets/text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ea_proyecto_flutter/screens/news_screen.dart';
+import 'package:ea_proyecto_flutter/screens/register_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   final Function()? onTap;
@@ -143,7 +144,6 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     const SizedBox(width: 4),
                     GestureDetector(
-                      onTap: widget.onTap,
                       child: Text(
                         "Registra't",
                         style: TextStyle(
@@ -151,7 +151,12 @@ class _LoginScreenState extends State<LoginScreen> {
                           color: Colors.blue,
                         ),
                       ),
-                    ),
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => RegisterScreen()),
+                      ),
+                    )
                   ],
                 ),
               ],

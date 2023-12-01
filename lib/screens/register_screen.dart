@@ -155,13 +155,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                     const SizedBox(width: 4),
                     GestureDetector(
-                      onTap: widget.onTap,
                       child: Text(
                         "Inicia sessió",
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           color: Colors.blue,
                         ),
+                      ),
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => LoginScreen()),
                       ),
                     ),
                   ],

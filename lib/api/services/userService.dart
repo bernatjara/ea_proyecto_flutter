@@ -7,7 +7,7 @@ class UserApiService {
 
   Future<Map<String, dynamic>> loginUser(
       String username, String password) async {
-    String endpoint = '/login/login/login';
+    String endpoint = '/login';
     try {
       final response = await http.post(
         Uri.parse(_baseUrl + endpoint),
