@@ -2,7 +2,6 @@ import 'package:ea_proyecto_flutter/api/services/userService.dart';
 import 'package:flutter/material.dart';
 import 'package:ea_proyecto_flutter/widgets/button.dart';
 import 'package:ea_proyecto_flutter/widgets/text_field.dart';
-import 'package:http/http.dart' as http;
 import '../screens/login_screen.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -49,7 +48,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           return;
         }
         try {
-          final responseData = await userApiService.registerUser(
+          userApiService.registerUser(
             username: usernameTextController.text,
             email: emailTextController.text,
             password: passwordTextController.text,

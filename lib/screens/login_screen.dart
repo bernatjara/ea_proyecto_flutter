@@ -2,8 +2,6 @@ import 'package:ea_proyecto_flutter/api/services/userService.dart';
 import 'package:ea_proyecto_flutter/widgets/button.dart';
 import 'package:ea_proyecto_flutter/widgets/text_field.dart';
 import 'package:flutter/material.dart';
-import 'user_screen.dart';
-import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ea_proyecto_flutter/screens/news_screen.dart';
 
