@@ -5,8 +5,8 @@ import '../models/asignatura.dart'; // Encara no està implementat el model
 class AsignaturaApiService {
   static const String _baseUrl = 'http://localhost:9090/asignatura';
 
-  Future<Map<List, dynamic>> GetAsignaturasById(String id) async {
-    String endpoint = '/user/:id';
+  Future<List<NewItem>> GetAsignaturasById(String id) async {
+    String endpoint = '/user/$id';
     try {
       final response = await http.get(
         Uri.parse(_baseUrl + endpoint),
@@ -18,9 +18,9 @@ class AsignaturaApiService {
         // Mapea la respuesta a objetos NewsItem
         List<NewItem> newList = [];
         newList = responseData.map((data) => NewItem.fromJson(data)).toList();
-        return json.decode(newList);
+        return newList;
       } else {
-        throw Exception('Credencials incorrectes');
+        throw Exception('Usuario no encontrado');
       }
     } catch (e) {
       throw Exception('Error al conectar amb el servidor');

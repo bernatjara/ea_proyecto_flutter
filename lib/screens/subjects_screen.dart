@@ -9,18 +9,17 @@ class SubjectsScreen extends StatefulWidget {
 }
 
 class _SubjectsScreenState extends State<SubjectsScreen> {
+  final List<NewItem> newList = [];
   final AsignaturaApiService asignaturaApiService = AsignaturaApiService();
   Future<void> _getasignaturas() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String storedId = prefs.getString('rol') ?? '';
-    final responseData =
-        await asignaturaApiService.GetAsignaturasById(storedId);
+    String storedId = prefs.getString('id') ?? '';
+    final newList = await asignaturaApiService.GetAsignaturasById(storedId);
   }
 
   @override
   void initState() {
     super.initState();
-    _getasignaturas();
   }
 
   @override
@@ -28,54 +27,29 @@ class _SubjectsScreenState extends State<SubjectsScreen> {
     return Scaffold(
       drawer: NavBar(),
       appBar: AppBar(
-        title: Text('Notícies'),
+        title: Text('Asignatures'),
         backgroundColor: Color.fromRGBO(0, 125, 204, 1.0),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.add),
-            onPressed: () {
-              // Navega a la pantalla de creación de noticias cuando se hace clic en el botón
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => CreateNewsScreen(),
-                ),
-              );
-            },
-          ),
-        ],
       ),
       body: ListView.builder(
-        itemCount: newsList.length,
-        itemBuilder: (context, index) {
-          return GestureDetector(
-            onTap: () {
-              // Navega a la pantalla de detalles cuando se hace clic en una noticia
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => NewsDetailScreen(news: newsList[index]),
-                ),
-              );
-            },
+        itemCount: newList.length,
+        itemBuilder: (context, index){
             child: Card(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Image.network(newsList[index].imageUrl,
-                      height: 200, fit: BoxFit.cover),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
-                      newsList[index].title,
+                      newList[index].name,
                       style:
                           TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
                   ),
                 ],
               ),
-            ),
-          );
+            );
+        }
+          ));
         },
       ),
     );
