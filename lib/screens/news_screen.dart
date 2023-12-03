@@ -1,4 +1,5 @@
 import 'package:ea_proyecto_flutter/screens/news_details_screen.dart';
+import 'package:ea_proyecto_flutter/api/services/newsService.dart';
 import 'package:flutter/material.dart';
 import '../widgets/navigation_drawer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -12,6 +13,7 @@ class NewsScreen extends StatefulWidget {
 }
 
 class _NewsScreenState extends State<NewsScreen> {
+  final NewsApiService newsApiService = NewsApiService();
   List<NewsItem> newsList = [];
   String? adminMode = '';
   @override
@@ -20,28 +22,17 @@ class _NewsScreenState extends State<NewsScreen> {
     _loadNewsData();
   }
 
-  static const String apiUrl = 'http://localhost:9090/news';
   Future<void> _loadNewsData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     adminMode = prefs.getString('adminMode');
     try {
-      final response = await http.get(Uri.parse(apiUrl));
-      if (response.statusCode == 200) {
-        final List<dynamic> responseData = json.decode(response.body);
+      final List<dynamic> response = await newsApiService.readNews();
 
-        // Mapea la respuesta a objetos NewsItem
-        newsList = responseData.map((data) => NewsItem.fromJson(data)).toList();
+      // Mapea la respuesta a objetos NewsItem
+      newsList = response.map((data) => NewsItem.fromJson(data)).toList();
 
-        // Notifica al framework que el estado ha cambiado
-        setState(() {});
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            backgroundColor: Colors.red,
-            content: Text('Error en la solicitud de notícies'),
-          ),
-        );
-      }
+      // Notifica al framework que el estado ha cambiado
+      setState(() {});
     } catch (e) {
       print('Error: $e');
       // ignore: use_build_context_synchronously
@@ -115,15 +106,20 @@ class _NewsScreenState extends State<NewsScreen> {
 }
 
 class NewsItem {
+  final String id;
   final String title;
   final String imageUrl;
   final String content;
 
   NewsItem(
-      {required this.title, required this.imageUrl, required this.content});
+      {required this.id,
+      required this.title,
+      required this.imageUrl,
+      required this.content});
 
   factory NewsItem.fromJson(Map<String, dynamic> json) {
     return NewsItem(
+      id: json['_id'],
       title: json['title'],
       imageUrl: json['imageUrl'],
       content: json['content'],

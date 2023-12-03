@@ -148,7 +148,7 @@ class _UserScreenState extends State<UserScreen> {
                         ),
                         content: const Padding(
                           padding: EdgeInsets.symmetric(vertical: 15.0),
-                          child: Text("¿Estás seguro que quieres salir?"),
+                          child: Text("¿Estàs segur que vols sortir?"),
                         ),
                         actions: [
                           ElevatedButton(
