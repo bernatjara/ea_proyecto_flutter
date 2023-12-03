@@ -12,17 +12,17 @@ class NewsDetailScreen extends StatefulWidget {
 
 class _NewsDetailScreenState extends State<NewsDetailScreen> {
   final NewsApiService newsApiService = NewsApiService();
-  List<NewsItem> newsList = [];
   String? adminMode = '';
   @override
   void initState() {
-    super.initState();
     _loadNewsData();
+    super.initState();
   }
 
   Future<void> _loadNewsData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     adminMode = prefs.getString('adminMode');
+    setState(() {});
   }
 
   Future<void> _deleteNewsData() async {
@@ -43,6 +43,8 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print(adminMode);
+    print(widget.news.id);
     return Scaffold(
       drawer: NavBar(),
       appBar: AppBar(
