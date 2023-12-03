@@ -42,7 +42,7 @@ class NewsApiService {
     }
   }
 
-  Future<List<dynamic>> deleteNews(String id) async {
+  Future<String> deleteNews(String id) async {
     try {
       String endpoint = '/$id';
       final response = await http.delete(
@@ -50,7 +50,7 @@ class NewsApiService {
       );
 
       if (response.statusCode == 200) {
-        return json.decode(response.body);
+        return '1';
       } else {
         throw Exception('Credencials incorrectes');
       }

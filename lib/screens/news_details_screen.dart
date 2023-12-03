@@ -43,17 +43,24 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print(adminMode);
-    print(widget.news.id);
+    bool isNewsDetailScreen = true;
     return Scaffold(
       drawer: NavBar(),
       appBar: AppBar(
         title: Text('Notícies'),
         backgroundColor: Color.fromRGBO(0, 125, 204, 1.0),
+        leading: isNewsDetailScreen
+            ? IconButton(
+                icon: Icon(Icons.arrow_back),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              )
+            : null,
         actions: [
           if (adminMode == '1')
             IconButton(
-              icon: Icon(Icons.add),
+              icon: Icon(Icons.delete_forever),
               onPressed: () {
                 showDialog(
                   context: context,
