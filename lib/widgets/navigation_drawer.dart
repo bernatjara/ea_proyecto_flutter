@@ -75,7 +75,7 @@ class _NavBarScreenState extends State<NavBar> {
           Padding(
             padding: const EdgeInsets.only(left: 25.0),
             child: ListTile(
-              leading: Icon(Icons.newspaper),
+              leading: Icon(Icons.list_alt),
               title: Text('Asignatures'),
               onTap: () => Navigator.push(
                 context,
