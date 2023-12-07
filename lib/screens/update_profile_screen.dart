@@ -1,7 +1,11 @@
+import 'dart:typed_data';
+
+import 'package:ea_proyecto_flutter/utils/image.dart';
 import 'package:flutter/material.dart';
 import 'package:ea_proyecto_flutter/api/services/userService.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../screens/user_screen.dart';
+import 'package:image_picker/image_picker.dart';
 
 class UpdateProfileScreen extends StatefulWidget {
   const UpdateProfileScreen({super.key});
@@ -27,6 +31,15 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
   // Variable para rastrear si la contraseña es visible
   bool isNewPasswordVisible = false;
   bool isPasswordVisible = false;
+
+  Uint8List? _image;
+
+  void selectImage() async {
+    Uint8List img = await pickImage(ImageSource.gallery);
+    setState(() {
+      _image = img;
+    });
+  }
 
   @override
   void initState() {
@@ -118,9 +131,15 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                     height: 120,
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(100),
-                      child: const Image(
-                        image: AssetImage('assets/profile_image.png'),
-                      ),
+                      child: _image != null
+                          ? Image(
+                              image: MemoryImage(_image!),
+                            )
+                          : const Image(
+                              image: NetworkImage(
+                                  'https://sbcf.fr/wp-content/uploads/2018/03/sbcf-default-avatar.png'),
+                              /* image: AssetImage('assets/profile_image.png'), */
+                            ),
                     ),
                   ),
                   Positioned(
@@ -134,9 +153,10 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                         color: const Color.fromRGBO(0, 125, 204,
                             1.0), // Puedes ajustar el color según tus necesidades
                       ),
-                      child: const Icon(
-                        Icons.camera,
-                        color: Color.fromARGB(255, 255, 255, 255),
+                      child: IconButton(
+                        onPressed: selectImage,
+                        icon: const Icon(Icons.camera),
+                        color: const Color.fromARGB(255, 255, 255, 255),
                       ),
                     ),
                   ),
