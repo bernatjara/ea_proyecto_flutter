@@ -4,6 +4,7 @@ import '../models/news.dart'; // Encara no està implementat el model
 
 class NewsApiService {
   static const String _baseUrl = 'http://localhost:9090/news';
+  //static const String _baseUrl = 'http://192.168.1.37:9090/news';
 
   Future<void> createNews(String title, String imageUrl, String content) async {
     try {

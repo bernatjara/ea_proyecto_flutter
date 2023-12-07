@@ -1,36 +1,37 @@
-import 'package:ea_proyecto_flutter/screens/subjects_edit.dart';
+import 'package:ea_proyecto_flutter/screens/subjects_screen.dart';
 import 'package:ea_proyecto_flutter/widgets/button.dart';
 import 'package:flutter/material.dart';
 import '../widgets/navigation_drawer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ea_proyecto_flutter/api/services/asignaturaService.dart';
 
-class SubjectsScreen extends StatefulWidget {
+class EditSubjectsScreen extends StatefulWidget {
   @override
-  _SubjectsScreenState createState() => _SubjectsScreenState();
+  _EditSubjectsScreenState createState() => _EditSubjectsScreenState();
 }
 
-class _SubjectsScreenState extends State<SubjectsScreen> {
+class _EditSubjectsScreenState extends State<EditSubjectsScreen> {
   final AsignaturaApiService asignaturaApiService = AsignaturaApiService();
   late Future<List<NewItem>> futureAsignaturas;
+  late List<NewItem> newList = [];
+  late List<bool> isCheckedList = [];
+  late bool firstime = true;
 
   @override
   void initState() {
-    futureAsignaturas = _getasignaturas();
+    futureAsignaturas = _getallasignaturas();
     super.initState();
   }
 
-  Future<List<NewItem>> _getasignaturas() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String storedId = prefs.getString('id') ?? '';
-    return await asignaturaApiService.GetAsignaturasById(storedId);
+  Future<List<NewItem>> _getallasignaturas() async {
+    return await asignaturaApiService.GetAllAsignaturas();
   }
 
-  Future<void> _editAsignatures() async {
+  Future<void> _done() async {
     Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => EditSubjectsScreen(),
+          builder: (context) => SubjectsScreen(),
         ));
   }
 
@@ -38,9 +39,9 @@ class _SubjectsScreenState extends State<SubjectsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Asignaturas'),
+        title: Text('Editar Assignatures'),
       ),
-      body: FutureBuilder(
+      body: FutureBuilder<List<NewItem>>(
         future: futureAsignaturas,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -49,28 +50,39 @@ class _SubjectsScreenState extends State<SubjectsScreen> {
           } else if (snapshot.hasError) {
             // If there's an error
             return Center(child: Text('Error: ${snapshot.error}'));
-          } else {
+          } else if (snapshot.hasData && snapshot.data != null) {
             // If the data has been successfully fetched
-            List<NewItem> newList = snapshot.data as List<NewItem>;
+            if (firstime == true) {
+              newList = snapshot.data as List<NewItem>;
+              isCheckedList = List.generate(newList.length, (index) => false);
+              firstime = false;
+            }
             return Column(
               children: [
                 Expanded(
                   child: ListView.builder(
                     itemCount: newList.length,
                     itemBuilder: (context, index) {
-                      return ListTile(
+                      return CheckboxListTile(
                         title: Text(newList[index].name),
-                        // Customize the ListTile as needed
+                        value: isCheckedList[index],
+                        onChanged: (value) {
+                          setState(() {
+                            isCheckedList[index] = value!;
+                          });
+                        },
                       );
                     },
                   ),
                 ),
                 MyButton(
-                  onTap: _editAsignatures,
-                  text: 'Editar Asignatures',
+                  onTap: _done,
+                  text: 'Editar',
                 ),
               ],
             );
+          } else {
+            return Center(child: Text('No data available'));
           }
         },
       ),

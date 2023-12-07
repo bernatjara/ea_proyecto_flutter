@@ -76,7 +76,7 @@ class _NavBarScreenState extends State<NavBar> {
             padding: const EdgeInsets.only(left: 25.0),
             child: ListTile(
               leading: Icon(Icons.list_alt),
-              title: Text('Asignatures'),
+              title: Text('Assignatures'),
               onTap: () => Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => SubjectsScreen()),
