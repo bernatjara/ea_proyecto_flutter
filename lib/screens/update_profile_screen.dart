@@ -1,11 +1,17 @@
+import 'dart:convert';
+import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:ea_proyecto_flutter/utils/image.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:ea_proyecto_flutter/api/services/userService.dart';
+import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../screens/user_screen.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:http/http.dart' as http;
+
+import '../api/services/userService.dart';
+import '../screens/user_screen.dart';
+import '../utils/image.dart';
 
 class UpdateProfileScreen extends StatefulWidget {
   const UpdateProfileScreen({super.key});
@@ -21,6 +27,10 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
   String storedPassword = '';
   String storedId = '';
 
+  File? _imageFile;
+  Uint8List webImage = Uint8List(8);
+  String? _imageUrl;
+
   // api controller
   final UserApiService userApiService = UserApiService();
 
@@ -32,19 +42,69 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
   bool isNewPasswordVisible = false;
   bool isPasswordVisible = false;
 
-  Uint8List? _image;
-
-  void selectImage() async {
-    Uint8List img = await pickImage(ImageSource.gallery);
-    setState(() {
-      _image = img;
-    });
-  }
+  /* Uint8List? _image; */
 
   @override
   void initState() {
     super.initState();
     _loadUserData();
+  }
+
+  /* void selectImage() async {
+    Uint8List img = await pickImage(ImageSource.gallery);
+    setState(() {
+      _image = img;
+    });
+  } */
+
+  Future<void> _pickImage() async {
+    if (!kIsWeb) {
+      final ImagePicker picker = ImagePicker();
+      XFile? pickedFile = await picker.pickImage(source: ImageSource.gallery);
+      if (pickedFile != null) {
+        var selected = File(pickedFile.path);
+        setState(() {
+          _imageFile = selected;
+        });
+      } else {
+        print('No ha triat imatge');
+        return;
+      }
+    } else if (kIsWeb) {
+      final ImagePicker picker = ImagePicker();
+      XFile? pickedFile = await picker.pickImage(source: ImageSource.gallery);
+      if (pickedFile != null) {
+        var f = await pickedFile.readAsBytes();
+        setState(() {
+          webImage = f;
+          _imageFile = File('a');
+        });
+      } else {
+        print('No ha triat imatge');
+        return;
+      }
+    } else {
+      print('Algo no va');
+      return;
+    }
+  }
+
+  Future<void> _uploadImage() async {
+    final url = Uri.parse('https://api.cloudinary.com/v1_1/db2guqknt/upload');
+
+    final request = http.MultipartRequest('POST', url)
+      ..fields['upload_preset'] = 'a6oj9aow'
+      ..files.add(await http.MultipartFile.fromPath('file', _imageFile!.path));
+    final response = await request.send();
+    if (response.statusCode == 200) {
+      final responseData = await response.stream.toBytes();
+      final responseString = String.fromCharCodes(responseData);
+      final jsonMap = jsonDecode(responseString);
+      setState(() {
+        final url = jsonMap['url'];
+        _imageUrl = url;
+      });
+    }
   }
 
   Future<void> _loadUserData() async {
@@ -113,7 +173,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
       appBar: AppBar(
         leading: IconButton(
           onPressed: () => Navigator.of(context).pop(),
-          icon: const Icon(Icons.arrow_left),
+          icon: const Icon(Icons.arrow_back),
         ),
         title: const Text('Editar perfil'),
         backgroundColor: const Color.fromRGBO(0, 125, 204, 1.0),
@@ -131,15 +191,14 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                     height: 120,
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(100),
-                      child: _image != null
-                          ? Image(
-                              image: MemoryImage(_image!),
-                            )
-                          : const Image(
+                      child: _imageFile == null
+                          ? const Image(
                               image: NetworkImage(
                                   'https://sbcf.fr/wp-content/uploads/2018/03/sbcf-default-avatar.png'),
-                              /* image: AssetImage('assets/profile_image.png'), */
-                            ),
+                            )
+                          : kIsWeb
+                              ? Image.memory(webImage, fit: BoxFit.fill)
+                              : Image.file(_imageFile!, fit: BoxFit.fill),
                     ),
                   ),
                   Positioned(
@@ -154,7 +213,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                             1.0), // Puedes ajustar el color según tus necesidades
                       ),
                       child: IconButton(
-                        onPressed: selectImage,
+                        onPressed: () => _pickImage(),
                         icon: const Icon(Icons.camera),
                         color: const Color.fromARGB(255, 255, 255, 255),
                       ),
