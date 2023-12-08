@@ -13,7 +13,6 @@ class AsignaturaApiService {
     try {
       final response = await http.get(Uri.parse(_baseUrl + endpoint));
       if (response.statusCode == 200) {
-        print(json.decode(response.body));
         final List<dynamic> responseData = json.decode(response.body);
         newList = responseData.map((data) => NewItem.fromJson(data)).toList();
         return newList;
@@ -31,7 +30,6 @@ class AsignaturaApiService {
     try {
       final response = await http.get(Uri.parse(_baseUrl));
       if (response.statusCode == 200) {
-        print(json.decode(response.body));
         final List<dynamic> responseData = json.decode(response.body);
         newList = responseData.map((data) => NewItem.fromJson(data)).toList();
         return newList;
@@ -52,7 +50,7 @@ class NewItem {
 
   factory NewItem.fromJson(Map<String, dynamic> json) {
     return NewItem(
-      id: json['id'],
+      id: json['_id'],
       name: json['name'],
     );
   }

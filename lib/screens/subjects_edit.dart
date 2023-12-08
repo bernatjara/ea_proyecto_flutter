@@ -18,6 +18,7 @@ class _EditSubjectsScreenState extends State<EditSubjectsScreen> {
   late Future<List<NewItem>> futureAsignaturas;
   late List<NewItem> newList = [];
   late List<bool> isCheckedList = [];
+  List<String> a = ['65462bddde9f3b500d1651a0', '65462c0ade9f3b500d1651a3'];
   late bool firstime = true;
 
   @override
@@ -34,19 +35,19 @@ class _EditSubjectsScreenState extends State<EditSubjectsScreen> {
     int i = 0;
     List<String> asignaturas = [];
     while (i < newList.length) {
-      if (isCheckedList[i] = true) {
+      if (isCheckedList[i] == true) {
         asignaturas.add(newList[i].id);
       }
       i++;
     }
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    userApiService.updateUser(
+    final responseData = await userApiService.updateSubjects(
         userId: prefs.getString('id') ?? '',
-        username: prefs.getString('username') ?? '',
+        username: prefs.getString('name') ?? '',
         email: prefs.getString('email') ?? '',
-        password: prefs.getString('password') ?? '',
+        password: '1234', //prefs.getString('password') ?? '',
         newPassword: prefs.getString('password') ?? '',
-        asignatura: asignaturas);
+        asignatura: a);
     Navigator.push(
         context,
         MaterialPageRoute(

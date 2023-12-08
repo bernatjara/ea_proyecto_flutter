@@ -61,19 +61,49 @@ class UserApiService {
     required String email,
     required String password,
     required String newPassword,
-    List<String>? asignatura,
   }) async {
     try {
-      final response = await http.put(
-        Uri.parse('$_baseUrl/$userId'),
-        body: {
-          'name': username,
-          'email': email,
-          'password': password,
-          'newPassword': newPassword,
-          'asignatura': asignatura,
-        },
-      );
+      var data = {
+        'name': username,
+        'email': email,
+        'password': password,
+        'newPassword': newPassword,
+      };
+      final response =
+          await http.put(Uri.parse('$_baseUrl/$userId'), body: data);
+
+      if (response.statusCode == 200) {
+        return json.decode(response.body);
+      } else {
+        throw Exception('Error al actualizar el usuario');
+      }
+    } catch (e) {
+      throw Exception('Error al conectar con el servidor');
+    }
+  }
+
+  Future<Map<String, dynamic>> updateSubjects({
+    required String userId,
+    required String username,
+    required String email,
+    required String password,
+    required String newPassword,
+    List<String>? asignatura,
+  }) async {
+    print('1 $asignatura');
+    try {
+      print('2 $asignatura');
+      var data = {
+        'name': username,
+        'email': email,
+        'password': password,
+        'newPassword': newPassword,
+        'asignatura': jsonEncode(asignatura),
+      };
+      var encodedData = jsonEncode(data);
+      final response =
+          await http.put(Uri.parse('$_baseUrl/$userId'), body: data);
+      print('3 $data');
 
       if (response.statusCode == 200) {
         return json.decode(response.body);
