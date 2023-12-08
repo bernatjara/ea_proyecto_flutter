@@ -18,7 +18,8 @@ class _EditSubjectsScreenState extends State<EditSubjectsScreen> {
   late Future<List<NewItem>> futureAsignaturas;
   late List<NewItem> newList = [];
   late List<bool> isCheckedList = [];
-  List<String> a = ['65462bddde9f3b500d1651a0', '65462c0ade9f3b500d1651a3'];
+  //List<String> a = ['65462bddde9f3b500d1651a0', '65462c0ade9f3b500d1651a3'];
+  List<String> a = ['65462c26de9f3b500d1651a8', '65462c32de9f3b500d1651ab'];
   late bool firstime = true;
 
   @override
@@ -46,7 +47,7 @@ class _EditSubjectsScreenState extends State<EditSubjectsScreen> {
         username: prefs.getString('name') ?? '',
         email: prefs.getString('email') ?? '',
         password: '1234', //prefs.getString('password') ?? '',
-        newPassword: prefs.getString('password') ?? '',
+        newPassword: '1234', //prefs.getString('password') ?? '',
         asignatura: a);
     Navigator.push(
         context,

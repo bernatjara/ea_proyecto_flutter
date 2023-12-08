@@ -98,11 +98,14 @@ class UserApiService {
         'email': email,
         'password': password,
         'newPassword': newPassword,
-        'asignatura': jsonEncode(asignatura),
+        'asignatura': asignatura,
       };
-      var encodedData = jsonEncode(data);
-      final response =
-          await http.put(Uri.parse('$_baseUrl/$userId'), body: data);
+      print(data);
+      Map<String, String> headerContentType = {
+        'Content-Type': 'application/json'
+      };
+      final response = await http.put(Uri.parse('$_baseUrl/$userId'),
+          headers: headerContentType, body: jsonEncode(data));
       print('3 $data');
 
       if (response.statusCode == 200) {
