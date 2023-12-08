@@ -107,7 +107,7 @@ class _NewsScreenState extends State<NewsScreen> {
 
 class NewsItem {
   final String id;
-  final String title;
+  String title;
   final String imageUrl;
   final String content;
 

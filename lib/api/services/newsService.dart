@@ -58,4 +58,31 @@ class NewsApiService {
       throw Exception('Error al conectar amb el servidor');
     }
   }
+
+  Future<Map<String, dynamic>> updateNews(
+      {required String newsId,
+      required String newTitle,
+      required String title,
+      required String imageUrl,
+      required String content}) async {
+    try {
+      final response = await http.put(
+        Uri.parse('$_baseUrl/$newsId'),
+        body: {
+          'newTitle': newTitle,
+          'title': title,
+          'imageUrl': imageUrl,
+          'content': content,
+        },
+      );
+
+      if (response.statusCode == 200) {
+        return json.decode(response.body);
+      } else {
+        throw Exception('Error al actualizar la notícia');
+      }
+    } catch (e) {
+      throw Exception('Error al conectar amb el servidor');
+    }
+  }
 }
