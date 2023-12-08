@@ -85,4 +85,30 @@ class NewsApiService {
       throw Exception('Error al conectar amb el servidor');
     }
   }
+
+  Future<void> addCommentAndRating(
+      String newsId, String comment, double rating) async {
+    try {
+      final response = await http.post(
+        Uri.parse('$_baseUrl/$newsId'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, dynamic>{
+          'comment': comment,
+          'rating': rating,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        // Comment and rating added successfully
+      } else {
+        // Handle the error case
+        print('Error adding comment and rating: ${response.body}');
+      }
+    } catch (e) {
+      // Handle any network or other errors
+      print('Error: $e');
+    }
+  }
 }

@@ -110,12 +110,16 @@ class NewsItem {
   String title;
   final String imageUrl;
   final String content;
+  List<Comment> comments;
+  double averageRating;
 
   NewsItem(
       {required this.id,
       required this.title,
       required this.imageUrl,
-      required this.content});
+      required this.content,
+      required this.comments,
+      required this.averageRating});
 
   factory NewsItem.fromJson(Map<String, dynamic> json) {
     return NewsItem(
@@ -123,6 +127,31 @@ class NewsItem {
       title: json['title'],
       imageUrl: json['imageUrl'],
       content: json['content'],
+      comments: (json['comments'] as List<dynamic>)
+          .map((commentData) => Comment.fromJson(commentData))
+          .toList(),
+      averageRating: json['averageRating'].toDouble(),
+    );
+  }
+}
+
+class Comment {
+  final String username;
+  final String text;
+  final double rating;
+
+  Comment({
+    required this.username,
+    required this.text,
+    required this.rating,
+  });
+
+  // Add a factory method to create a Comment from JSON data
+  factory Comment.fromJson(Map<String, dynamic> json) {
+    return Comment(
+      username: json['username'],
+      text: json['text'],
+      rating: json['rating'].toDouble(),
     );
   }
 }

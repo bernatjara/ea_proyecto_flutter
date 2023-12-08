@@ -1,6 +1,7 @@
 import 'package:ea_proyecto_flutter/screens/news_screen.dart';
 import 'package:ea_proyecto_flutter/screens/news_update_screen.dart';
 import 'package:ea_proyecto_flutter/api/services/newsService.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter/material.dart';
 import '../widgets/navigation_drawer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -13,6 +14,8 @@ class NewsDetailScreen extends StatefulWidget {
 
 class _NewsDetailScreenState extends State<NewsDetailScreen> {
   final NewsApiService newsApiService = NewsApiService();
+  TextEditingController commentController = TextEditingController();
+  double userRating = 0.0;
   String? adminMode = '';
   @override
   void initState() {
@@ -41,6 +44,13 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
         ),
       );
     }
+  }
+
+  Future<void> _addCommentAndRating() async {
+    String comment = commentController.text;
+    double rating = userRating;
+    await newsApiService.addCommentAndRating(widget.news.id, comment, rating);
+    setState(() {});
   }
 
   @override
@@ -139,6 +149,48 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
               widget.news.content,
               style: TextStyle(fontSize: 16),
             ),
+            SizedBox(height: 16),
+            Form(
+              child: Column(
+                children: [
+                  TextFormField(
+                    controller: commentController,
+                    decoration:
+                        InputDecoration(labelText: 'Afegeix un comentari'),
+                  ),
+                  RatingBar.builder(
+                    initialRating: userRating,
+                    minRating: 0,
+                    maxRating: 5,
+                    direction: Axis.horizontal,
+                    allowHalfRating: true,
+                    itemCount: 5,
+                    itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
+                    itemBuilder: (context, _) => Icon(
+                      Icons.star,
+                      color: Colors.amber,
+                    ),
+                    onRatingUpdate: (value) {
+                      setState(() {
+                        userRating = value;
+                      });
+                    },
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      _addCommentAndRating();
+                    },
+                    child: Text('Afegeix el comentari'),
+                  ),
+                ],
+              ),
+            ),
+            if (widget.news.comments.isNotEmpty) ...[
+              Text('Comentaris:'),
+              for (Comment comment in widget.news.comments)
+                Text('${comment.username}: ${comment.text}'),
+            ],
+            Text('Rating midjana: ${widget.news.averageRating}'),
           ],
         ),
       ),
