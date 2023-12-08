@@ -61,6 +61,7 @@ class UserApiService {
     required String email,
     required String password,
     required String newPassword,
+    List<String>? asignatura,
   }) async {
     try {
       final response = await http.put(
@@ -70,6 +71,7 @@ class UserApiService {
           'email': email,
           'password': password,
           'newPassword': newPassword,
+          'asignatura': asignatura,
         },
       );
 

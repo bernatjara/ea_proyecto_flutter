@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import '../widgets/navigation_drawer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ea_proyecto_flutter/api/services/asignaturaService.dart';
+import 'package:ea_proyecto_flutter/api/services/userService.dart';
+import '../api/models/user.dart';
 
 class EditSubjectsScreen extends StatefulWidget {
   @override
@@ -12,6 +14,7 @@ class EditSubjectsScreen extends StatefulWidget {
 
 class _EditSubjectsScreenState extends State<EditSubjectsScreen> {
   final AsignaturaApiService asignaturaApiService = AsignaturaApiService();
+  final UserApiService userApiService = UserApiService();
   late Future<List<NewItem>> futureAsignaturas;
   late List<NewItem> newList = [];
   late List<bool> isCheckedList = [];
@@ -28,6 +31,22 @@ class _EditSubjectsScreenState extends State<EditSubjectsScreen> {
   }
 
   Future<void> _done() async {
+    int i = 0;
+    List<String> asignaturas = [];
+    while (i < newList.length) {
+      if (isCheckedList[i] = true) {
+        asignaturas.add(newList[i].id);
+      }
+      i++;
+    }
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    userApiService.updateUser(
+        userId: prefs.getString('id') ?? '',
+        username: prefs.getString('username') ?? '',
+        email: prefs.getString('email') ?? '',
+        password: prefs.getString('password') ?? '',
+        newPassword: prefs.getString('password') ?? '',
+        asignatura: asignaturas);
     Navigator.push(
         context,
         MaterialPageRoute(
