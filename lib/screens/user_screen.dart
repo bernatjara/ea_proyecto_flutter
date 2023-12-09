@@ -105,12 +105,18 @@ class _UserScreenState extends State<UserScreen> {
               SizedBox(
                 width: 200,
                 child: ElevatedButton(
-                  onPressed: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const UpdateProfileScreen(),
-                    ),
-                  ),
+                  onPressed: () async {
+                    final result = await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const UpdateProfileScreen(),
+                      ),
+                    );
+                    if (result != null && result) {
+                      // Refresh user data if the result is not null and true
+                      _loadUserData();
+                    }
+                  },
                   style: ElevatedButton.styleFrom(
                       backgroundColor: const Color.fromRGBO(0, 125, 204, 1.0),
                       side: BorderSide.none,

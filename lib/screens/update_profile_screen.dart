@@ -128,6 +128,8 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
       });
       SharedPreferences prefs = await SharedPreferences.getInstance();
       prefs.setString('image', _imageUrl!);
+
+      _updateUserImage();
     } catch (e) {
       print('Error uploading image to Cloudinary: $e');
     }
@@ -210,6 +212,31 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
     setState(() {});
   }
 
+  Future<void> _updateUserImage() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String newImage = prefs.getString('image') ?? '';
+    try {
+      await userApiService.updateImage(
+        userId: storedId,
+        username: storedName,
+        email: storedEmail,
+        password: storedPassword,
+        image: newImage,
+      );
+    } catch (e) {
+      // Maneja errores de conexión o cualquier otra excepción
+      // ignore: avoid_print
+      print('Error image: $e');
+      // ignore: use_build_context_synchronously
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Colors.red,
+          content: Text(e.toString()),
+        ),
+      );
+    }
+  }
+
   Future<void> _updateUser() async {
     if (passwordController.text.isEmpty || newPasswordController.text.isEmpty) {
       // Muestra un mensaje de error si algún campo está vacío
@@ -260,7 +287,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          onPressed: () => Navigator.of(context).pop(),
+          onPressed: () => Navigator.pop(context, true),
           icon: const Icon(Icons.arrow_back),
         ),
         title: const Text('Editar perfil'),

@@ -49,8 +49,8 @@ class _LoginScreenState extends State<LoginScreen> {
       final String email = userData['email'];
       final String rol = userData['rol'];
       final String id = userData['_id'];
-      //final String image = userData['image'];
-      String image = '';
+      final String image = userData['image'];
+      //String image = '';
       String adminMode = '';
       SharedPreferences prefs = await SharedPreferences.getInstance();
       prefs.setString('token', token);
