@@ -88,7 +88,6 @@ class UserApiService {
     required String username,
     required String email,
     required String password,
-    required String newPassword,
     List<String>? asignatura,
     String endpoint = '/editAsignaturas',
   }) async {
@@ -97,7 +96,6 @@ class UserApiService {
         'name': username,
         'email': email,
         'password': password,
-        'newPassword': newPassword,
         'asignatura': asignatura,
       };
       print(data);
