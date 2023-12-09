@@ -48,7 +48,7 @@ class _EditSubjectsScreenState extends State<EditSubjectsScreen> {
         email: prefs.getString('email') ?? '',
         password: '1234', //prefs.getString('password') ?? '',
         newPassword: '1234', //prefs.getString('password') ?? '',
-        asignatura: a);
+        asignatura: asignaturas);
     Navigator.push(
         context,
         MaterialPageRoute(

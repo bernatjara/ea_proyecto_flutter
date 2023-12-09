@@ -61,6 +61,7 @@ class UserApiService {
     required String email,
     required String password,
     required String newPassword,
+    String endpoint = '/update',
   }) async {
     try {
       var data = {
@@ -70,7 +71,7 @@ class UserApiService {
         'newPassword': newPassword,
       };
       final response =
-          await http.put(Uri.parse('$_baseUrl/$userId'), body: data);
+          await http.put(Uri.parse('$_baseUrl/$endpoint/$userId'), body: data);
 
       if (response.statusCode == 200) {
         return json.decode(response.body);
@@ -89,6 +90,7 @@ class UserApiService {
     required String password,
     required String newPassword,
     List<String>? asignatura,
+    String endpoint = '/editAsignaturas',
   }) async {
     print('1 $asignatura');
     try {
@@ -104,7 +106,7 @@ class UserApiService {
       Map<String, String> headerContentType = {
         'Content-Type': 'application/json'
       };
-      final response = await http.put(Uri.parse('$_baseUrl/$userId'),
+      final response = await http.put(Uri.parse('$_baseUrl/$endpoint/$userId'),
           headers: headerContentType, body: jsonEncode(data));
       print('3 $data');
 
