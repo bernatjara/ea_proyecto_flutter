@@ -1,5 +1,5 @@
-import 'dart:html';
-
+import 'package:ea_proyecto_flutter/screens/subjects_edit.dart';
+import 'package:ea_proyecto_flutter/widgets/button.dart';
 import 'package:flutter/material.dart';
 import '../widgets/navigation_drawer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -26,9 +26,18 @@ class _SubjectsScreenState extends State<SubjectsScreen> {
     return await asignaturaApiService.GetAsignaturasById(storedId);
   }
 
+  Future<void> _editAsignatures() async {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => EditSubjectsScreen(),
+        ));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: NavBar(),
       appBar: AppBar(
         title: Text('Asignaturas'),
       ),
@@ -44,14 +53,24 @@ class _SubjectsScreenState extends State<SubjectsScreen> {
           } else {
             // If the data has been successfully fetched
             List<NewItem> newList = snapshot.data as List<NewItem>;
-            return ListView.builder(
-              itemCount: newList.length,
-              itemBuilder: (context, index) {
-                return ListTile(
-                  title: Text(newList[index].name),
-                  // Customize the ListTile as needed
-                );
-              },
+            return Column(
+              children: [
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: newList.length,
+                    itemBuilder: (context, index) {
+                      return ListTile(
+                        title: Text(newList[index].name),
+                        // Customize the ListTile as needed
+                      );
+                    },
+                  ),
+                ),
+                MyButton(
+                  onTap: _editAsignatures,
+                  text: 'Editar Asignatures',
+                ),
+              ],
             );
           }
         },

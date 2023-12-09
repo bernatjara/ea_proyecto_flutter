@@ -4,6 +4,7 @@ import '../models/user.dart'; // Encara no està implementat el model
 
 class UserApiService {
   static const String _baseUrl = 'http://localhost:9090/users';
+  //static const String _baseUrl = 'http://192.168.1.37:9090/users';
 
   Future<Map<String, dynamic>> loginUser(
       String username, String password) async {
@@ -60,17 +61,49 @@ class UserApiService {
     required String email,
     required String password,
     required String newPassword,
+    String endpoint = '/update',
   }) async {
     try {
-      final response = await http.put(
-        Uri.parse('$_baseUrl/$userId'),
-        body: {
-          'name': username,
-          'email': email,
-          'password': password,
-          'newPassword': newPassword,
-        },
-      );
+      var data = {
+        'name': username,
+        'email': email,
+        'password': password,
+        'newPassword': newPassword,
+      };
+      final response =
+          await http.put(Uri.parse('$_baseUrl/$endpoint/$userId'), body: data);
+
+      if (response.statusCode == 200) {
+        return json.decode(response.body);
+      } else {
+        throw Exception('Error al actualizar el usuario');
+      }
+    } catch (e) {
+      throw Exception('Error al conectar con el servidor');
+    }
+  }
+
+  Future<Map<String, dynamic>> updateSubjects({
+    required String userId,
+    required String username,
+    required String email,
+    required String password,
+    List<String>? asignatura,
+    String endpoint = '/editAsignaturas',
+  }) async {
+    try {
+      var data = {
+        'name': username,
+        'email': email,
+        'password': password,
+        'asignatura': asignatura,
+      };
+      print(data);
+      Map<String, String> headerContentType = {
+        'Content-Type': 'application/json'
+      };
+      final response = await http.put(Uri.parse('$_baseUrl/$endpoint/$userId'),
+          headers: headerContentType, body: jsonEncode(data));
 
       if (response.statusCode == 200) {
         return json.decode(response.body);
