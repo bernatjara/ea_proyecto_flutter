@@ -20,6 +20,7 @@ dependencies:
   cloudinary_flutter: ^1.0.0
   cloudinary_url_gen: ^1.0.0
   flutter_dotenv: ^5.0.2
+  flutter_rating_bar: ^4.0.0
 
 dev_dependencies:
   flutter_test:

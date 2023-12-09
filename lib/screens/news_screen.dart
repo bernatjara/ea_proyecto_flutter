@@ -27,10 +27,9 @@ class _NewsScreenState extends State<NewsScreen> {
     adminMode = prefs.getString('adminMode');
     try {
       final List<dynamic> response = await newsApiService.readNews();
-
       // Mapea la respuesta a objetos NewsItem
       newsList = response.map((data) => NewsItem.fromJson(data)).toList();
-
+      print(newsList);
       // Notifica al framework que el estado ha cambiado
       setState(() {});
     } catch (e) {
@@ -110,19 +109,47 @@ class NewsItem {
   String title;
   final String imageUrl;
   final String content;
+  List<Comment> comments;
+  List<dynamic> ratings;
 
   NewsItem(
       {required this.id,
       required this.title,
       required this.imageUrl,
-      required this.content});
+      required this.content,
+      required this.comments,
+      required this.ratings});
 
   factory NewsItem.fromJson(Map<String, dynamic> json) {
     return NewsItem(
-      id: json['_id'],
-      title: json['title'],
-      imageUrl: json['imageUrl'],
-      content: json['content'],
+        id: json['_id'],
+        title: json['title'],
+        imageUrl: json['imageUrl'],
+        content: json['content'],
+        ratings: json['ratings'],
+        comments: (json['comments'] as List<dynamic>)
+            .map((commentData) => Comment.fromJson(commentData))
+            .toList());
+  }
+}
+
+class Comment {
+  final String? username;
+  final String? text;
+  final double? rating;
+
+  Comment({
+    required this.username,
+    required this.text,
+    required this.rating,
+  });
+
+  // Add a factory method to create a Comment from JSON data
+  factory Comment.fromJson(Map<String, dynamic> json) {
+    return Comment(
+      username: json['username'],
+      text: json['text'],
+      rating: json['rating'].toDouble(),
     );
   }
 }

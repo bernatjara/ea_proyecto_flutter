@@ -1,6 +1,7 @@
 import 'package:ea_proyecto_flutter/screens/news_screen.dart';
 import 'package:ea_proyecto_flutter/screens/news_update_screen.dart';
 import 'package:ea_proyecto_flutter/api/services/newsService.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter/material.dart';
 import '../widgets/navigation_drawer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -13,7 +14,12 @@ class NewsDetailScreen extends StatefulWidget {
 
 class _NewsDetailScreenState extends State<NewsDetailScreen> {
   final NewsApiService newsApiService = NewsApiService();
+  TextEditingController commentController = TextEditingController();
+  double userRating = 0.0;
   String? adminMode = '';
+  String? username = '';
+  double ratingsSum = 0.0;
+  double averageRating = 0.0;
   @override
   void initState() {
     _loadNewsData();
@@ -23,7 +29,9 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
   Future<void> _loadNewsData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     adminMode = prefs.getString('adminMode');
-
+    username = prefs.getString('name');
+    ratingsSum = widget.news.ratings.reduce((sum, rating) => sum + rating);
+    averageRating = ratingsSum / widget.news.ratings.length;
     setState(() {});
   }
 
@@ -41,6 +49,14 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
         ),
       );
     }
+  }
+
+  Future<void> _addCommentAndRating() async {
+    String text = commentController.text;
+    double rating = userRating;
+    String id = widget.news.id;
+    await newsApiService.addCommentAndRating(id, text, rating, username);
+    setState(() {});
   }
 
   @override
@@ -138,6 +154,82 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
             Text(
               widget.news.content,
               style: TextStyle(fontSize: 16),
+            ),
+            SizedBox(height: 16),
+            Form(
+              child: Column(
+                children: [
+                  TextFormField(
+                    controller: commentController,
+                    decoration:
+                        InputDecoration(labelText: 'Afegeix un comentari'),
+                  ),
+                  RatingBar.builder(
+                    initialRating: userRating,
+                    minRating: 0,
+                    maxRating: 5,
+                    direction: Axis.horizontal,
+                    allowHalfRating: true,
+                    itemCount: 5,
+                    itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
+                    itemBuilder: (context, _) => Icon(
+                      Icons.star,
+                      color: Colors.amber,
+                    ),
+                    onRatingUpdate: (value) {
+                      setState(() {
+                        userRating = value;
+                      });
+                    },
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      _addCommentAndRating();
+                    },
+                    child: Text('Afegeix el comentari'),
+                  ),
+                ],
+              ),
+            ),
+            if (widget.news.comments.isNotEmpty) ...[
+              SizedBox(height: 16),
+              Text('Comentaris:',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              SizedBox(height: 8),
+              Container(
+                height: 200, // Ajusta según sea necesario
+                child: ListView.builder(
+                  itemCount: widget.news.comments.length,
+                  itemBuilder: (context, index) {
+                    Comment comment = widget.news.comments[index];
+                    return Card(
+                      elevation: 3,
+                      margin: EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text('${comment.username}: ${comment.text}'),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
+            SizedBox(height: 16),
+            Container(
+              padding: EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: Colors
+                    .blue[100], // Ajusta el color según tu paleta de colores
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Row(
+                children: [
+                  Icon(Icons.star, color: Colors.amber),
+                  SizedBox(width: 8),
+                  Text('Valoració mitjana: $averageRating',
+                      style: TextStyle(fontSize: 18)),
+                ],
+              ),
             ),
           ],
         ),
