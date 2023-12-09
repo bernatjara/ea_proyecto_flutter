@@ -16,6 +16,7 @@ class _UserScreenState extends State<UserScreen> {
   String storedName = '';
   String storedEmail = '';
   String storedRol = '';
+  String storedImage = '';
 
   @override
   void initState() {
@@ -31,6 +32,7 @@ class _UserScreenState extends State<UserScreen> {
         ''; // Puedes establecer un valor predeterminado si es nulo
     storedEmail = prefs.getString('email') ?? '';
     storedRol = prefs.getString('rol') ?? '';
+    storedImage = prefs.getString('image') ?? '';
 
     // Notifica al framework que el estado ha cambiado, para que se actualice en la pantalla
     setState(() {});
@@ -63,9 +65,15 @@ class _UserScreenState extends State<UserScreen> {
                     height: 120,
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(100),
-                      child: const Image(
-                          image: AssetImage(
-                              '')), // Hay que poner la imagen de pefil
+                      child: storedImage == ''
+                          ? const Image(
+                              image: NetworkImage(
+                                  'https://sbcf.fr/wp-content/uploads/2018/03/sbcf-default-avatar.png'),
+                            )
+                          : Image.network(
+                              storedImage,
+                              fit: BoxFit.fill,
+                            ),
                     ),
                   ),
                   Positioned(
@@ -97,12 +105,18 @@ class _UserScreenState extends State<UserScreen> {
               SizedBox(
                 width: 200,
                 child: ElevatedButton(
-                  onPressed: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const UpdateProfileScreen(),
-                    ),
-                  ),
+                  onPressed: () async {
+                    final result = await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const UpdateProfileScreen(),
+                      ),
+                    );
+                    if (result != null && result) {
+                      // Refresh user data if the result is not null and true
+                      _loadUserData();
+                    }
+                  },
                   style: ElevatedButton.styleFrom(
                       backgroundColor: const Color.fromRGBO(0, 125, 204, 1.0),
                       side: BorderSide.none,

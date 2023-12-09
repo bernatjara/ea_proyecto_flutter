@@ -1,6 +1,14 @@
+import 'dart:io';
+import 'dart:typed_data';
+
+import 'package:cloudinary/cloudinary.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:ea_proyecto_flutter/api/services/userService.dart';
+import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:image_picker/image_picker.dart';
+
+import '../api/services/userService.dart';
 import '../screens/user_screen.dart';
 
 class UpdateProfileScreen extends StatefulWidget {
@@ -16,6 +24,13 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
   String storedRol = '';
   String storedPassword = '';
   String storedId = '';
+  String storedImage = '';
+
+  File? _imageFile;
+  Uint8List webImage = Uint8List(8);
+  String? _imageUrl;
+
+  Cloudinary? cloudinary;
 
   // api controller
   final UserApiService userApiService = UserApiService();
@@ -28,11 +43,156 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
   bool isNewPasswordVisible = false;
   bool isPasswordVisible = false;
 
+  /* Uint8List? _image; */
+
   @override
   void initState() {
     super.initState();
+    cloudinary = Cloudinary.signedConfig(
+      apiKey: '248635653313453',
+      apiSecret: 'mATgE6us-MJeNRGD29Y-dkR9tE0',
+      cloudName: 'db2guqknt',
+    );
     _loadUserData();
   }
+
+  /* void selectImage() async {
+    Uint8List img = await pickImage(ImageSource.gallery);
+    setState(() {
+      _image = img;
+    });
+  } */
+
+  Future<void> _pickImage() async {
+    if (!kIsWeb) {
+      final ImagePicker picker = ImagePicker();
+      XFile? pickedFile = await picker.pickImage(source: ImageSource.gallery);
+      if (pickedFile != null) {
+        var selected = File(pickedFile.path);
+        setState(() {
+          _imageFile = selected;
+        });
+        _uploadImage();
+      } else {
+        print('No ha triat imatge');
+        return;
+      }
+    } else if (kIsWeb) {
+      final ImagePicker picker = ImagePicker();
+      XFile? pickedFile = await picker.pickImage(source: ImageSource.gallery);
+      if (pickedFile != null) {
+        var f = await pickedFile.readAsBytes();
+        setState(() {
+          webImage = f;
+          _imageFile = File('a');
+        });
+        _uploadImage();
+      } else {
+        print('No ha triat imatge');
+        return;
+      }
+    } else {
+      print('Algo no va');
+      return;
+    }
+  }
+
+  Future<void> _uploadImage() async {
+    try {
+      CloudinaryResponse response;
+
+      if (_imageFile != null && !kIsWeb) {
+        // If the image is of type File (non-web)
+        response = await cloudinary!.upload(
+          file: _imageFile!.path,
+          resourceType: CloudinaryResourceType.image,
+          folder: 'profile',
+        );
+      } else if (kIsWeb) {
+        // If the image is of type web
+        response = await cloudinary!.upload(
+          fileBytes: webImage,
+          resourceType: CloudinaryResourceType.image,
+          folder: 'profile',
+        );
+      } else {
+        print('Algo no va');
+        return;
+      }
+
+      setState(() {
+        _imageUrl = response.secureUrl;
+        print('devuelve la URL: $_imageUrl');
+      });
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.setString('image', _imageUrl!);
+
+      _updateUserImage();
+    } catch (e) {
+      print('Error uploading image to Cloudinary: $e');
+    }
+  }
+
+  /* Future<void> _uploadImage() async {
+    final url = Uri.parse('https://api.cloudinary.com/v1_1/db2guqknt/upload');
+
+    final request = http.MultipartRequest('POST', url)
+      ..fields['upload_preset'] = 'a6oj9aow'
+      ..files.add(await http.MultipartFile.fromPath('file', _imageFile!.path));
+    final response = await request.send();
+    if (response.statusCode == 200) {
+      final responseData = await response.stream.toBytes();
+      final responseString = String.fromCharCodes(responseData);
+      final jsonMap = jsonDecode(responseString);
+      setState(() {
+        final url = jsonMap['url'];
+        _imageUrl = url;
+      });
+    }
+  } */
+
+  /* Future<void> _uploadImage() async {
+    final url = Uri.parse('https://api.cloudinary.com/v1_1/db2guqknt/upload');
+
+    http.Response response;
+
+    try {
+      if (kIsWeb) {
+        final httpResponse = await http.post(
+          url,
+          body: {'file': base64Encode(webImage), 'upload_preset': 'a6oj9aow'},
+        );
+
+        response = httpResponse; // Assign the web response directly
+      } else {
+        final request = http.MultipartRequest('POST', url)
+          ..fields['upload_preset'] = 'a6oj9aow'
+          ..files
+              .add(await http.MultipartFile.fromPath('file', _imageFile!.path));
+
+        final streamedResponse = await request.send();
+        final responseBytes = await streamedResponse.stream.toBytes();
+        final responseString = String.fromCharCodes(responseBytes);
+
+        response = http.Response(responseString, streamedResponse.statusCode);
+      }
+
+      if (response.statusCode == 200) {
+        final responseData = await response.bodyBytes;
+        final responseString = String.fromCharCodes(responseData);
+        final jsonMap = jsonDecode(responseString);
+        setState(() {
+          final url = jsonMap['url'];
+          _imageUrl = url;
+        });
+      } else {
+        print('Error uploading image: ${response.statusCode}');
+        print(response.body);
+      }
+    } catch (e) {
+      print('Error uploading image: $e');
+    }
+  }*/
 
   Future<void> _loadUserData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -44,9 +204,35 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
     storedEmail = prefs.getString('email') ?? '';
     storedPassword = prefs.getString('password') ?? '';
     storedId = prefs.getString('id') ?? '';
+    storedImage = prefs.getString('image') ?? '';
 
     // Notifica al framework que el estado ha cambiado, para que se actualice en la pantalla
     setState(() {});
+  }
+
+  Future<void> _updateUserImage() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String newImage = prefs.getString('image') ?? '';
+    try {
+      await userApiService.updateImage(
+        userId: storedId,
+        username: storedName,
+        email: storedEmail,
+        password: storedPassword,
+        image: newImage,
+      );
+    } catch (e) {
+      // Maneja errores de conexión o cualquier otra excepción
+      // ignore: avoid_print
+      print('Error image: $e');
+      // ignore: use_build_context_synchronously
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Colors.red,
+          content: Text(e.toString()),
+        ),
+      );
+    }
   }
 
   Future<void> _updateUser() async {
@@ -99,8 +285,8 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          onPressed: () => Navigator.of(context).pop(),
-          icon: const Icon(Icons.arrow_left),
+          onPressed: () => Navigator.pop(context, true),
+          icon: const Icon(Icons.arrow_back),
         ),
         title: const Text('Editar perfil'),
         backgroundColor: const Color.fromRGBO(0, 125, 204, 1.0),
@@ -118,9 +304,25 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                     height: 120,
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(100),
-                      child: const Image(
-                        image: AssetImage('assets/profile_image.png'),
-                      ),
+                      child: _imageFile == null && storedImage == ''
+                          ? const Image(
+                              image: NetworkImage(
+                                  'https://sbcf.fr/wp-content/uploads/2018/03/sbcf-default-avatar.png'),
+                            )
+                          : storedImage != ''
+                              ? Image.network(
+                                  storedImage,
+                                  fit: BoxFit.fill,
+                                )
+                              : kIsWeb
+                                  ? Image.memory(
+                                      webImage,
+                                      fit: BoxFit.fill,
+                                    )
+                                  : Image.file(
+                                      _imageFile!,
+                                      fit: BoxFit.fill,
+                                    ),
                     ),
                   ),
                   Positioned(
@@ -134,9 +336,10 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                         color: const Color.fromRGBO(0, 125, 204,
                             1.0), // Puedes ajustar el color según tus necesidades
                       ),
-                      child: const Icon(
-                        Icons.camera,
-                        color: Color.fromARGB(255, 255, 255, 255),
+                      child: IconButton(
+                        onPressed: () => _pickImage(),
+                        icon: const Icon(Icons.camera),
+                        color: const Color.fromARGB(255, 255, 255, 255),
                       ),
                     ),
                   ),

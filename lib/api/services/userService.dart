@@ -64,14 +64,15 @@ class UserApiService {
     String endpoint = '/update',
   }) async {
     try {
-      var data = {
-        'name': username,
-        'email': email,
-        'password': password,
-        'newPassword': newPassword,
-      };
-      final response =
-          await http.put(Uri.parse('$_baseUrl/$endpoint/$userId'), body: data);
+      final response = await http.put(
+        Uri.parse('$_baseUrl/update/$userId'),
+        body: {
+          'name': username,
+          'email': email,
+          'password': password,
+          'newPassword': newPassword,
+        },
+      );
 
       if (response.statusCode == 200) {
         return json.decode(response.body);
@@ -98,12 +99,39 @@ class UserApiService {
         'password': password,
         'asignatura': asignatura,
       };
-      print(data);
       Map<String, String> headerContentType = {
         'Content-Type': 'application/json'
       };
       final response = await http.put(Uri.parse('$_baseUrl/$endpoint/$userId'),
           headers: headerContentType, body: jsonEncode(data));
+
+      if (response.statusCode == 200) {
+        return json.decode(response.body);
+      } else {
+        throw Exception('Error al actualizar el usuario');
+      }
+    } catch (e) {
+      throw Exception('Error al conectar con el servidor');
+    }
+  }
+
+  Future<Map<String, dynamic>> updateImage({
+    required String userId,
+    required String username,
+    required String email,
+    required String password,
+    required String image,
+  }) async {
+    try {
+      final response = await http.put(
+        Uri.parse('$_baseUrl/updateImage/$userId'),
+        body: {
+          'name': username,
+          'email': email,
+          'password': password,
+          'image': image,
+        },
+      );
 
       if (response.statusCode == 200) {
         return json.decode(response.body);
