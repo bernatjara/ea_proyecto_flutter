@@ -17,6 +17,9 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
   TextEditingController commentController = TextEditingController();
   double userRating = 0.0;
   String? adminMode = '';
+  String? username = '';
+  double ratingsSum = 0.0;
+  double averageRating = 0.0;
   @override
   void initState() {
     _loadNewsData();
@@ -26,7 +29,9 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
   Future<void> _loadNewsData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     adminMode = prefs.getString('adminMode');
-
+    username = prefs.getString('name');
+    ratingsSum = widget.news.ratings.reduce((sum, rating) => sum + rating);
+    averageRating = ratingsSum / widget.news.ratings.length;
     setState(() {});
   }
 
@@ -47,9 +52,10 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
   }
 
   Future<void> _addCommentAndRating() async {
-    String comment = commentController.text;
+    String text = commentController.text;
     double rating = userRating;
-    await newsApiService.addCommentAndRating(widget.news.id, comment, rating);
+    String id = widget.news.id;
+    await newsApiService.addCommentAndRating(id, text, rating, username);
     setState(() {});
   }
 
@@ -186,11 +192,45 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
               ),
             ),
             if (widget.news.comments.isNotEmpty) ...[
-              Text('Comentaris:'),
-              for (Comment comment in widget.news.comments)
-                Text('${comment.username}: ${comment.text}'),
+              SizedBox(height: 16),
+              Text('Comentaris:',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              SizedBox(height: 8),
+              Container(
+                height: 200, // Ajusta según sea necesario
+                child: ListView.builder(
+                  itemCount: widget.news.comments.length,
+                  itemBuilder: (context, index) {
+                    Comment comment = widget.news.comments[index];
+                    return Card(
+                      elevation: 3,
+                      margin: EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text('${comment.username}: ${comment.text}'),
+                      ),
+                    );
+                  },
+                ),
+              ),
             ],
-            Text('Rating midjana: ${widget.news.averageRating}'),
+            SizedBox(height: 16),
+            Container(
+              padding: EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: Colors
+                    .blue[100], // Ajusta el color según tu paleta de colores
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Row(
+                children: [
+                  Icon(Icons.star, color: Colors.amber),
+                  SizedBox(width: 8),
+                  Text('Valoració mitjana: $averageRating',
+                      style: TextStyle(fontSize: 18)),
+                ],
+              ),
+            ),
           ],
         ),
       ),

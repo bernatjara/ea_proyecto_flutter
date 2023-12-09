@@ -27,10 +27,9 @@ class _NewsScreenState extends State<NewsScreen> {
     adminMode = prefs.getString('adminMode');
     try {
       final List<dynamic> response = await newsApiService.readNews();
-
       // Mapea la respuesta a objetos NewsItem
       newsList = response.map((data) => NewsItem.fromJson(data)).toList();
-
+      print(newsList);
       // Notifica al framework que el estado ha cambiado
       setState(() {});
     } catch (e) {
@@ -111,7 +110,7 @@ class NewsItem {
   final String imageUrl;
   final String content;
   List<Comment> comments;
-  double averageRating;
+  List<dynamic> ratings;
 
   NewsItem(
       {required this.id,
@@ -119,26 +118,25 @@ class NewsItem {
       required this.imageUrl,
       required this.content,
       required this.comments,
-      required this.averageRating});
+      required this.ratings});
 
   factory NewsItem.fromJson(Map<String, dynamic> json) {
     return NewsItem(
-      id: json['_id'],
-      title: json['title'],
-      imageUrl: json['imageUrl'],
-      content: json['content'],
-      comments: (json['comments'] as List<dynamic>)
-          .map((commentData) => Comment.fromJson(commentData))
-          .toList(),
-      averageRating: json['averageRating'].toDouble(),
-    );
+        id: json['_id'],
+        title: json['title'],
+        imageUrl: json['imageUrl'],
+        content: json['content'],
+        ratings: json['ratings'],
+        comments: (json['comments'] as List<dynamic>)
+            .map((commentData) => Comment.fromJson(commentData))
+            .toList());
   }
 }
 
 class Comment {
-  final String username;
-  final String text;
-  final double rating;
+  final String? username;
+  final String? text;
+  final double? rating;
 
   Comment({
     required this.username,
