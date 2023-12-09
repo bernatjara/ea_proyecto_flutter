@@ -32,7 +32,6 @@ class NewsApiService {
       final response = await http.get(
         Uri.parse(_baseUrl),
       );
-
       if (response.statusCode == 200) {
         return json.decode(response.body);
       } else {

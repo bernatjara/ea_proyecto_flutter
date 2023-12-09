@@ -56,6 +56,21 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
     double rating = userRating;
     String id = widget.news.id;
     await newsApiService.addCommentAndRating(id, text, rating, username);
+    widget.news.comments
+        .add(Comment(username: username, text: text, rating: rating));
+    widget.news.ratings.add(rating);
+
+    // Recalcula el promedio de calificaciones
+    ratingsSum = widget.news.ratings.reduce((sum, rating) => sum + rating);
+    averageRating = ratingsSum / widget.news.ratings.length;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Comentario añadido exitosamente'),
+        duration: Duration(seconds: 2),
+      ),
+    );
+    // Limpia el controlador de comentarios
+    commentController.clear();
     setState(() {});
   }
 
