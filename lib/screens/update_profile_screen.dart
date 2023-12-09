@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:cloudinary/cloudinary.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -11,7 +12,6 @@ import 'package:http/http.dart' as http;
 
 import '../api/services/userService.dart';
 import '../screens/user_screen.dart';
-import '../utils/image.dart';
 
 class UpdateProfileScreen extends StatefulWidget {
   const UpdateProfileScreen({super.key});
@@ -26,10 +26,13 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
   String storedRol = '';
   String storedPassword = '';
   String storedId = '';
+  String storedImage = '';
 
   File? _imageFile;
   Uint8List webImage = Uint8List(8);
   String? _imageUrl;
+
+  Cloudinary? cloudinary;
 
   // api controller
   final UserApiService userApiService = UserApiService();
@@ -47,6 +50,11 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
   @override
   void initState() {
     super.initState();
+    cloudinary = Cloudinary.signedConfig(
+      apiKey: '248635653313453',
+      apiSecret: 'mATgE6us-MJeNRGD29Y-dkR9tE0',
+      cloudName: 'db2guqknt',
+    );
     _loadUserData();
   }
 
@@ -66,6 +74,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
         setState(() {
           _imageFile = selected;
         });
+        _uploadImage();
       } else {
         print('No ha triat imatge');
         return;
@@ -79,6 +88,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
           webImage = f;
           _imageFile = File('a');
         });
+        _uploadImage();
       } else {
         print('No ha triat imatge');
         return;
@@ -90,6 +100,40 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
   }
 
   Future<void> _uploadImage() async {
+    try {
+      CloudinaryResponse response;
+
+      if (_imageFile != null && !kIsWeb) {
+        // If the image is of type File (non-web)
+        response = await cloudinary!.upload(
+          file: _imageFile!.path,
+          resourceType: CloudinaryResourceType.image,
+          folder: 'profile',
+        );
+      } else if (kIsWeb) {
+        // If the image is of type web
+        response = await cloudinary!.upload(
+          fileBytes: webImage,
+          resourceType: CloudinaryResourceType.image,
+          folder: 'profile',
+        );
+      } else {
+        print('Algo no va');
+        return;
+      }
+
+      setState(() {
+        _imageUrl = response.secureUrl;
+        print('devuelve la URL: $_imageUrl');
+      });
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.setString('image', _imageUrl!);
+    } catch (e) {
+      print('Error uploading image to Cloudinary: $e');
+    }
+  }
+
+  /* Future<void> _uploadImage() async {
     final url = Uri.parse('https://api.cloudinary.com/v1_1/db2guqknt/upload');
 
     final request = http.MultipartRequest('POST', url)
@@ -105,7 +149,50 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
         _imageUrl = url;
       });
     }
-  }
+  } */
+
+  /* Future<void> _uploadImage() async {
+    final url = Uri.parse('https://api.cloudinary.com/v1_1/db2guqknt/upload');
+
+    http.Response response;
+
+    try {
+      if (kIsWeb) {
+        final httpResponse = await http.post(
+          url,
+          body: {'file': base64Encode(webImage), 'upload_preset': 'a6oj9aow'},
+        );
+
+        response = httpResponse; // Assign the web response directly
+      } else {
+        final request = http.MultipartRequest('POST', url)
+          ..fields['upload_preset'] = 'a6oj9aow'
+          ..files
+              .add(await http.MultipartFile.fromPath('file', _imageFile!.path));
+
+        final streamedResponse = await request.send();
+        final responseBytes = await streamedResponse.stream.toBytes();
+        final responseString = String.fromCharCodes(responseBytes);
+
+        response = http.Response(responseString, streamedResponse.statusCode);
+      }
+
+      if (response.statusCode == 200) {
+        final responseData = await response.bodyBytes;
+        final responseString = String.fromCharCodes(responseData);
+        final jsonMap = jsonDecode(responseString);
+        setState(() {
+          final url = jsonMap['url'];
+          _imageUrl = url;
+        });
+      } else {
+        print('Error uploading image: ${response.statusCode}');
+        print(response.body);
+      }
+    } catch (e) {
+      print('Error uploading image: $e');
+    }
+  }*/
 
   Future<void> _loadUserData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -117,6 +204,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
     storedEmail = prefs.getString('email') ?? '';
     storedPassword = prefs.getString('password') ?? '';
     storedId = prefs.getString('id') ?? '';
+    storedImage = prefs.getString('image') ?? '';
 
     // Notifica al framework que el estado ha cambiado, para que se actualice en la pantalla
     setState(() {});
@@ -191,14 +279,25 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                     height: 120,
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(100),
-                      child: _imageFile == null
+                      child: _imageFile == null && storedImage == ''
                           ? const Image(
                               image: NetworkImage(
                                   'https://sbcf.fr/wp-content/uploads/2018/03/sbcf-default-avatar.png'),
                             )
-                          : kIsWeb
-                              ? Image.memory(webImage, fit: BoxFit.fill)
-                              : Image.file(_imageFile!, fit: BoxFit.fill),
+                          : storedImage != ''
+                              ? Image.network(
+                                  storedImage,
+                                  fit: BoxFit.fill,
+                                )
+                              : kIsWeb
+                                  ? Image.memory(
+                                      webImage,
+                                      fit: BoxFit.fill,
+                                    )
+                                  : Image.file(
+                                      _imageFile!,
+                                      fit: BoxFit.fill,
+                                    ),
                     ),
                   ),
                   Positioned(
