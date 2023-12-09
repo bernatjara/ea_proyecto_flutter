@@ -92,9 +92,7 @@ class UserApiService {
     List<String>? asignatura,
     String endpoint = '/editAsignaturas',
   }) async {
-    print('1 $asignatura');
     try {
-      print('2 $asignatura');
       var data = {
         'name': username,
         'email': email,
@@ -108,7 +106,6 @@ class UserApiService {
       };
       final response = await http.put(Uri.parse('$_baseUrl/$endpoint/$userId'),
           headers: headerContentType, body: jsonEncode(data));
-      print('3 $data');
 
       if (response.statusCode == 200) {
         return json.decode(response.body);
