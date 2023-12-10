@@ -76,20 +76,17 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    bool isNewsDetailScreen = true;
     return Scaffold(
       drawer: NavBar(),
       appBar: AppBar(
         title: Text('Notícies'),
         backgroundColor: Color.fromRGBO(0, 125, 204, 1.0),
-        leading: isNewsDetailScreen
-            ? IconButton(
-                icon: Icon(Icons.arrow_back),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-              )
-            : null,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
         actions: [
           if (adminMode == '1')
             Row(
@@ -166,9 +163,14 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 16),
-            Text(
-              widget.news.content,
-              style: TextStyle(fontSize: 16),
+            Container(
+              height: 200, // Ajusta según sea necesario
+              child: SingleChildScrollView(
+                child: Text(
+                  widget.news.content,
+                  style: TextStyle(fontSize: 16),
+                ),
+              ),
             ),
             SizedBox(height: 16),
             Form(
@@ -212,7 +214,7 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
               SizedBox(height: 8),
               Container(
-                height: 200, // Ajusta según sea necesario
+                height: 150, // Ajusta según sea necesario
                 child: ListView.builder(
                   itemCount: widget.news.comments.length,
                   itemBuilder: (context, index) {
