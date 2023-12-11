@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:html';
 import 'package:http/http.dart' as http;
 //import '../models/user.dart'; // Encara no està implementat el model
 
@@ -90,6 +91,7 @@ class UserApiService {
     required String email,
     required String password,
     List<String>? asignatura,
+    required String token,
     String endpoint = '/editAsignaturas',
   }) async {
     try {
@@ -99,11 +101,12 @@ class UserApiService {
         'password': password,
         'asignatura': asignatura,
       };
-      Map<String, String> headerContentType = {
-        'Content-Type': 'application/json'
-      };
       final response = await http.put(Uri.parse('$_baseUrl/$endpoint/$userId'),
-          headers: headerContentType, body: jsonEncode(data));
+          headers: {
+            'Content-Type': 'application/json',
+            'token': token, 
+          },
+          body: jsonEncode(data));
 
       if (response.statusCode == 200) {
         return json.decode(response.body);

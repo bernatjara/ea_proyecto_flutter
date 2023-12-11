@@ -6,10 +6,13 @@ class NewsApiService {
   static const String _baseUrl = 'http://localhost:9191/news';
   //static const String _baseUrl = 'http://192.168.1.140:9191/news';
 
-  Future<void> createNews(String title, String imageUrl, String content) async {
+  Future<void> createNews(String title, String imageUrl, String content, String token) async {
     try {
       final response = await http.post(
         Uri.parse(_baseUrl),
+        headers: {
+          'token': token,
+        },
         body: {
           'title': title,
           'imageUrl': imageUrl,
