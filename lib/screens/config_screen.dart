@@ -1,23 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/cupertino.dart';
-import '../auth/login_or_register.dart';
+import '../widgets/navigation_drawer.dart';
+import '../main.dart';
 
-void main() async {
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Mi App',
-      theme: ThemeData.light(), // Establece el tema inicial
-      darkTheme: ThemeData.dark(), // Establece el tema oscuro
-      home: LoginOrRegister(),
-    );
-  }
-}
 class ConfigurationScreen extends StatefulWidget {
   @override
   _ConfigurationScreenState createState() => _ConfigurationScreenState();
@@ -56,13 +42,25 @@ class _ConfigurationScreenState extends State<ConfigurationScreen> {
     setState(() {
       darkMode = prefs.getString('darkMode') ?? '0';
     });
+     _updateTheme();
   }
-
+  void _updateTheme() {
+    bool isDarkModeEnabled = darkMode == '1';
+    if (isDarkModeEnabled) {
+      // Si darkMode está activado, establecer el tema oscuro
+      MyApp.setTheme(context, ThemeData.dark());
+    } else {
+      // Si darkMode está desactivado, establecer el tema claro
+      MyApp.setTheme(context, ThemeData.light());
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: NavBar(),
       appBar: AppBar(
         title: Text('Configuració'),
+        backgroundColor: const Color.fromRGBO(0, 125, 204, 1.0),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

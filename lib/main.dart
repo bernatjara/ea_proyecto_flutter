@@ -7,14 +7,32 @@ void main() async {
   runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class MyApp extends StatefulWidget {
+  @override
+  _MyAppState createState() => _MyAppState();
+
+  static setTheme(BuildContext context, ThemeData theme) {
+    _MyAppState state = context.findAncestorStateOfType<_MyAppState>()!;
+    state.setTheme(theme);
+  }
+}
+
+class _MyAppState extends State<MyApp> {
+  ThemeData _currentTheme = ThemeData.light();
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
+      title: 'Mi App',
+      theme: _currentTheme,
       home: LoginOrRegister(),
+      debugShowCheckedModeBanner: false,
     );
+  }
+
+  void setTheme(ThemeData theme) {
+    setState(() {
+      _currentTheme = theme;
+    });
   }
 }

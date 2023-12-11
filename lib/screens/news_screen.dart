@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:ea_proyecto_flutter/screens/news_create_screen.dart';
+import '../widgets/news_item_card.dart';
 
 class NewsScreen extends StatefulWidget {
   @override
@@ -44,7 +45,7 @@ class _NewsScreenState extends State<NewsScreen> {
     }
   }
 
-  @override
+  /*@override
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: NavBar(),
@@ -101,8 +102,47 @@ class _NewsScreenState extends State<NewsScreen> {
         },
       ),
     );
+  }*/
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      drawer: NavBar(),
+      appBar: AppBar(
+        title: Text('Notícies'),
+        backgroundColor: Color.fromRGBO(0, 125, 204, 1.0),
+        actions: [
+          if (adminMode == '1')
+            IconButton(
+              icon: Icon(Icons.add),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => CreateNewsScreen(),
+                  ),
+                );
+              },
+            ),
+        ],
+      ),
+      body: _buildNewsList(),
+    );
+  }
+
+  Widget _buildNewsList() {
+    if (newsList == null) {
+      return Center(child: CircularProgressIndicator());
+    } else {
+      return ListView.builder(
+        itemCount: newsList.length,
+        itemBuilder: (context, index) {
+          return NewsItemCard(news: newsList[index]);
+        },
+      );
+    }
   }
 }
+
 
 class NewsItem {
   final String id;

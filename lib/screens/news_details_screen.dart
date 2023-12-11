@@ -1,6 +1,7 @@
 import 'package:ea_proyecto_flutter/screens/news_screen.dart';
 import 'package:ea_proyecto_flutter/screens/news_update_screen.dart';
 import 'package:ea_proyecto_flutter/api/services/newsService.dart';
+import 'package:ea_proyecto_flutter/widgets/news_header.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter/material.dart';
 import '../widgets/navigation_drawer.dart';
@@ -156,54 +157,37 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Image.network(widget.news.imageUrl, height: 200, fit: BoxFit.cover),
-            SizedBox(height: 16),
-            Text(
-              widget.news.title,
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(height: 16),
-            Container(
-              height: 200, // Ajusta según sea necesario
-              child: SingleChildScrollView(
-                child: Text(
-                  widget.news.content,
-                  style: TextStyle(fontSize: 16),
+            NewsHeader(news: widget.news),
+          Form(
+            child: Column(
+              children: [
+                TextFormField(
+                  controller: commentController,
+                  decoration: InputDecoration(labelText: 'Afegeix un comentari'),
                 ),
-              ),
-            ),
-            SizedBox(height: 16),
-            Form(
-              child: Column(
-                children: [
-                  TextFormField(
-                    controller: commentController,
-                    decoration:
-                        InputDecoration(labelText: 'Afegeix un comentari'),
+                RatingBar.builder(
+                  initialRating: userRating,
+                  minRating: 0,
+                  maxRating: 5,
+                  direction: Axis.horizontal,
+                  allowHalfRating: true,
+                  itemCount: 5,
+                  itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
+                  itemBuilder: (context, _) => Icon(
+                    Icons.star,
+                    color: Colors.amber,
                   ),
-                  RatingBar.builder(
-                    initialRating: userRating,
-                    minRating: 0,
-                    maxRating: 5,
-                    direction: Axis.horizontal,
-                    allowHalfRating: true,
-                    itemCount: 5,
-                    itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
-                    itemBuilder: (context, _) => Icon(
-                      Icons.star,
-                      color: Colors.amber,
-                    ),
-                    onRatingUpdate: (value) {
-                      setState(() {
-                        userRating = value;
-                      });
-                    },
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      _addCommentAndRating();
-                    },
-                    child: Text('Afegeix el comentari'),
+                  onRatingUpdate: (value) {
+                    setState(() {
+                      userRating = value;
+                    });
+                  },
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    _addCommentAndRating();
+                  },
+                  child: Text('Afegeix el comentari'),
                   ),
                 ],
               ),
