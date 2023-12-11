@@ -1,11 +1,11 @@
 import 'package:ea_proyecto_flutter/screens/subjects_screen.dart';
 import 'package:ea_proyecto_flutter/widgets/button.dart';
 import 'package:flutter/material.dart';
-import '../widgets/navigation_drawer.dart';
+//import '../widgets/navigation_drawer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ea_proyecto_flutter/api/services/asignaturaService.dart';
 import 'package:ea_proyecto_flutter/api/services/userService.dart';
-import '../api/models/user.dart';
+//import '../api/models/user.dart';
 
 class EditSubjectsScreen extends StatefulWidget {
   @override
@@ -40,7 +40,7 @@ class _EditSubjectsScreenState extends State<EditSubjectsScreen> {
       i++;
     }
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    final responseData = await userApiService.updateSubjects(
+    await userApiService.updateSubjects(
         userId: prefs.getString('id') ?? '',
         username: prefs.getString('name') ?? '',
         email: prefs.getString('email') ?? '',

@@ -1,4 +1,4 @@
-import 'package:ea_proyecto_flutter/screens/news_details_screen.dart';
+//import 'package:ea_proyecto_flutter/screens/news_details_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:ea_proyecto_flutter/api/services/newsService.dart';
 import '../screens/news_screen.dart';

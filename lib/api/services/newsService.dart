@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import '../models/news.dart'; // Encara no està implementat el model
+//import '../models/news.dart'; // Encara no està implementat el model
 
 class NewsApiService {
   static const String _baseUrl = 'http://localhost:9191/news';

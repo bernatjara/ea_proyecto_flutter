@@ -1,10 +1,10 @@
-import 'package:ea_proyecto_flutter/screens/news_details_screen.dart';
+//import 'package:ea_proyecto_flutter/screens/news_details_screen.dart';
 import 'package:ea_proyecto_flutter/api/services/newsService.dart';
 import 'package:flutter/material.dart';
 import '../widgets/navigation_drawer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
+//import 'package:http/http.dart' as http;
+//import 'dart:convert';
 import 'package:ea_proyecto_flutter/screens/news_create_screen.dart';
 import '../widgets/news_item_card.dart';
 
@@ -130,9 +130,6 @@ class _NewsScreenState extends State<NewsScreen> {
   }
 
   Widget _buildNewsList() {
-    if (newsList == null) {
-      return Center(child: CircularProgressIndicator());
-    } else {
       return ListView.builder(
         itemCount: newsList.length,
         itemBuilder: (context, index) {
@@ -141,7 +138,7 @@ class _NewsScreenState extends State<NewsScreen> {
       );
     }
   }
-}
+
 
 
 class NewsItem {
