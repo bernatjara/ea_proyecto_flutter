@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 
 class NewsApiService {
   static const String _baseUrl = 'http://localhost:9191/news';
-  //static const String _baseUrl = 'http://192.168.1.140:9090/news';
+  //static const String _baseUrl = 'http://192.168.1.140:9191/news';
 
   Future<void> createNews(String title, String imageUrl, String content) async {
     try {

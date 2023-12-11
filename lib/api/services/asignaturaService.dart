@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 
 class AsignaturaApiService {
   static const String _baseUrl = 'http://localhost:9191/asignaturas';
-  //static const String _baseUrl = 'http://192.168.1.140:9090/asignaturas';
+  //static const String _baseUrl = 'http://192.168.1.140:9191/asignaturas';
 
   Future<List<NewItem>> GetAsignaturasById(String id) async {
     String endpoint = '/user/$id';

@@ -23,7 +23,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Mi App',
+      title: 'EETAC App',
       theme: _currentTheme,
       home: LoginOrRegister(),
       debugShowCheckedModeBanner: false,
