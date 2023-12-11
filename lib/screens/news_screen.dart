@@ -29,7 +29,6 @@ class _NewsScreenState extends State<NewsScreen> {
       final List<dynamic> response = await newsApiService.readNews();
       // Mapea la respuesta a objetos NewsItem
       newsList = response.map((data) => NewsItem.fromJson(data)).toList();
-      print(newsList);
       // Notifica al framework que el estado ha cambiado
       setState(() {});
     } catch (e) {
