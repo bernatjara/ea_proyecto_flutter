@@ -1,52 +1,79 @@
+import 'package:ea_proyecto_flutter/api/models/schedule.dart';
 import 'package:flutter/material.dart';
 import 'package:timetable_view/timetable_view.dart';
+import 'package:ea_proyecto_flutter/api/services/asignaturaService.dart';
+import 'package:ea_proyecto_flutter/api/services/scheduleService.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-void main() => runApp(ScheduleScreen2());
-
-class ScheduleScreen2 extends StatelessWidget {
+class ScheduleScreen2 extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter TimeTable View Demo',
-      theme: ThemeData(primarySwatch: Colors.blue),
-      home: MyHomePage(),
-    );
+  _ScheduleScreenState createState() => _ScheduleScreenState();
+}
+
+class _ScheduleScreenState extends State<ScheduleScreen2> {
+  final AsignaturaApiService asignaturaApiService = AsignaturaApiService();
+  final ScheduleApiService scheduleApiService = ScheduleApiService();
+  late Future<List<NewItem>> futureAsignaturas;
+  late Future<List<NewSchedule>> futureSchedules;
+
+  @override
+  void initState() {
+    futureAsignaturas = _getasignaturas();
+    futureSchedules = _getSchedules(asignaturaId)
+    super.initState();
   }
-}
 
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key? key}) : super(key: key);
+  Future<List<NewItem>> _getasignaturas() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String storedId = prefs.getString('id') ?? '';
+    return await asignaturaApiService.GetAsignaturasById(storedId);
+  }
 
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
+  Future<List<NewSchedule>> _getSchedules(String asignaturaId) async {
+    return await scheduleApiService.GetSchedulesById(asignaturaId);
+  }
 
-class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Flutter Timetable View Demo'),
-      ),
-      body: TimetableView(
-        laneEventsList: _buildLaneEvents(),
-        onEventTap: onEventTapCallBack,
-        timetableStyle: TimetableStyle(),
-        onEmptySlotTap: onTimeSlotTappedCallBack,
-      ),
-    );
+        appBar: AppBar(
+          title: Text('Horari'),
+        ),
+        body: FutureBuilder(
+            future: Future.wait([futureAsignaturas, futureSchedules]),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                // While waiting for the data to be fetched
+                return Center(child: CircularProgressIndicator());
+              } else if (snapshot.hasError) {
+                // If there's an error
+                return Center(child: Text('Error: ${snapshot.error}'));
+              } else {
+                // If the data has been successfully fetched
+                List<NewItem> newList = snapshot.data?[0] as List<NewItem>;
+                List<NewSchedule> newSchedule =
+                    snapshot.data?[1] as List<NewSchedule>;
+                return TimetableView(
+                  laneEventsList: _buildLaneEvents(newList, newSchedule),
+                  onEventTap: onEventTapCallBack,
+                  timetableStyle: TimetableStyle(),
+                  onEmptySlotTap: onTimeSlotTappedCallBack,
+                );
+              }
+            }));
   }
 
-  List<LaneEvents> _buildLaneEvents() {
+  List<LaneEvents> _buildLaneEvents(
+      List<NewItem> newList, List<NewSchedule> newSchedule) {
     return [
       LaneEvents(
         lane: Lane(name: 'Lunes', laneIndex: 1),
         events: [
           TableEvent(
-            title: 'An event 1',
+            title: newList[1].name,
             eventId: 11,
-            startTime: TableEventTime(hour: 8, minute: 0),
-            endTime: TableEventTime(hour: 10, minute: 0),
+            startTime: TableEventTime(hour: newSchedule[1].start, minute: 0),
+            endTime: TableEventTime(hour: newSchedule[1].finish, minute: 0),
             laneIndex: 1,
           ),
           TableEvent(
@@ -71,7 +98,7 @@ class _MyHomePageState extends State<MyHomePage> {
         ],
       ),
       LaneEvents(
-        lane: Lane(name: 'Miercoles', laneIndex: 2),
+        lane: Lane(name: 'Miercoles', laneIndex: 3),
         events: [
           TableEvent(
             title: 'An event 3',
@@ -83,7 +110,7 @@ class _MyHomePageState extends State<MyHomePage> {
         ],
       ),
       LaneEvents(
-        lane: Lane(name: 'Jueves', laneIndex: 2),
+        lane: Lane(name: 'Jueves', laneIndex: 4),
         events: [
           TableEvent(
             title: 'An event 3',
@@ -95,7 +122,7 @@ class _MyHomePageState extends State<MyHomePage> {
         ],
       ),
       LaneEvents(
-        lane: Lane(name: 'Viernes', laneIndex: 2),
+        lane: Lane(name: 'Viernes', laneIndex: 5),
         events: [
           TableEvent(
             title: 'An event 3',

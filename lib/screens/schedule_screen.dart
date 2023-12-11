@@ -47,27 +47,39 @@ class CalendarAppointment extends State<ScheduleScreen> {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        body: SafeArea(
-          child: SfCalendar(
-            dataSource: _dataSource,
-            view: CalendarView.week,
-            allowedViews: const [
-              CalendarView.day,
-              CalendarView.week,
-              CalendarView.workWeek,
-              CalendarView.month,
-              CalendarView.timelineDay,
-              CalendarView.timelineWeek,
-              CalendarView.timelineWorkWeek,
-              CalendarView.timelineMonth,
-              CalendarView.schedule
-            ],
-            onViewChanged: viewChanged,
-            specialRegions: _specialTimeRegion,
-          ),
-        ),
-      ),
+      home: FutureBuilder(
+          future: futureAsignaturas,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              // While waiting for the data to be fetched
+              return Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              // If there's an error
+              return Center(child: Text('Error: ${snapshot.error}'));
+            } else {
+              // If the data has been successfully fetched
+              List<NewItem> newList = snapshot.data as List<NewItem>;
+              return SafeArea(
+                child: SfCalendar(
+                  dataSource: _dataSource,
+                  view: CalendarView.week,
+                  allowedViews: const [
+                    CalendarView.day,
+                    CalendarView.week,
+                    CalendarView.workWeek,
+                    CalendarView.month,
+                    CalendarView.timelineDay,
+                    CalendarView.timelineWeek,
+                    CalendarView.timelineWorkWeek,
+                    CalendarView.timelineMonth,
+                    CalendarView.schedule
+                  ],
+                  onViewChanged: viewChanged,
+                  specialRegions: _specialTimeRegion,
+                ),
+              );
+            }
+          }),
     );
   }
 
@@ -126,6 +138,7 @@ class CalendarAppointment extends State<ScheduleScreen> {
   void _getSubjectCollection() async {
     futureAsignaturas = _getasignaturas();
     newList = await futureAsignaturas;
+    _subjectCollection.add(newList[1].name);
     _subjectCollection.add('General Meeting');
     _subjectCollection.add('Plan Execution');
     _subjectCollection.add('Project Plan');
@@ -135,8 +148,7 @@ class CalendarAppointment extends State<ScheduleScreen> {
     _subjectCollection.add('Scrum');
     _subjectCollection.add('Project Completion');
     _subjectCollection.add('Release updates');
-    _subjectCollection.add('Performance Check');
-    //_subjectCollection.add(newList[1].name);
+    //_subjectCollection.add('Performance Check');
   }
 
   void _getStartTimeCollection() {

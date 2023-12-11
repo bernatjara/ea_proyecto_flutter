@@ -47,13 +47,21 @@ class ScheduleApiService {
 class NewSchedule {
   final String id;
   final String name;
+  final int start;
+  final int finish;
 
-  NewSchedule({required this.id, required this.name});
+  NewSchedule(
+      {required this.id,
+      required this.name,
+      required this.start,
+      required this.finish});
 
   factory NewSchedule.fromJson(Map<String, dynamic> json) {
     return NewSchedule(
       id: json['_id'],
       name: json['name'],
+      start: json['start'],
+      finish: json['finish'],
     );
   }
 }
