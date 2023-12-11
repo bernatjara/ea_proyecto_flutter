@@ -91,7 +91,7 @@ class _NavBarScreenState extends State<NavBar> {
               title: Text('Activitats'),
               onTap: () => Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => ActivitiesScreen()),
+                MaterialPageRoute(builder: (context) => MapScreen()),
               ),
             ),
           ),
