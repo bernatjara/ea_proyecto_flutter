@@ -4,6 +4,7 @@ import '../widgets/navigation_drawer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../widgets/profile_menu_widget.dart';
 import 'package:ea_proyecto_flutter/screens/login_screen.dart';
+import '../screens/config_screen.dart';
 
 class UserScreen extends StatefulWidget {
   const UserScreen({super.key});
@@ -133,8 +134,13 @@ class _UserScreenState extends State<UserScreen> {
               //MENU
               ProfileMenuWidget(
                 title: "Configuració",
-                icon: Icons.settings,
-                onPress: () {},
+  icon: Icons.settings,
+  onPress: () {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => ConfigurationScreen()),
+    );
+  },
               ),
 
               const Divider(), // Linea separatopria

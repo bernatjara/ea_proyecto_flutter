@@ -12,8 +12,8 @@ class NavBar extends StatefulWidget {
 class _NavBarScreenState extends State<NavBar> {
   String storedName = '';
   String storedEmail = '';
-  String storedRol = '';
-  String adminMode = '';
+  //String storedRol = '';
+  //String adminMode = '';
 
   @override
   void initState() {
@@ -27,8 +27,8 @@ class _NavBarScreenState extends State<NavBar> {
     storedName = prefs.getString('name') ??
         ''; // Puedes establecer un valor predeterminado si es nulo
     storedEmail = prefs.getString('email') ?? '';
-    storedRol = prefs.getString('rol') ?? '';
-    adminMode = prefs.getString('adminMode') ?? '';
+    //storedRol = prefs.getString('rol') ?? '';
+    //adminMode = prefs.getString('adminMode') ?? '';
     // Notifica al framework que el estado ha cambiado, para que se actualice en la pantalla
     setState(() {});
   }
@@ -82,7 +82,7 @@ class _NavBarScreenState extends State<NavBar> {
                 MaterialPageRoute(builder: (context) => SubjectsScreen()),
               ),
             ),
-          ),
+          ),/*
           if (storedRol == 'admin')
             Padding(
               padding: const EdgeInsets.only(left: 25.0),
@@ -98,7 +98,7 @@ class _NavBarScreenState extends State<NavBar> {
                       adminMode = prefs.getString('adminMode') ?? '0';
                     });
                   }),
-            ),
+            ),*/
         ],
       ),
     );
