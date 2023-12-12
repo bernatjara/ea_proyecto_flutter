@@ -25,7 +25,9 @@ class _ScheduleScreenState extends State<ScheduleScreen2> {
   Future<void> _initializeData() async {
     futureAsignaturas = _getasignaturas();
     List<NewItem> asignaturas = await futureAsignaturas;
-    futureSchedules = _getSchedules(asignaturas[0].id);
+    setState(() {
+      futureSchedules = _getSchedules(asignaturas[0].id);
+    });
     print(asignaturas[0].name);
     print(futureSchedules);
   }
@@ -33,43 +35,11 @@ class _ScheduleScreenState extends State<ScheduleScreen2> {
   Future<List<NewItem>> _getasignaturas() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String storedId = prefs.getString('id') ?? '';
-    return asignaturaApiService.GetAsignaturasById(storedId);
+    return await asignaturaApiService.GetAsignaturasById(storedId);
   }
 
   Future<List<NewSchedule>> _getSchedules(String asignaturaId) async {
     return await scheduleApiService.GetSchedulesById(asignaturaId);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: Text('Horari'),
-        ),
-        body: FutureBuilder(
-            future: Future.wait([futureAsignaturas, futureSchedules]),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                // While waiting for the data to be fetched
-                return Center(child: CircularProgressIndicator());
-              } else if (snapshot.hasError) {
-                // If there's an error
-                return Center(child: Text('Error: ${snapshot.error}'));
-              } else {
-                print('ayuda');
-                // If the data has been successfully fetched
-                List<NewItem> newList = snapshot.data?[0] as List<NewItem>;
-                List<NewSchedule> newSchedule =
-                    snapshot.data?[1] as List<NewSchedule>;
-                print('ayuda2');
-                return TimetableView(
-                  laneEventsList: _buildLaneEvents(newList, newSchedule),
-                  onEventTap: onEventTapCallBack,
-                  timetableStyle: TimetableStyle(),
-                  onEmptySlotTap: onTimeSlotTappedCallBack,
-                );
-              }
-            }));
   }
 
   List<LaneEvents> _buildLaneEvents(
@@ -155,5 +125,37 @@ class _ScheduleScreenState extends State<ScheduleScreen2> {
       int laneIndex, TableEventTime start, TableEventTime end) {
     print(
         "Empty Slot Clicked !! LaneIndex: $laneIndex StartHour: ${start.hour} EndHour: ${end.hour}");
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(
+          title: Text('Horari'),
+        ),
+        body: FutureBuilder(
+            future: Future.wait([futureAsignaturas, futureSchedules]),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                // While waiting for the data to be fetched
+                return Center(child: CircularProgressIndicator());
+              } else if (snapshot.hasError) {
+                // If there's an error
+                return Center(child: Text('Error: ${snapshot.error}'));
+              } else {
+                print('ayuda');
+                // If the data has been successfully fetched
+                List<NewItem> newList = snapshot.data?[0] as List<NewItem>;
+                List<NewSchedule> newSchedule =
+                    snapshot.data?[1] as List<NewSchedule>;
+                print('ayuda2');
+                return TimetableView(
+                  laneEventsList: _buildLaneEvents(newList, newSchedule),
+                  onEventTap: onEventTapCallBack,
+                  timetableStyle: TimetableStyle(),
+                  onEmptySlotTap: onTimeSlotTappedCallBack,
+                );
+              }
+            }));
   }
 }
