@@ -55,20 +55,20 @@ class MapScreen extends StatelessWidget {
           MarkerLayer(
             markers: initMarkers()
           ),
-          /*PopupMarkerLayer(
+          PopupMarkerLayer(
             options: PopupMarkerLayerOptions(
               markers: markerslist,
               popupController: PopupController(),
-              popupWidgetBuilder: (BuildContext context, Marker marker) {
+              selectedMarkerBuilder: (BuildContext context, Marker marker) {
                 return Container(
-                  width: 200,
-                  height: 100,
+                  width: 500,
+                  height: 500,
                   color: Colors.white,
-                  child: Text('Información del Marcador'),
+                  child: Text('Fórum Aerotelecom 14 de Maig'),
                 );
               },
             ),
-          ),*/
+          ),
         ],
       ),
     );
