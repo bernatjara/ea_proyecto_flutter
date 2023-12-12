@@ -7,16 +7,20 @@ class NewsApiService {
   static const String _baseUrl = 'http://localhost:9191/news';
   //static const String _baseUrl = 'http://192.168.1.140:9191/news';
 
-  Future<void> createNews(String title, String imageUrl, String content) async {
+  Future<void> createNews(
+      String title, String imageUrl, String content, String token) async {
     try {
-      final response = await http.post(
-        Uri.parse(_baseUrl),
-        body: {
-          'title': title,
-          'imageUrl': imageUrl,
-          'content': content,
-        },
-      );
+      var data = {
+        'title': title,
+        'imageUrl': imageUrl,
+        'content': content,
+      };
+      Map<String, String> headerContentType = {
+        'Content-Type': 'application/json',
+        'Authorization': token,
+      };
+      final response = await http.post(Uri.parse(_baseUrl),
+          headers: headerContentType, body: jsonEncode(data));
 
       if (response.statusCode == 200) {
         return json.decode(response.body);
@@ -43,11 +47,16 @@ class NewsApiService {
     }
   }
 
-  Future<String> deleteNews(String id) async {
+  Future<String> deleteNews(String id, String token) async {
     try {
+      Map<String, String> headerContentType = {
+        'Content-Type': 'application/json',
+        'Authorization': token,
+      };
       String endpoint = '/$id';
       final response = await http.delete(
         Uri.parse(_baseUrl + endpoint),
+        headers: headerContentType,
       );
 
       if (response.statusCode == 200) {
@@ -60,22 +69,27 @@ class NewsApiService {
     }
   }
 
-  Future<Map<String, dynamic>> updateNews(
-      {required String newsId,
-      required String newTitle,
-      required String title,
-      required String imageUrl,
-      required String content}) async {
+  Future<Map<String, dynamic>> updateNews({
+    required String newsId,
+    required String newTitle,
+    required String title,
+    required String imageUrl,
+    required String content,
+    required String token,
+  }) async {
     try {
-      final response = await http.put(
-        Uri.parse('$_baseUrl/$newsId'),
-        body: {
-          'newTitle': newTitle,
-          'title': title,
-          'imageUrl': imageUrl,
-          'content': content,
-        },
-      );
+      var data = {
+        'newTitle': newTitle,
+        'title': title,
+        'imageUrl': imageUrl,
+        'content': content,
+      };
+      Map<String, String> headerContentType = {
+        'Content-Type': 'application/json',
+        'Authorization': token,
+      };
+      final response = await http.put(Uri.parse('$_baseUrl/$newsId'),
+          headers: headerContentType, body: jsonEncode(data));
 
       if (response.statusCode == 200) {
         return json.decode(response.body);
@@ -87,20 +101,20 @@ class NewsApiService {
     }
   }
 
-  Future<void> addCommentAndRating(
-      String newsId, String text, double rating, String? username) async {
+  Future<void> addCommentAndRating(String newsId, String text, double rating,
+      String? username, String token) async {
     try {
-      final response = await http.post(
-        Uri.parse('$_baseUrl/$newsId'),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-        body: jsonEncode(<String, dynamic>{
-          'username': username,
-          'text': text,
-          'rating': rating,
-        }),
-      );
+      var data = {
+        'username': username,
+        'text': text,
+        'rating': rating,
+      };
+      Map<String, String> headerContentType = {
+        'Content-Type': 'application/json',
+        'Authorization': token,
+      };
+      final response = await http.post(Uri.parse('$_baseUrl/$newsId'),
+          headers: headerContentType, body: jsonEncode(data));
 
       if (response.statusCode == 200) {
         // Comment and rating added successfully

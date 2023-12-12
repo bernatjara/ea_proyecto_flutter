@@ -19,6 +19,7 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
   double userRating = 0.0;
   String? adminMode = '';
   String? username = '';
+  String token = '';
   double ratingsSum = 0.0;
   double averageRating = 0.0;
   @override
@@ -31,6 +32,7 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     adminMode = prefs.getString('adminMode');
     username = prefs.getString('name');
+    token = prefs.getString('token') ?? '';
     ratingsSum = widget.news.ratings.reduce((sum, rating) => sum + rating);
     averageRating = ratingsSum / widget.news.ratings.length;
     setState(() {});
@@ -39,7 +41,7 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
   Future<void> _deleteNewsData() async {
     String id = widget.news.id;
     try {
-      await newsApiService.deleteNews(id);
+      await newsApiService.deleteNews(id, token);
     } catch (e) {
       print('Error: $e');
       // ignore: use_build_context_synchronously
@@ -56,7 +58,7 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
     String text = commentController.text;
     double rating = userRating;
     String id = widget.news.id;
-    await newsApiService.addCommentAndRating(id, text, rating, username);
+    await newsApiService.addCommentAndRating(id, text, rating, username, token);
     widget.news.comments
         .add(Comment(username: username, text: text, rating: rating));
     widget.news.ratings.add(rating);
@@ -158,36 +160,37 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             NewsHeader(news: widget.news),
-          Form(
-            child: Column(
-              children: [
-                TextFormField(
-                  controller: commentController,
-                  decoration: InputDecoration(labelText: 'Afegeix un comentari'),
-                ),
-                RatingBar.builder(
-                  initialRating: userRating,
-                  minRating: 0,
-                  maxRating: 5,
-                  direction: Axis.horizontal,
-                  allowHalfRating: true,
-                  itemCount: 5,
-                  itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
-                  itemBuilder: (context, _) => Icon(
-                    Icons.star,
-                    color: Colors.amber,
+            Form(
+              child: Column(
+                children: [
+                  TextFormField(
+                    controller: commentController,
+                    decoration:
+                        InputDecoration(labelText: 'Afegeix un comentari'),
                   ),
-                  onRatingUpdate: (value) {
-                    setState(() {
-                      userRating = value;
-                    });
-                  },
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    _addCommentAndRating();
-                  },
-                  child: Text('Afegeix el comentari'),
+                  RatingBar.builder(
+                    initialRating: userRating,
+                    minRating: 0,
+                    maxRating: 5,
+                    direction: Axis.horizontal,
+                    allowHalfRating: true,
+                    itemCount: 5,
+                    itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
+                    itemBuilder: (context, _) => Icon(
+                      Icons.star,
+                      color: Colors.amber,
+                    ),
+                    onRatingUpdate: (value) {
+                      setState(() {
+                        userRating = value;
+                      });
+                    },
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      _addCommentAndRating();
+                    },
+                    child: Text('Afegeix el comentari'),
                   ),
                 ],
               ),

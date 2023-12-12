@@ -25,6 +25,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
   String storedPassword = '';
   String storedId = '';
   String storedImage = '';
+  String token = '';
 
   File? _imageFile;
   Uint8List webImage = Uint8List(8);
@@ -205,6 +206,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
     storedPassword = prefs.getString('password') ?? '';
     storedId = prefs.getString('id') ?? '';
     storedImage = prefs.getString('image') ?? '';
+    token = prefs.getString('token') ?? '';
 
     // Notifica al framework que el estado ha cambiado, para que se actualice en la pantalla
     setState(() {});
@@ -220,6 +222,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
         email: storedEmail,
         password: storedPassword,
         image: newImage,
+        token: token,
       );
     } catch (e) {
       // Maneja errores de conexión o cualquier otra excepción
@@ -253,6 +256,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
         email: storedEmail,
         password: passwordController.text,
         newPassword: newPasswordController.text,
+        token: token,
       );
 
       final String password = responseData['password'];

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:cloudinary/cloudinary.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/foundation.dart';
-//import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:io';
 import 'package:dotted_border/dotted_border.dart';
 import '../widgets/text_widget.dart';
@@ -48,13 +48,11 @@ class _CreateNewsScreenState extends State<CreateNewsScreen> {
       );
       return;
     }
-
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String token = prefs.getString('token') ?? '';
     try {
       await newsApiService.createNews(
-        titleController.text,
-        _imageUrl!,
-        contentController.text,
-      );
+          titleController.text, _imageUrl!, contentController.text, token);
       // La noticia se creó correctamente, puedes mostrar un mensaje y luego navegar de regreso a NewsScreen
       showDialog(
         context: context,

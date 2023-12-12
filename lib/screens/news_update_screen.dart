@@ -1,6 +1,7 @@
 //import 'package:ea_proyecto_flutter/screens/news_details_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:ea_proyecto_flutter/api/services/newsService.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../screens/news_screen.dart';
 
 class NewsUpdateScreen extends StatefulWidget {
@@ -27,6 +28,8 @@ class _NewsUpdateScreenState extends State<NewsUpdateScreen> {
   }
 
   Future<void> _updateNews() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String token = prefs.getString('token') ?? '';
     if (newTitleController.text.isEmpty) {
       title = widget.news.title;
     } else {
@@ -49,6 +52,7 @@ class _NewsUpdateScreenState extends State<NewsUpdateScreen> {
         title: widget.news.title,
         imageUrl: imageUrl,
         content: content,
+        token: token,
       );
       widget.news.title = title;
       Navigator.pushReplacement(
