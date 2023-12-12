@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:flutter_map/src/layer/marker_layer.dart';
+import 'package:flutter_map_marker_popup/flutter_map_marker_popup.dart';
 
-import 'package:flutter/material.dart';
-import 'package:flutter_map/flutter_map.dart';
-import 'package:latlong2/latlong.dart';
+
 
 
 class MyApp extends StatelessWidget {
@@ -18,9 +16,22 @@ class MyApp extends StatelessWidget {
 }
 
 class MapScreen extends StatelessWidget {
+  var markerslist;
   final String mapboxAccessToken =
       'pk.eyJ1Ijoiam9yZGlwaWUiLCJhIjoiY2xxMTI4dHE4MDRrejJycGszdjZ2MTFxYiJ9.ns79MsPOeQ9_0drgrsYPEw';
-
+  initMarkers(){
+    markerslist=[];
+    markerslist.add(Marker(width: 30.0,
+                height: 30.0,
+                point: LatLng(41.275556, 1.986944),
+                builder: (ctx) => const Icon(
+                
+                    Icons.location_pin,
+                    color: Colors.red,
+                  ),
+                ),);
+                return markerslist;
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,8 +51,8 @@ class MapScreen extends StatelessWidget {
               'id': 'mapbox/streets-v11', // Puedes cambiar el estilo del mapa aquí
             },
           ),
-          /*MarkerLayer(
-            markers: [
+          MarkerLayer(
+            markers: initMarkers()/*[
               Marker(
                 width: 30.0,
                 height: 30.0,
@@ -53,6 +64,21 @@ class MapScreen extends StatelessWidget {
                   ),
                 ),
               ),
+            ],*/
+          ),
+         /* PopupMarkerLayerOptions(
+            markers: [
+              PopupMarker(
+                marker: markers[0],
+                popupBuilder: (BuildContext context, Marker marker) {
+                  return Container(
+                    width: 200,
+                    height: 100,
+                    color: Colors.white,
+                    child: Text('Información del Marcador'),
+                  );
+                },
+              ),
             ],
           ),*/
         ],
@@ -60,6 +86,10 @@ class MapScreen extends StatelessWidget {
     );
   }
 }
+  
+
+
+
 
 
 /*
