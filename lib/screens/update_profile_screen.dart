@@ -133,67 +133,6 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
     }
   }
 
-  /* Future<void> _uploadImage() async {
-    final url = Uri.parse('https://api.cloudinary.com/v1_1/db2guqknt/upload');
-
-    final request = http.MultipartRequest('POST', url)
-      ..fields['upload_preset'] = 'a6oj9aow'
-      ..files.add(await http.MultipartFile.fromPath('file', _imageFile!.path));
-    final response = await request.send();
-    if (response.statusCode == 200) {
-      final responseData = await response.stream.toBytes();
-      final responseString = String.fromCharCodes(responseData);
-      final jsonMap = jsonDecode(responseString);
-      setState(() {
-        final url = jsonMap['url'];
-        _imageUrl = url;
-      });
-    }
-  } */
-
-  /* Future<void> _uploadImage() async {
-    final url = Uri.parse('https://api.cloudinary.com/v1_1/db2guqknt/upload');
-
-    http.Response response;
-
-    try {
-      if (kIsWeb) {
-        final httpResponse = await http.post(
-          url,
-          body: {'file': base64Encode(webImage), 'upload_preset': 'a6oj9aow'},
-        );
-
-        response = httpResponse; // Assign the web response directly
-      } else {
-        final request = http.MultipartRequest('POST', url)
-          ..fields['upload_preset'] = 'a6oj9aow'
-          ..files
-              .add(await http.MultipartFile.fromPath('file', _imageFile!.path));
-
-        final streamedResponse = await request.send();
-        final responseBytes = await streamedResponse.stream.toBytes();
-        final responseString = String.fromCharCodes(responseBytes);
-
-        response = http.Response(responseString, streamedResponse.statusCode);
-      }
-
-      if (response.statusCode == 200) {
-        final responseData = await response.bodyBytes;
-        final responseString = String.fromCharCodes(responseData);
-        final jsonMap = jsonDecode(responseString);
-        setState(() {
-          final url = jsonMap['url'];
-          _imageUrl = url;
-        });
-      } else {
-        print('Error uploading image: ${response.statusCode}');
-        print(response.body);
-      }
-    } catch (e) {
-      print('Error uploading image: $e');
-    }
-  }*/
-
   Future<void> _loadUserData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 

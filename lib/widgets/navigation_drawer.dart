@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ea_proyecto_flutter/screens/news_screen.dart';
 import 'package:ea_proyecto_flutter/screens/subjects_screen.dart';
+import 'package:ea_proyecto_flutter/screens/group_screen.dart';
 
 class NavBar extends StatefulWidget {
   @override
@@ -82,7 +83,19 @@ class _NavBarScreenState extends State<NavBar> {
                 MaterialPageRoute(builder: (context) => SubjectsScreen()),
               ),
             ),
-          ),/*
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 25.0),
+            child: ListTile(
+              leading: Icon(Icons.chat),
+              title: Text('Xat'),
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => GroupsScreen()),
+              ),
+            ),
+          ),
+          /*
           if (storedRol == 'admin')
             Padding(
               padding: const EdgeInsets.only(left: 25.0),
