@@ -12,21 +12,28 @@ class ScheduleScreen2 extends StatefulWidget {
 
 class _ScheduleScreenState extends State<ScheduleScreen2> {
   final AsignaturaApiService asignaturaApiService = AsignaturaApiService();
-  final ScheduleApiService scheduleApiService = ScheduleApiService();
   late Future<List<NewItem>> futureAsignaturas;
-  late Future<List<NewSchedule>> futureSchedules;
+  late Future<List<NewSchedule>> futureSchedules = Future.value([]);
+  final ScheduleApiService scheduleApiService = ScheduleApiService();
 
   @override
   void initState() {
-    futureAsignaturas = _getasignaturas();
-    futureSchedules = _getSchedules(asignaturaId)
+    _initializeData();
     super.initState();
+  }
+
+  Future<void> _initializeData() async {
+    futureAsignaturas = _getasignaturas();
+    List<NewItem> asignaturas = await futureAsignaturas;
+    futureSchedules = _getSchedules(asignaturas[0].id);
+    print(asignaturas[0].name);
+    print(futureSchedules);
   }
 
   Future<List<NewItem>> _getasignaturas() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String storedId = prefs.getString('id') ?? '';
-    return await asignaturaApiService.GetAsignaturasById(storedId);
+    return asignaturaApiService.GetAsignaturasById(storedId);
   }
 
   Future<List<NewSchedule>> _getSchedules(String asignaturaId) async {
@@ -49,10 +56,12 @@ class _ScheduleScreenState extends State<ScheduleScreen2> {
                 // If there's an error
                 return Center(child: Text('Error: ${snapshot.error}'));
               } else {
+                print('ayuda');
                 // If the data has been successfully fetched
                 List<NewItem> newList = snapshot.data?[0] as List<NewItem>;
                 List<NewSchedule> newSchedule =
                     snapshot.data?[1] as List<NewSchedule>;
+                print('ayuda2');
                 return TimetableView(
                   laneEventsList: _buildLaneEvents(newList, newSchedule),
                   onEventTap: onEventTapCallBack,
@@ -65,15 +74,16 @@ class _ScheduleScreenState extends State<ScheduleScreen2> {
 
   List<LaneEvents> _buildLaneEvents(
       List<NewItem> newList, List<NewSchedule> newSchedule) {
+    print(newList);
     return [
       LaneEvents(
         lane: Lane(name: 'Lunes', laneIndex: 1),
         events: [
           TableEvent(
-            title: newList[1].name,
+            title: newList[0].name,
             eventId: 11,
-            startTime: TableEventTime(hour: newSchedule[1].start, minute: 0),
-            endTime: TableEventTime(hour: newSchedule[1].finish, minute: 0),
+            startTime: TableEventTime(hour: newSchedule[0].start, minute: 0),
+            endTime: TableEventTime(hour: newSchedule[0].finish, minute: 0),
             laneIndex: 1,
           ),
           TableEvent(

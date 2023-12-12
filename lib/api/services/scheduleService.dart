@@ -8,7 +8,7 @@ class ScheduleApiService {
 
   Future<List<NewSchedule>> GetSchedulesById(String id) async {
     String endpoint = '/asignatura/$id';
-    List<NewSchedule> newList = [];
+    List<NewSchedule> newList;
 
     try {
       final response = await http.get(Uri.parse(_baseUrl + endpoint));
@@ -16,6 +16,7 @@ class ScheduleApiService {
         final List<dynamic> responseData = json.decode(response.body);
         newList =
             responseData.map((data) => NewSchedule.fromJson(data)).toList();
+        print('getschedules' + newList[0].name);
         return newList;
       } else {
         throw Exception('Asignatura no encontrado');
