@@ -90,6 +90,7 @@ class UserApiService {
     required String email,
     required String password,
     List<String>? asignatura,
+    required String token,
     String endpoint = '/editAsignaturas',
   }) async {
     try {
@@ -100,7 +101,8 @@ class UserApiService {
         'asignatura': asignatura,
       };
       Map<String, String> headerContentType = {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Authorization': token,
       };
       final response = await http.put(Uri.parse('$_baseUrl/$endpoint/$userId'),
           headers: headerContentType, body: jsonEncode(data));
