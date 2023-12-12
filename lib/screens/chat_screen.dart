@@ -1,3 +1,5 @@
+import 'package:ea_proyecto_flutter/customUI/own_message_card.dart';
+import 'package:ea_proyecto_flutter/customUI/reply_card.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
@@ -35,7 +37,9 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey[300],
       appBar: AppBar(
+        backgroundColor: Color.fromRGBO(0, 125, 204, 1.0),
         title: Text(widget.groupName),
       ),
       body: Container(
@@ -43,7 +47,16 @@ class _ChatScreenState extends State<ChatScreen> {
         width: MediaQuery.of(context).size.width,
         child: Stack(
           children: [
-            ListView(),
+            Container(
+              height: MediaQuery.of(context).size.height - 140,
+              child: ListView(
+                shrinkWrap: true,
+                children: [
+                  OwnMessageCard(),
+                  ReplyCard(),
+                ],
+              ),
+            ),
             Align(
               alignment: Alignment.bottomCenter,
               child: Row(
