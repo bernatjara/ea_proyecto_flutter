@@ -28,8 +28,6 @@ class _ScheduleScreenState extends State<ScheduleScreen2> {
     setState(() {
       futureSchedules = _getSchedules(asignaturas[0].id);
     });
-    print(asignaturas[0].name);
-    print(futureSchedules);
   }
 
   Future<List<NewItem>> _getasignaturas() async {
@@ -44,7 +42,6 @@ class _ScheduleScreenState extends State<ScheduleScreen2> {
 
   List<LaneEvents> _buildLaneEvents(
       List<NewItem> newList, List<NewSchedule> newSchedule) {
-    print(newList);
     return [
       LaneEvents(
         lane: Lane(name: 'Lunes', laneIndex: 1),
