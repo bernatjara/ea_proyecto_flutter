@@ -200,44 +200,50 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
               ),
               if (widget.news.comments.isNotEmpty) ...[
                 SizedBox(height: 16),
-                Text('Comentaris:',
-                    style:
-                        TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                Expanded(
+                  child: Text('Comentaris:',
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                ),
                 SizedBox(height: 8),
-                Container(
-                  height: 150, // Ajusta según sea necesario
-                  child: ListView.builder(
-                    itemCount: widget.news.comments.length,
-                    itemBuilder: (context, index) {
-                      Comment comment = widget.news.comments[index];
-                      return Card(
-                        elevation: 3,
-                        margin:
-                            EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text('${comment.username}: ${comment.text}'),
-                        ),
-                      );
-                    },
+                Expanded(
+                  child: Container(
+                    height: 150, // Ajusta según sea necesario
+                    child: ListView.builder(
+                      itemCount: widget.news.comments.length,
+                      itemBuilder: (context, index) {
+                        Comment comment = widget.news.comments[index];
+                        return Card(
+                          elevation: 3,
+                          margin:
+                              EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text('${comment.username}: ${comment.text}'),
+                          ),
+                        );
+                      },
+                    ),
                   ),
                 ),
               ],
               SizedBox(height: 16),
-              Container(
-                padding: EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: Colors
-                      .blue[100], // Ajusta el color según tu paleta de colores
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Row(
-                  children: [
-                    Icon(Icons.star, color: Colors.amber),
-                    SizedBox(width: 8),
-                    Text('Valoració mitjana: $averageRating',
-                        style: TextStyle(fontSize: 18)),
-                  ],
+              Expanded(
+                child: Container(
+                  padding: EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: Colors.blue[
+                        100], // Ajusta el color según tu paleta de colores
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(Icons.star, color: Colors.amber),
+                      SizedBox(width: 8),
+                      Text('Valoració mitjana: $averageRating',
+                          style: TextStyle(fontSize: 18)),
+                    ],
+                  ),
                 ),
               ),
             ],
