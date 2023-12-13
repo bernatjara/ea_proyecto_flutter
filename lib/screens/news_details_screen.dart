@@ -196,10 +196,10 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
               ),
             ),
             if (widget.news.comments.isNotEmpty) ...[
-              SizedBox(height: 16),
+              SizedBox(height: 12),
               Text('Comentaris:',
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-              SizedBox(height: 8),
+              SizedBox(height: 6),
               Container(
                 height: 150, // Ajusta según sea necesario
                 child: ListView.builder(
@@ -218,7 +218,7 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
                 ),
               ),
             ],
-            SizedBox(height: 16),
+            SizedBox(height: 12),
             Container(
               padding: EdgeInsets.all(8),
               decoration: BoxDecoration(
