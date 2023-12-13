@@ -1,8 +1,10 @@
+import 'package:ea_proyecto_flutter/api/services/chatService.dart';
 import 'package:ea_proyecto_flutter/customUI/own_message_card.dart';
 import 'package:ea_proyecto_flutter/customUI/reply_card.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ChatScreen extends StatefulWidget {
   final String groupName;
@@ -15,23 +17,22 @@ class ChatScreen extends StatefulWidget {
 
 class _ChatScreenState extends State<ChatScreen> {
   final TextEditingController _controller = TextEditingController();
+  final ChatService _chatService = ChatService();
+  String userId = "";
   final List<String> _messages = [];
   late io.Socket socket;
 
   @override
   void initState() {
     super.initState();
-    socket = io.io('http://localhost:3000');
-    socket.on('chat message', (data) {
-      setState(() {
-        _messages.add(data);
-      });
-    });
+    _loadData();
+    //_chatService.initSocket();
+    //_chatService.joinChat(userId, widget.groupName);
   }
 
-  void _sendMessage() {
-    socket.emit('chat message', _controller.text);
-    _controller.clear();
+  Future<void> _loadData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    userId = prefs.getString('id') ?? '';
   }
 
   @override

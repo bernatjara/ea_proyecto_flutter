@@ -26,7 +26,7 @@ class ReplyCard extends StatelessWidget {
                     bottom: 20,
                   ),
                   child: Text(
-                    'Hey There',
+                    'Que tal?',
                     style: TextStyle(
                       fontSize: 16,
                     ),
