@@ -11,15 +11,15 @@ class NewsHeader extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Image.network(news.imageUrl, height: 200, fit: BoxFit.cover),
-        SizedBox(height: 16),
+        Image.network(news.imageUrl, height: 100, fit: BoxFit.cover),
+        SizedBox(height: 8),
         Text(
           news.title,
           style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
         ),
-        SizedBox(height: 16),
+        SizedBox(height: 8),
         Container(
-          height: 200, // Ajusta según sea necesario
+          height: 120, // Ajusta según sea necesario
           child: SingleChildScrollView(
             child: Text(
               news.content,
@@ -27,7 +27,7 @@ class NewsHeader extends StatelessWidget {
             ),
           ),
         ),
-        SizedBox(height: 16),
+        SizedBox(height: 8),
       ],
     );
   }
