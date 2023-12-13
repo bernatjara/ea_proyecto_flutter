@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ea_proyecto_flutter/screens/news_screen.dart';
 import 'package:ea_proyecto_flutter/screens/subjects_screen.dart';
 import 'package:ea_proyecto_flutter/screens/activities_screen.dart';
+import 'package:ea_proyecto_flutter/screens/group_screen.dart';
 
 class NavBar extends StatefulWidget {
   @override
@@ -87,6 +88,17 @@ class _NavBarScreenState extends State<NavBar> {
           Padding(
             padding: const EdgeInsets.only(left: 25.0),
             child: ListTile(
+              leading: Icon(Icons.chat),
+              title: Text('Xat'),
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => GroupsScreen()),
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 25.0),
+            child: ListTile(
               leading: Icon(Icons.list_alt),
               title: Text('Activitats'),
               onTap: () => Navigator.push(
@@ -95,7 +107,8 @@ class _NavBarScreenState extends State<NavBar> {
               ),
             ),
           ),
-          /*if (storedRol == 'admin')
+          /*
+          if (storedRol == 'admin')
             Padding(
               padding: const EdgeInsets.only(left: 25.0),
               child: ListTile(
