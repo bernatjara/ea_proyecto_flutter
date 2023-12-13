@@ -26,7 +26,7 @@ class _ScheduleScreenState extends State<ScheduleScreen2> {
     futureAsignaturas = _getasignaturas();
     List<NewItem> asignaturas = await futureAsignaturas;
     setState(() {
-      futureSchedules = _getSchedules(asignaturas[0].id);
+      futureSchedules = _getSchedules();
     });
   }
 
@@ -36,92 +36,8 @@ class _ScheduleScreenState extends State<ScheduleScreen2> {
     return await asignaturaApiService.GetAsignaturasById(storedId);
   }
 
-  Future<List<NewSchedule>> _getSchedules(String asignaturaId) async {
-    return await scheduleApiService.GetSchedulesById(asignaturaId);
-  }
-
-  List<LaneEvents> _buildLaneEvents(
-      List<NewItem> newList, List<NewSchedule> newSchedule) {
-    return [
-      LaneEvents(
-        lane: Lane(name: 'Lunes', laneIndex: 1),
-        events: [
-          TableEvent(
-            title: newList[0].name,
-            eventId: 11,
-            startTime: TableEventTime(hour: newSchedule[0].start, minute: 0),
-            endTime: TableEventTime(hour: newSchedule[0].finish, minute: 0),
-            laneIndex: 1,
-          ),
-          TableEvent(
-            eventId: 12,
-            title: 'An event 2',
-            laneIndex: 1,
-            startTime: TableEventTime(hour: 12, minute: 0),
-            endTime: TableEventTime(hour: 13, minute: 20),
-          ),
-        ],
-      ),
-      LaneEvents(
-        lane: Lane(name: 'Martes', laneIndex: 2),
-        events: [
-          TableEvent(
-            title: 'An event 3',
-            laneIndex: 2,
-            eventId: 21,
-            startTime: TableEventTime(hour: 10, minute: 10),
-            endTime: TableEventTime(hour: 11, minute: 45),
-          ),
-        ],
-      ),
-      LaneEvents(
-        lane: Lane(name: 'Miercoles', laneIndex: 3),
-        events: [
-          TableEvent(
-            title: 'An event 3',
-            laneIndex: 2,
-            eventId: 21,
-            startTime: TableEventTime(hour: 10, minute: 10),
-            endTime: TableEventTime(hour: 11, minute: 45),
-          ),
-        ],
-      ),
-      LaneEvents(
-        lane: Lane(name: 'Jueves', laneIndex: 4),
-        events: [
-          TableEvent(
-            title: 'An event 3',
-            laneIndex: 2,
-            eventId: 21,
-            startTime: TableEventTime(hour: 10, minute: 10),
-            endTime: TableEventTime(hour: 11, minute: 45),
-          ),
-        ],
-      ),
-      LaneEvents(
-        lane: Lane(name: 'Viernes', laneIndex: 5),
-        events: [
-          TableEvent(
-            title: 'An event 3',
-            laneIndex: 2,
-            eventId: 21,
-            startTime: TableEventTime(hour: 10, minute: 10),
-            endTime: TableEventTime(hour: 11, minute: 45),
-          ),
-        ],
-      ),
-    ];
-  }
-
-  void onEventTapCallBack(TableEvent event) {
-    print(
-        "Event Clicked!! LaneIndex ${event.laneIndex} Title: ${event.title} StartHour: ${event.startTime.hour} EndHour: ${event.endTime.hour}");
-  }
-
-  void onTimeSlotTappedCallBack(
-      int laneIndex, TableEventTime start, TableEventTime end) {
-    print(
-        "Empty Slot Clicked !! LaneIndex: $laneIndex StartHour: ${start.hour} EndHour: ${end.hour}");
+  Future<List<NewSchedule>> _getSchedules() async {
+    return await scheduleApiService.GetAllSchedules();
   }
 
   @override
@@ -140,12 +56,10 @@ class _ScheduleScreenState extends State<ScheduleScreen2> {
                 // If there's an error
                 return Center(child: Text('Error: ${snapshot.error}'));
               } else {
-                print('ayuda');
                 // If the data has been successfully fetched
                 List<NewItem> newList = snapshot.data?[0] as List<NewItem>;
                 List<NewSchedule> newSchedule =
                     snapshot.data?[1] as List<NewSchedule>;
-                print('ayuda2');
                 return TimetableView(
                   laneEventsList: _buildLaneEvents(newList, newSchedule),
                   onEventTap: onEventTapCallBack,
@@ -154,5 +68,58 @@ class _ScheduleScreenState extends State<ScheduleScreen2> {
                 );
               }
             }));
+  }
+
+  List<LaneEvents> _buildLaneEvents(
+      List<NewItem> asignaturas, List<NewSchedule> schedules) {
+    Map<String, List<TableEvent>> eventsMap = {};
+    for (int i = 0; i < asignaturas.length; i++) {
+      NewItem asignatura = asignaturas[i];
+      print(asignatura.name);
+      for (int j = 0; j < schedules.length; j++) {
+        NewSchedule schedule = schedules[j];
+        print(schedule.name);
+        if (schedule.name == asignatura.name) {
+          String day = schedule.day;
+
+          if (!eventsMap.containsKey(day)) {
+            eventsMap[day] = [];
+          }
+
+          eventsMap[day]!.add(
+            TableEvent(
+              title: asignatura.name,
+              eventId: i,
+              startTime: TableEventTime(hour: schedule.start, minute: 0),
+              endTime: TableEventTime(hour: schedule.finish, minute: 0),
+              laneIndex: i + 1,
+            ),
+          );
+        }
+      }
+    }
+
+    List<LaneEvents> laneEventsList = [];
+    eventsMap.forEach((day, events) {
+      laneEventsList.add(
+        LaneEvents(
+          lane: Lane(name: day, laneIndex: laneEventsList.length + 1),
+          events: events,
+        ),
+      );
+    });
+
+    return laneEventsList;
+  }
+
+  void onEventTapCallBack(TableEvent event) {
+    print(
+        "Event Clicked!! LaneIndex ${event.laneIndex} Title: ${event.title} StartHour: ${event.startTime.hour} EndHour: ${event.endTime.hour}");
+  }
+
+  void onTimeSlotTappedCallBack(
+      int laneIndex, TableEventTime start, TableEventTime end) {
+    print(
+        "Empty Slot Clicked !! LaneIndex: $laneIndex StartHour: ${start.hour} EndHour: ${end.hour}");
   }
 }

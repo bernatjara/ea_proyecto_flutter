@@ -16,7 +16,6 @@ class ScheduleApiService {
         final List<dynamic> responseData = json.decode(response.body);
         newList =
             responseData.map((data) => NewSchedule.fromJson(data)).toList();
-        print('getschedules' + newList[0].name);
         return newList;
       } else {
         throw Exception('Asignatura no encontrado');
@@ -50,12 +49,14 @@ class NewSchedule {
   final String name;
   final int start;
   final int finish;
+  final String day;
 
   NewSchedule(
       {required this.id,
       required this.name,
       required this.start,
-      required this.finish});
+      required this.finish,
+      required this.day});
 
   factory NewSchedule.fromJson(Map<String, dynamic> json) {
     return NewSchedule(
@@ -63,6 +64,7 @@ class NewSchedule {
       name: json['name'],
       start: json['start'],
       finish: json['finish'],
+      day: json['day'],
     );
   }
 }
