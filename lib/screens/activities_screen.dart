@@ -3,7 +3,7 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:flutter_map_marker_popup/flutter_map_marker_popup.dart';
 
-
+import '../widgets/marker_popup.dart';
 
 
 class MyApp extends StatelessWidget {
@@ -26,8 +26,17 @@ class MapScreen extends StatelessWidget {
                 height: 30.0,
                 point: LatLng(41.275556, 1.986944),
                 child: Icon(
-                    Icons.location_pin,
-                    color: Colors.red,
+                    Icons.location_pin, size:50,
+                    color: Colors.black,
+                  ),
+                ),);
+    markerslist.add(Marker(
+                width: 30.0,
+                height: 30.0,
+                point: LatLng(41.274322, 1.983839),
+                child: Icon(
+                    Icons.location_pin, size:50,
+                    color: Colors.black,
                   ),
                 ),);
                 return markerslist;
@@ -58,15 +67,15 @@ class MapScreen extends StatelessWidget {
           PopupMarkerLayer(
             options: PopupMarkerLayerOptions(
               markers: markerslist,
-              popupController: PopupController(),
-              selectedMarkerBuilder: (BuildContext context, Marker marker) {
-                return Container(
-                  width: 500,
-                  height: 500,
-                  color: Color.fromARGB(255, 156, 12, 12),
-                  child: Text('Fórum Aerotelecom 14 de Maig'),
-                );
-              },
+              popupDisplayOptions: PopupDisplayOptions(
+                builder: (BuildContext context, Marker marker) =>
+                    ExamplePopup(marker),
+              ),
+              selectedMarkerBuilder: (context, marker) => const Icon(
+                Icons.location_on,
+                size: 50,
+                color: Colors.red,
+              ),
             ),
           ),
         ],
@@ -74,6 +83,8 @@ class MapScreen extends StatelessWidget {
     );
   }
 }
+
+
   
 
 
