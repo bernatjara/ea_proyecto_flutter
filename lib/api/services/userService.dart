@@ -154,4 +154,53 @@ class UserApiService {
       throw Exception('Error al conectar con el servidor');
     }
   }
+
+  Future<Map<String, dynamic>> registerWithGoogle({
+    required String username,
+    required String email,
+    required String password,
+  }) async {
+    try {
+      final response = await http.post(
+        Uri.parse(''), // URL del backend
+        body: {
+          'name': username,
+          'email': email,
+          'password': password,
+          'rol': 'client',
+        },
+      );
+
+      if (response.statusCode == 200) {
+         return json.decode(response.body);
+      } else {
+        print('Error al registrar con Google: ${response.body}');
+        throw Exception('Error al registrar con Google');
+      }
+    } catch (e) {
+      print('Error al registrar con Google: $e');
+      throw Exception('Error al registrar con Google');
+    }
+  }
+
+  Future<bool> loginUserGoogle() async {
+    String endpoint = ''; // URL del backend
+    try {
+      final response = await http.post(
+        Uri.parse(_baseUrl + endpoint),
+        body: {
+          
+        },
+      );
+
+      if (response.statusCode == 200) {
+        //aqui hay que guardar la información del usuario en shared preferences
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      return false;
+    }
+  }
 }

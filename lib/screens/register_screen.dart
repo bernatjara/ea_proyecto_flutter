@@ -1,7 +1,9 @@
 import 'package:ea_proyecto_flutter/api/services/userService.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:ea_proyecto_flutter/widgets/button.dart';
 import 'package:ea_proyecto_flutter/widgets/text_field.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import '../screens/login_screen.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -13,11 +15,45 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
+  // api controller
+  final UserApiService userApiService = UserApiService();
+
+  Future<void> _registerWithGoogle() async {
+    try {
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+
+      if (googleUser == null) {
+        // El usuario cancela el registro con Google
+        return;
+      }
+
+      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+      final String email = googleUser.email;
+      final String username = googleUser.displayName ?? email.split('@')[0]; // Si no me devuelve el nombre de usuario agarro hasta el @ del mail
+      final String password = ''; // Google no devuelve un password
+      await userApiService.registerWithGoogle( username: username,email:email,password:password);
+
+      Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const LoginScreen(),
+              ),
+            );
+
+    } catch (e) {
+      // Maneja errores
+      print('Error al registrar amb Google: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Colors.red,
+          content: Text('Error al registrar amb Google'),
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    // api controller
-    final UserApiService userApiService = UserApiService();
-
     // text editing controllers
     final usernameTextController = TextEditingController();
     final emailTextController = TextEditingController();
@@ -139,6 +175,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 MyButton(
                   onTap: _registerUser,
                   text: 'CREAR COMPTE',
+                ),
+                const SizedBox(height: 20),
+
+                MyButton(
+                  onTap:() {},
+                  text: 'Registre amb Google',
                 ),
 
                 const SizedBox(height: 20),

@@ -2,9 +2,11 @@ import 'package:ea_proyecto_flutter/api/services/userService.dart';
 import 'package:ea_proyecto_flutter/widgets/button.dart';
 import 'package:ea_proyecto_flutter/widgets/text_field.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ea_proyecto_flutter/screens/news_screen.dart';
 import 'package:ea_proyecto_flutter/screens/register_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class LoginScreen extends StatefulWidget {
   final Function()? onTap;
@@ -15,12 +17,45 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+
   // api controller
   final UserApiService userApiService = UserApiService();
 
   // text editing controllers
   final usernameTextController = TextEditingController();
   final passwordTextController = TextEditingController();
+
+  Future<UserCredential?> signInWithGoogle(BuildContext context) async {
+  try {
+    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+
+    final GoogleSignInAuthentication googleAuth = await googleUser!.authentication;
+
+    final credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth.accessToken,
+      idToken: googleAuth.idToken,
+    );
+
+    final UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
+
+    final User? user = userCredential.user;
+
+    final bool isResgisterd = await userApiService.loginUserGoogle();
+    if (isResgisterd){
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => NewsScreen(),
+        ),
+      );
+    }
+    
+    return userCredential;
+  } catch (e) {
+    print('Login amb Google ha fallat: $e');
+    return null;
+  }
+}
 
   Future<void> _loginUser() async {
     if (usernameTextController.text.isEmpty ||
@@ -131,6 +166,15 @@ class _LoginScreenState extends State<LoginScreen> {
                 MyButton(
                   onTap: _loginUser,
                   text: 'INICIAR SESSIÓ',
+                ),
+
+                const SizedBox(height: 20),
+
+                ElevatedButton(
+                  onPressed: () async {
+                    await signInWithGoogle(context);
+                  },
+                  child: Text('Iniciar sessión amb Google'),
                 ),
 
                 const SizedBox(height: 20),

@@ -4,7 +4,7 @@ class UserModel {
   final String password;
   final String email;
   final List<String>? asignaturas;
-  final String rol;
+  final String? rol;
 
   UserModel({
     required this.id,
@@ -12,7 +12,7 @@ class UserModel {
     required this.password,
     required this.email,
     this.asignaturas,
-    required this.rol,
+    this.rol,
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
