@@ -63,7 +63,7 @@ class MapScreen extends StatelessWidget {
                 return Container(
                   width: 500,
                   height: 500,
-                  color: Colors.white,
+                  color: Color.fromARGB(255, 156, 12, 12),
                   child: Text('Fórum Aerotelecom 14 de Maig'),
                 );
               },

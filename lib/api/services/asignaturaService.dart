@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 //import '../models/asignatura.dart'; // Encara no està implementat el model
 
 class AsignaturaApiService {
-  static const String _baseUrl = 'http://localhost:9191/asignaturas';
+  static const String _baseUrl = 'http://147.83.7.155:9191/asignaturas';
   //static const String _baseUrl = 'http://192.168.1.140:9191/asignaturas';
 
   Future<List<NewItem>> GetAsignaturasById(String id) async {
