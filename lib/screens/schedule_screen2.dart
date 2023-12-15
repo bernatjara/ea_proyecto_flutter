@@ -75,17 +75,14 @@ class _ScheduleScreenState extends State<ScheduleScreen2> {
     Map<String, List<TableEvent>> eventsMap = {};
     for (int i = 0; i < asignaturas.length; i++) {
       NewItem asignatura = asignaturas[i];
-      print(asignatura.name);
       for (int j = 0; j < schedules.length; j++) {
         NewSchedule schedule = schedules[j];
-        print(schedule.name);
         if (schedule.name == asignatura.name) {
           String day = schedule.day;
 
           if (!eventsMap.containsKey(day)) {
             eventsMap[day] = [];
           }
-
           eventsMap[day]!.add(
             TableEvent(
               title: asignatura.name,
