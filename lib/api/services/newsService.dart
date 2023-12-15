@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:ea_proyecto_flutter/api/services/asignaturaService.dart';
 import 'package:http/http.dart' as http;
 
 //import '../models/news.dart'; // Encara no està implementat el model
@@ -10,10 +11,14 @@ class NewsApiService {
   Future<void> createNews(
       String title, String imageUrl, String content, String token) async {
     try {
+      DateTime now = DateTime.now();
       var data = {
         'title': title,
         'imageUrl': imageUrl,
         'content': content,
+        'year': now.year,
+        'month': now.month,
+        'day': now.day
       };
       Map<String, String> headerContentType = {
         'Content-Type': 'application/json',
@@ -126,5 +131,115 @@ class NewsApiService {
       // Handle any network or other errors
       print('Error: $e');
     }
+  }
+
+  Future<List<NewssItem2>> getAllNews() async {
+    List<NewssItem2> newList = [];
+
+    try {
+      final response = await http.get(Uri.parse(_baseUrl));
+      if (response.statusCode == 200) {
+        final List<dynamic> responseData = json.decode(response.body);
+        newList =
+            responseData.map((data) => NewssItem2.fromJson(data)).toList();
+        print('test en news $newList');
+        return newList;
+      } else {
+        throw Exception('Usuario no encontrado');
+      }
+    } catch (e) {
+      throw Exception('Error al conectar amb el servidor3');
+    }
+  }
+}
+
+class NewssItem {
+  final String id;
+  String title;
+  final String imageUrl;
+  final String content;
+  List<Comments> comments;
+  List<dynamic> ratings;
+
+  NewssItem(
+      {required this.id,
+      required this.title,
+      required this.imageUrl,
+      required this.content,
+      required this.comments,
+      required this.ratings});
+
+  factory NewssItem.fromJson(Map<String, dynamic> json) {
+    return NewssItem(
+        id: json['_id'],
+        title: json['title'],
+        imageUrl: json['imageUrl'],
+        content: json['content'],
+        ratings: json['ratings'],
+        comments: (json['comments'] as List<dynamic>)
+            .map((commentData) => Comments.fromJson(commentData))
+            .toList());
+  }
+}
+
+class Comments {
+  final String? username;
+  final String? text;
+  final double? rating;
+
+  Comments({
+    required this.username,
+    required this.text,
+    required this.rating,
+  });
+
+  // Add a factory method to create a Comment from JSON data
+  factory Comments.fromJson(Map<String, dynamic> json) {
+    return Comments(
+      username: json['username'],
+      text: json['text'],
+      rating: json['rating'].toDouble(),
+    );
+  }
+}
+
+class NewssItem2 {
+  final String id;
+  String title;
+  final String imageUrl;
+  final String content;
+  List<Comments> comments;
+  List<dynamic> ratings;
+  int year;
+  int month;
+  int day;
+
+  NewssItem2(
+      {required this.id,
+      required this.title,
+      required this.imageUrl,
+      required this.content,
+      required this.comments,
+      required this.ratings,
+      int? year,
+      int? month,
+      int? day})
+      : year = year ?? 0,
+        month = month ?? 0,
+        day = day ?? 0;
+
+  factory NewssItem2.fromJson(Map<String, dynamic> json) {
+    return NewssItem2(
+        id: json['_id'],
+        title: json['title'],
+        imageUrl: json['imageUrl'],
+        content: json['content'],
+        ratings: json['ratings'],
+        year: json['year'] ?? 0,
+        month: json['month'] ?? 0,
+        day: json['day'] ?? 0,
+        comments: (json['comments'] as List<dynamic>)
+            .map((commentData) => Comments.fromJson(commentData))
+            .toList());
   }
 }

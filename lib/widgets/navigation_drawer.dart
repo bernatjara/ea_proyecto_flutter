@@ -1,3 +1,4 @@
+import 'package:ea_proyecto_flutter/screens/statistics_screen.dart';
 import 'package:ea_proyecto_flutter/screens/user_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -15,7 +16,7 @@ class _NavBarScreenState extends State<NavBar> {
   String storedName = '';
   String storedEmail = '';
   //String storedRol = '';
-  //String adminMode = '';
+  String adminMode = '';
 
   @override
   void initState() {
@@ -30,7 +31,7 @@ class _NavBarScreenState extends State<NavBar> {
         ''; // Puedes establecer un valor predeterminado si es nulo
     storedEmail = prefs.getString('email') ?? '';
     //storedRol = prefs.getString('rol') ?? '';
-    //adminMode = prefs.getString('adminMode') ?? '';
+    adminMode = prefs.getString('adminMode') ?? '';
     // Notifica al framework que el estado ha cambiado, para que se actualice en la pantalla
     setState(() {});
   }
@@ -107,23 +108,18 @@ class _NavBarScreenState extends State<NavBar> {
               ),
             ),
           ),
-          /*
-          if (storedRol == 'admin')
+          if (adminMode == '1')
             Padding(
               padding: const EdgeInsets.only(left: 25.0),
               child: ListTile(
-                  leading: Icon(Icons.admin_panel_settings),
-                  title: Text('Modo admin'),
-                  onTap: () async {
-                    SharedPreferences prefs =
-                        await SharedPreferences.getInstance();
-                    prefs.setString('adminMode', adminMode == '1' ? '0' : '1');
-                    // Actualiza el estado con el nuevo valor
-                    setState(() {
-                      adminMode = prefs.getString('adminMode') ?? '0';
-                    });
-                  }),
-            ),*/
+                leading: Icon(Icons.admin_panel_settings),
+                title: Text('Estadístiques'),
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => StatisticsScreen()),
+                ),
+              ),
+            ),
         ],
       ),
     );

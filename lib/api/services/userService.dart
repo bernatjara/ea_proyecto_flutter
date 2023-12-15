@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'package:ea_proyecto_flutter/api/models/user.dart';
+import 'package:ea_proyecto_flutter/screens/user_screen.dart';
 import 'package:flutter/rendering.dart';
 import 'package:http/http.dart' as http;
 //import '../models/user.dart'; // Encara no està implementat el model
@@ -152,6 +154,23 @@ class UserApiService {
       }
     } catch (e) {
       throw Exception('Error al conectar con el servidor');
+    }
+  }
+
+  Future<List<UserModel>> getAllUsers() async {
+    List<UserModel> newList = [];
+
+    try {
+      final response = await http.get(Uri.parse(_baseUrl));
+      if (response.statusCode == 200) {
+        final List<dynamic> responseData = json.decode(response.body);
+        newList = responseData.map((data) => UserModel.fromJson(data)).toList();
+        return newList;
+      } else {
+        throw Exception('Usuario no encontrado');
+      }
+    } catch (e) {
+      throw Exception('Error al conectar amb el servidor2');
     }
   }
 }

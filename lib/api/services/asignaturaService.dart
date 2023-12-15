@@ -37,7 +37,7 @@ class AsignaturaApiService {
         throw Exception('Usuario no encontrado');
       }
     } catch (e) {
-      throw Exception('Error al conectar amb el servidor');
+      throw Exception('Error al conectar amb el servidor1');
     }
   }
 }
