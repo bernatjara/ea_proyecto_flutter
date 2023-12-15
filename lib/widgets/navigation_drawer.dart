@@ -5,6 +5,7 @@ import 'package:ea_proyecto_flutter/screens/news_screen.dart';
 import 'package:ea_proyecto_flutter/screens/subjects_screen.dart';
 import 'package:ea_proyecto_flutter/screens/activities_screen.dart';
 import 'package:ea_proyecto_flutter/screens/group_screen.dart';
+import '../screens/estadistica_screen.dart';
 
 class NavBar extends StatefulWidget {
   @override
@@ -15,7 +16,7 @@ class _NavBarScreenState extends State<NavBar> {
   String storedName = '';
   String storedEmail = '';
   //String storedRol = '';
-  //String adminMode = '';
+  String adminMode = '';
 
   @override
   void initState() {
@@ -30,7 +31,7 @@ class _NavBarScreenState extends State<NavBar> {
         ''; // Puedes establecer un valor predeterminado si es nulo
     storedEmail = prefs.getString('email') ?? '';
     //storedRol = prefs.getString('rol') ?? '';
-    //adminMode = prefs.getString('adminMode') ?? '';
+    adminMode = prefs.getString('adminMode') ?? '';
     // Notifica al framework que el estado ha cambiado, para que se actualice en la pantalla
     setState(() {});
   }
@@ -104,6 +105,18 @@ class _NavBarScreenState extends State<NavBar> {
               onTap: () => Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => MapScreen()),
+              ),
+            ),
+          ),
+          if (adminMode == '1')
+          Padding(
+            padding: const EdgeInsets.only(left: 25.0),
+            child: ListTile(
+              leading: Icon(Icons.list_alt),
+              title: Text('Estadistica'),
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => EstadisticaScreen()),
               ),
             ),
           ),
