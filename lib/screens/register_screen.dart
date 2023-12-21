@@ -18,7 +18,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   // api controller
   final UserApiService userApiService = UserApiService();
 
-  Future<void> _registerWithGoogle() async {
+  /* Future<void> _registerWithGoogle() async {
     try {
       final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
@@ -51,7 +51,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       );
     }
   }
-
+ */
   @override
   Widget build(BuildContext context) {
     // text editing controllers
@@ -179,7 +179,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 const SizedBox(height: 20),
 
                 MyButton(
-                  onTap:() {},
+                  onTap: () {},
                   text: 'Registre amb Google',
                 ),
 

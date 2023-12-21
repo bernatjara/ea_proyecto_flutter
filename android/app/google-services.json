@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "667305405602",
+    "project_id": "eetaceaapp",
+    "storage_bucket": "eetaceaapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:667305405602:android:587ebf5d6e4d3077c47bfb",
+        "android_client_info": {
+          "package_name": "com.example.ea_proyecto_flutter"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "667305405602-o13qv91edm36582biusv76njrit7i68p.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAny2oXAchJYtBw2_fEqse_ut_Ojf4n5pA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "667305405602-o13qv91edm36582biusv76njrit7i68p.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

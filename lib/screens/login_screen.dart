@@ -1,5 +1,6 @@
 import 'package:ea_proyecto_flutter/api/services/userService.dart';
 import 'package:ea_proyecto_flutter/widgets/button.dart';
+import 'package:ea_proyecto_flutter/widgets/square_tile.dart';
 import 'package:ea_proyecto_flutter/widgets/text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -7,6 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ea_proyecto_flutter/screens/news_screen.dart';
 import 'package:ea_proyecto_flutter/screens/register_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import '../api/services/auth_service.dart';
 
 class LoginScreen extends StatefulWidget {
   final Function()? onTap;
@@ -17,7 +19,6 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-
   // api controller
   final UserApiService userApiService = UserApiService();
 
@@ -25,37 +26,39 @@ class _LoginScreenState extends State<LoginScreen> {
   final usernameTextController = TextEditingController();
   final passwordTextController = TextEditingController();
 
-  Future<UserCredential?> signInWithGoogle(BuildContext context) async {
-  try {
-    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+  /* Future<UserCredential?> signInWithGoogle(BuildContext context) async {
+    try {
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
-    final GoogleSignInAuthentication googleAuth = await googleUser!.authentication;
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser!.authentication;
 
-    final credential = GoogleAuthProvider.credential(
-      accessToken: googleAuth.accessToken,
-      idToken: googleAuth.idToken,
-    );
-
-    final UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
-
-    final User? user = userCredential.user;
-
-    final bool isResgisterd = await userApiService.loginUserGoogle();
-    if (isResgisterd){
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => NewsScreen(),
-        ),
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
       );
+
+      final UserCredential userCredential =
+          await FirebaseAuth.instance.signInWithCredential(credential);
+
+      final User? user = userCredential.user;
+
+      final bool isResgisterd = await userApiService.loginUserGoogle();
+      if (isResgisterd) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => NewsScreen(),
+          ),
+        );
+      }
+
+      return userCredential;
+    } catch (e) {
+      print('Login amb Google ha fallat: $e');
+      return null;
     }
-    
-    return userCredential;
-  } catch (e) {
-    print('Login amb Google ha fallat: $e');
-    return null;
-  }
-}
+  } */
 
   Future<void> _loginUser() async {
     if (usernameTextController.text.isEmpty ||
@@ -168,13 +171,69 @@ class _LoginScreenState extends State<LoginScreen> {
                   text: 'INICIAR SESSIÓ',
                 ),
 
-                const SizedBox(height: 20),
+                const SizedBox(height: 25),
 
-                ElevatedButton(
-                  onPressed: () async {
-                    await signInWithGoogle(context);
-                  },
-                  child: Text('Iniciar sessión amb Google'),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Divider(
+                          thickness: 0.5,
+                          color: Colors.grey[400],
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                        child: Text(
+                          'O contiunua amb',
+                          style: TextStyle(color: Colors.grey[700]),
+                        ),
+                      ),
+                      Expanded(
+                        child: Divider(
+                          thickness: 0.5,
+                          color: Colors.grey[400],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                const SizedBox(height: 25),
+
+                //google button
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    // google button
+                    SquareTile(
+                        onTap: () async {
+                          try {
+                            final user = await AuthService.signInWithGoogle();
+                            if (user != null && mounted) {
+                              /* Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => NewsScreen()),
+                              ); */
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text('Vamos bien')));
+                            }
+                          } on FirebaseAuthException catch (e) {
+                            print(e);
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              content:
+                                  Text(e.message ?? 'Unknown error occurred'),
+                            ));
+                          } catch (e) {
+                            print(e);
+                            ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text(e.toString())));
+                          }
+                        },
+                        imagePath: 'assets/images/google.png'),
+                  ],
                 ),
 
                 const SizedBox(height: 20),

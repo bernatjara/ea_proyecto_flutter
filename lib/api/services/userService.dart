@@ -155,7 +155,7 @@ class UserApiService {
     }
   }
 
-  Future<Map<String, dynamic>> registerWithGoogle({
+  /* Future<Map<String, dynamic>> registerWithGoogle({
     required String username,
     required String email,
     required String password,
@@ -202,5 +202,5 @@ class UserApiService {
     } catch (e) {
       return false;
     }
-  }
+  } */
 }
