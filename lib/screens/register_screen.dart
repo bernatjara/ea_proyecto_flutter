@@ -1,3 +1,4 @@
+import 'package:ea_proyecto_flutter/api/services/auth_service.dart';
 import 'package:ea_proyecto_flutter/api/services/userService.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -5,6 +6,7 @@ import 'package:ea_proyecto_flutter/widgets/button.dart';
 import 'package:ea_proyecto_flutter/widgets/text_field.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import '../screens/login_screen.dart';
+import 'package:ea_proyecto_flutter/widgets/square_tile.dart';
 
 class RegisterScreen extends StatefulWidget {
   final Function()? onTap;
@@ -176,11 +178,87 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   onTap: _registerUser,
                   text: 'CREAR COMPTE',
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 25),
 
-                MyButton(
-                  onTap: () {},
-                  text: 'Registre amb Google',
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Divider(
+                          thickness: 0.5,
+                          color: Colors.grey[400],
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                        child: Text(
+                          'O contiunua amb',
+                          style: TextStyle(color: Colors.grey[700]),
+                        ),
+                      ),
+                      Expanded(
+                        child: Divider(
+                          thickness: 0.5,
+                          color: Colors.grey[400],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                const SizedBox(height: 25),
+
+                //google button
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    // google button
+                    SquareTile(
+                        onTap: () async {
+                          try {
+                            final user = await AuthService.signInWithGoogle();
+                            if (user != null && mounted) {
+                              try {
+                                await userApiService.registerGoogleUser(
+                                    username: user.email!.split('@')[0],
+                                    email: user.email!,
+                                    password: user.uid,
+                                    image: user.photoURL ??
+                                        'https://sbcf.fr/wp-content/uploads/2018/03/sbcf-default-avatar.png');
+                                // Si la solicitud fue exitosa (código 200)
+                                // Registro exitoso, redirige a la pantalla de inicio de sesión
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const LoginScreen(),
+                                  ),
+                                );
+                              } catch (e) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    backgroundColor: Colors.red,
+                                    content: Text(e.toString()),
+                                  ),
+                                );
+                              }
+                            }
+                          } on FirebaseAuthException catch (e) {
+                            print(e);
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              backgroundColor: Colors.red,
+                              content:
+                                  Text(e.message ?? 'Unknown error occurred'),
+                            ));
+                          } catch (e) {
+                            print(e);
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                backgroundColor: Colors.red,
+                                content: Text(e.toString())));
+                          }
+                        },
+                        imagePath: 'assets/images/google.png'),
+                  ],
                 ),
 
                 const SizedBox(height: 20),

@@ -217,6 +217,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                 MaterialPageRoute(
                                     builder: (context) => NewsScreen()),
                               ); */
+                              print('User: $user');
+                              print('User UID: $user.uid');
                               ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(content: Text('Vamos bien')));
                             }
