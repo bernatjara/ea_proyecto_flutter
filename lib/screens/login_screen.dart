@@ -60,6 +60,54 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   } */
 
+  Future<void> _loginGoogleUser(User user) async {
+    if (user.email != null) {
+      String nickname = user.email!.split('@')[0];
+      String pass = user.uid;
+
+      try {
+        final responseData = await userApiService.loginUser(
+          nickname,
+          pass,
+        );
+
+        // Si la solicitud fue exitosa (código 200)
+        final String token = responseData['token'];
+        final Map<String, dynamic> userData = responseData['user'];
+        final String name = userData['name'];
+        final String password = userData['password'];
+        final String email = userData['email'];
+        final String rol = userData['rol'];
+        final String id = userData['_id'];
+        final String image = userData['image'];
+        //String image = '';
+        String adminMode = '';
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        prefs.setString('token', token);
+        prefs.setString('id', id);
+        prefs.setString('name', name);
+        prefs.setString('email', email);
+        prefs.setString('password', password);
+        prefs.setString('rol', rol);
+        prefs.setString('adminMode', adminMode);
+        prefs.setString('image', image);
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => NewsScreen(),
+          ),
+        );
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: Colors.red,
+            content: Text(e.toString()),
+          ),
+        );
+      }
+    }
+  }
+
   Future<void> _loginUser() async {
     if (usernameTextController.text.isEmpty ||
         passwordTextController.text.isEmpty) {
@@ -212,15 +260,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           try {
                             final user = await AuthService.signInWithGoogle();
                             if (user != null && mounted) {
-                              /* Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => NewsScreen()),
-                              ); */
-                              print('User: $user');
-                              print('User UID: $user.uid');
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text('Vamos bien')));
+                              await _loginGoogleUser(user);
                             }
                           } on FirebaseAuthException catch (e) {
                             print(e);
