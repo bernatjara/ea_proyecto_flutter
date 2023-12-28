@@ -1,3 +1,4 @@
+import 'package:ea_proyecto_flutter/screens/schedule_screen2.dart';
 import 'package:ea_proyecto_flutter/screens/user_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -104,6 +105,17 @@ class _NavBarScreenState extends State<NavBar> {
               onTap: () => Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => MapScreen()),
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 25.0),
+            child: ListTile(
+              leading: Icon(Icons.access_time),
+              title: Text('Horari'),
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ScheduleScreen2()),
               ),
             ),
           ),

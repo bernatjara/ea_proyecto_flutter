@@ -10,6 +10,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  syncfusion_flutter_calendar: ^20.3.57
 
   cupertino_icons: ^1.0.2
   http: ^1.1.0
@@ -31,6 +32,7 @@ dependencies:
   google_sign_in: ^6.1.6
   firebase_auth: ^4.15.3
   firebase_core: ^2.24.2
+  timetable_view: ^0.3.0
 
 dev_dependencies:
   flutter_test:
