@@ -81,7 +81,11 @@ class _ScheduleScreenState extends State<ScheduleScreen2> {
           String day = schedule.day;
 
           if (!eventsMap.containsKey(day)) {
-            eventsMap[day] = [];
+            eventsMap["Dilluns"] = [];
+            eventsMap["Dimarts"] = [];
+            eventsMap["Dimecres"] = [];
+            eventsMap["Dijous"] = [];
+            eventsMap["Divendres"] = [];
           }
           eventsMap[day]!.add(
             TableEvent(
