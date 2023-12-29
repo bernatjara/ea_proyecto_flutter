@@ -23,7 +23,7 @@ class UpdateProfileScreen extends StatefulWidget {
 class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
   String storedName = '';
   String storedEmail = '';
-  String storedRol = '';
+  //String storedRol = '';
   String storedPassword = '';
   String storedId = '';
   String storedImage = '';
@@ -144,7 +144,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     if(kIsWeb){
       storedName = html.window.localStorage['name'] ?? '';
-      storedRol = html.window.localStorage['rol'] ?? '';
+      //storedRol = html.window.localStorage['rol'] ?? '';
       storedEmail = html.window.localStorage['email'] ?? '';
       storedPassword = html.window.localStorage['password'] ?? '';
       storedId = html.window.localStorage['id'] ?? '';
@@ -154,7 +154,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
     else{
       // Recupera los valores almacenados en SharedPreferences
       storedName = prefs.getString('name') ?? ''; // Puedes establecer un valor predeterminado si es nulo
-      storedRol = prefs.getString('rol') ?? '';
+      //storedRol = prefs.getString('rol') ?? '';
       storedEmail = prefs.getString('email') ?? '';
       storedPassword = prefs.getString('password') ?? '';
       storedId = prefs.getString('id') ?? '';

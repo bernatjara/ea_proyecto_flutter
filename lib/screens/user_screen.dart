@@ -42,6 +42,9 @@ class _UserScreenState extends State<UserScreen> {
       storedRol = prefs.getString('rol') ?? '';
       storedImage = prefs.getString('image') ?? '';
     }
+    if(storedRol == ''){
+      storedRol = 'cliente';
+    }
     // Notifica al framework que el estado ha cambiado, para que se actualice en la pantalla
     setState(() {});
   }

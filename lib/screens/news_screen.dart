@@ -19,6 +19,7 @@ class _NewsScreenState extends State<NewsScreen> {
   final NewsApiService newsApiService = NewsApiService();
   List<NewsItem> newsList = [];
   String? adminMode = '';
+  String? rol = '';
   @override
   void initState() {
     super.initState();
@@ -29,9 +30,19 @@ class _NewsScreenState extends State<NewsScreen> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     if(kIsWeb){
       adminMode = html.window.localStorage['adminMode'];
+      rol = html.window.localStorage['rol'];
+      if(rol != 'admin'){
+        html.window.localStorage.remove('adminMode');
+        html.window.localStorage.remove('rol');
+      }
     }
     else{
       adminMode = prefs.getString('adminMode');
+      rol = prefs.getString('rol');
+      if(rol != 'admin'){
+        prefs.remove('adminMode');
+        prefs.remove('rol');
+      }
     }
     try {
       final List<dynamic> response = await newsApiService.readNews();
