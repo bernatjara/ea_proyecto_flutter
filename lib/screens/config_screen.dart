@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/cupertino.dart';
 import '../main.dart';
-/*import 'package:shared_preferences_web/shared_preferences_web.dart';
 import 'dart:html' as html;
-import 'package:flutter/foundation.dart' show kIsWeb;*/
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 class ConfigurationScreen extends StatefulWidget {
   @override
@@ -23,49 +22,56 @@ class _ConfigurationScreenState extends State<ConfigurationScreen> {
   }
 
   Future<void> _loadConfigurationData() async {
-    String? adminModeValue;
-    String? darkModeValue;
-
-    /*if (kIsWeb) {
+    if (kIsWeb) {
       // Almacenamiento local para la web
-      adminModeValue = html.window.localStorage['adminMode'];
-      darkModeValue = html.window.localStorage['darkMode'];
-    } else {*/
+      adminMode = html.window.localStorage['adminMode'];
+      darkMode = html.window.localStorage['darkMode'];
+      rol = html.window.localStorage['rol'];
+    } else {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    adminModeValue = prefs.getString('adminMode');
-    darkModeValue = prefs.getString('darkMode') ?? '0';
+    adminMode = prefs.getString('adminMode');
+    darkMode = prefs.getString('darkMode') ?? '0';
     rol = prefs.getString('rol');
-    //}
-    darkMode = darkModeValue;
-    adminMode = adminModeValue;
+    }
     setState(() {});    
   }
 
   Future<void> _toggleAdminMode() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString('adminMode', adminMode == '1' ? '0' : '1');
+     SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (kIsWeb) {
+      html.window.localStorage['adminMode'] = adminMode == '1' ? '0' : '1';      
+    }
+    else{   
+      prefs.setString('adminMode', adminMode == '1' ? '0' : '1');
+    }
     setState(() {
-      adminMode = prefs.getString('adminMode') ?? '0';
+      if (kIsWeb) {
+        adminMode = html.window.localStorage['adminMode'];
+      }
+      else
+      {
+        adminMode = prefs.getString('adminMode') ?? '0';
+      }
     });
   }
 
   Future<void> _toggleDarkMode() async {
-    /*if (kIsWeb) {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (kIsWeb) {
       // Almacenamiento local para la web
       html.window.localStorage['darkMode'] = darkMode == '1' ? '0' : '1';
-    } else {*/
-      // Almacenamiento local para dispositivos móviles
-      SharedPreferences prefs = await SharedPreferences.getInstance();
+    } else {
+      // Almacenamiento local para dispositivos móviles      
       prefs.setString('darkMode', darkMode == '1' ? '0' : '1');
-    //}    
-    /*if (kIsWeb) {
+    }    
+    if (kIsWeb) {
       darkMode = html.window.localStorage['darkMode'] ?? '0';
-    } else {*/
+    } else {
       //SharedPreferences prefs = await SharedPreferences.getInstance();
       darkMode = prefs.getString('darkMode') ?? '0';
-    //}
+    }
     setState(() {
-    _updateTheme();
+      _updateTheme();
     });
   }
   void _updateTheme() {

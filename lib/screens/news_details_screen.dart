@@ -2,10 +2,13 @@ import 'package:ea_proyecto_flutter/screens/news_screen.dart';
 import 'package:ea_proyecto_flutter/screens/news_update_screen.dart';
 import 'package:ea_proyecto_flutter/api/services/newsService.dart';
 import 'package:ea_proyecto_flutter/widgets/news_header.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter/material.dart';
 import '../widgets/navigation_drawer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:html' as html;
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 class NewsDetailScreen extends StatefulWidget {
   final NewsItem news;
@@ -30,9 +33,16 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
 
   Future<void> _loadNewsData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    adminMode = prefs.getString('adminMode');
-    username = prefs.getString('name');
-    token = prefs.getString('token') ?? '';
+    if(kIsWeb){
+      adminMode = html.window.localStorage['adminMode'];
+      username = html.window.localStorage['name'];
+      token = html.window.localStorage['token'] ?? '';
+    }
+    else{
+      adminMode = prefs.getString('adminMode');
+      username = prefs.getString('name');
+      token = prefs.getString('token') ?? '';
+    }
     ratingsSum = widget.news.ratings.reduce((sum, rating) => sum + rating);
     averageRating = ratingsSum / widget.news.ratings.length;
     setState(() {});

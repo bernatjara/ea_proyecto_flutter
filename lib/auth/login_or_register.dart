@@ -2,7 +2,6 @@ import 'package:ea_proyecto_flutter/screens/login_screen.dart';
 import 'package:ea_proyecto_flutter/screens/register_screen.dart';
 import 'package:flutter/material.dart';
 import '../main.dart';
-import 'package:shared_preferences_web/shared_preferences_web.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:html' as html;
 import 'package:flutter/foundation.dart' show kIsWeb;
@@ -31,9 +30,10 @@ class _LoginOrRegisterState extends State<LoginOrRegister> {
     if (kIsWeb) {
       // Almacenamiento local para la web
       darkModeValue = html.window.localStorage['darkMode'];
-    } else {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    darkModeValue = prefs.getString('darkMode') ?? '0';
+    } 
+    else {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      darkModeValue = prefs.getString('darkMode') ?? '0';
     }
     darkMode = darkModeValue;
     setState(() {});

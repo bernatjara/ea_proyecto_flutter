@@ -5,6 +5,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../widgets/profile_menu_widget.dart';
 import 'package:ea_proyecto_flutter/screens/login_screen.dart';
 import '../screens/config_screen.dart';
+import 'dart:html' as html;
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 class UserScreen extends StatefulWidget {
   const UserScreen({super.key});
@@ -27,22 +29,32 @@ class _UserScreenState extends State<UserScreen> {
 
   Future<void> _loadUserData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-
+    if(kIsWeb){
+      storedName = html.window.localStorage['name'] ?? '';
+      storedEmail = html.window.localStorage['email'] ?? '';
+      storedRol = html.window.localStorage['rol'] ?? '';
+      storedImage = html.window.localStorage['image'] ?? '';
+    }
+    else{
     // Recupera los valores almacenados en SharedPreferences
-    storedName = prefs.getString('name') ??
-        ''; // Puedes establecer un valor predeterminado si es nulo
-    storedEmail = prefs.getString('email') ?? '';
-    storedRol = prefs.getString('rol') ?? '';
-    storedImage = prefs.getString('image') ?? '';
-
+      storedName = prefs.getString('name') ?? ''; // Puedes establecer un valor predeterminado si es nulo
+      storedEmail = prefs.getString('email') ?? '';
+      storedRol = prefs.getString('rol') ?? '';
+      storedImage = prefs.getString('image') ?? '';
+    }
     // Notifica al framework que el estado ha cambiado, para que se actualice en la pantalla
     setState(() {});
   }
 
   Future<void> logout() async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    //preferences.remove('token');
-    preferences.clear();
+    if(kIsWeb){
+      html.window.localStorage.clear();
+    }
+    else{
+      SharedPreferences preferences = await SharedPreferences.getInstance();
+      //preferences.remove('token');
+      preferences.clear();
+    }
   }
 
   @override

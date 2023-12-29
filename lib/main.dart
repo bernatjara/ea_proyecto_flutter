@@ -1,10 +1,12 @@
 import 'package:ea_proyecto_flutter/auth/login_or_register.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'screens/news_screen.dart';
+import 'dart:html' as html;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -29,10 +31,15 @@ String? darkMode;
 ThemeData? _currentTheme;
 Future<void> _loadInitData() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
-  token = prefs.getString('token');
-  darkMode = prefs.getString('darkMode');
-  print(token);
-  print(darkMode);
+  if(kIsWeb){
+    token = html.window.localStorage['token'];
+    darkMode = html.window.localStorage['darkMode'];
+  }
+  else
+  {
+    token = prefs.getString('token');
+    darkMode = prefs.getString('darkMode');
+  }
   if(darkMode == '1') {
     _currentTheme = ThemeData.dark();
   }

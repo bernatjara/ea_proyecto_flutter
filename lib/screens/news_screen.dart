@@ -7,6 +7,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 //import 'dart:convert';
 import 'package:ea_proyecto_flutter/screens/news_create_screen.dart';
 import '../widgets/news_item_card.dart';
+import 'dart:html' as html;
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 class NewsScreen extends StatefulWidget {
   @override
@@ -25,12 +27,16 @@ class _NewsScreenState extends State<NewsScreen> {
 
   Future<void> _loadNewsData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    adminMode = prefs.getString('adminMode');
+    if(kIsWeb){
+      adminMode = html.window.localStorage['adminMode'];
+    }
+    else{
+      adminMode = prefs.getString('adminMode');
+    }
     try {
       final List<dynamic> response = await newsApiService.readNews();
       // Mapea la respuesta a objetos NewsItem
       newsList = response.map((data) => NewsItem.fromJson(data)).toList();
-      print(newsList);
       // Notifica al framework que el estado ha cambiado
       setState(() {});
     } catch (e) {

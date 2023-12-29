@@ -10,6 +10,8 @@ import 'package:image_picker/image_picker.dart';
 
 import '../api/services/userService.dart';
 import '../screens/user_screen.dart';
+import 'dart:html' as html;
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 class UpdateProfileScreen extends StatefulWidget {
   const UpdateProfileScreen({super.key});
@@ -136,24 +138,38 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
 
   Future<void> _loadUserData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    // Recupera los valores almacenados en SharedPreferences
-    storedName = prefs.getString('name') ??
-        ''; // Puedes establecer un valor predeterminado si es nulo
-    storedRol = prefs.getString('rol') ?? '';
-    storedEmail = prefs.getString('email') ?? '';
-    storedPassword = prefs.getString('password') ?? '';
-    storedId = prefs.getString('id') ?? '';
-    storedImage = prefs.getString('image') ?? '';
-    token = prefs.getString('token') ?? '';
-
+    if(kIsWeb){
+      storedName = html.window.localStorage['name'] ?? '';
+      storedRol = html.window.localStorage['rol'] ?? '';
+      storedEmail = html.window.localStorage['email'] ?? '';
+      storedPassword = html.window.localStorage['password'] ?? '';
+      storedId = html.window.localStorage['id'] ?? '';
+      storedImage = html.window.localStorage['image'] ?? '';
+      token = html.window.localStorage['token'] ?? '';
+    }
+    else{
+      // Recupera los valores almacenados en SharedPreferences
+      storedName = prefs.getString('name') ?? ''; // Puedes establecer un valor predeterminado si es nulo
+      storedRol = prefs.getString('rol') ?? '';
+      storedEmail = prefs.getString('email') ?? '';
+      storedPassword = prefs.getString('password') ?? '';
+      storedId = prefs.getString('id') ?? '';
+      storedImage = prefs.getString('image') ?? '';
+      token = prefs.getString('token') ?? '';
+    }
     // Notifica al framework que el estado ha cambiado, para que se actualice en la pantalla
     setState(() {});
   }
 
   Future<void> _updateUserImage() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String newImage = prefs.getString('image') ?? '';
+    String newImage;
+    if(kIsWeb){
+      newImage = html.window.localStorage['image'] ?? '';
+    }
+    else{
+      newImage = prefs.getString('image') ?? '';
+    }
     try {
       await userApiService.updateImage(
         userId: storedId,
@@ -201,7 +217,12 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
       final String password = responseData['password'];
 
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      prefs.setString('password', password);
+      if(kIsWeb){
+        html.window.localStorage['password'] = password;
+      }
+      else{
+        prefs.setString('password', password);
+      }
 
       Navigator.pushReplacement(
         context,
