@@ -8,6 +8,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:io';
 import 'package:dotted_border/dotted_border.dart';
 import '../widgets/text_widget.dart';
+import 'dart:html' as html;
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 class CreateNewsScreen extends StatefulWidget {
   const CreateNewsScreen({super.key});
@@ -49,7 +51,13 @@ class _CreateNewsScreenState extends State<CreateNewsScreen> {
       return;
     }
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String token = prefs.getString('token') ?? '';
+    String token;
+    if(kIsWeb){
+      token = html.window.localStorage['token'] ?? '';
+    }
+    else{
+      token = prefs.getString('token') ?? '';
+    }
     try {
       await newsApiService.createNews(
           titleController.text, _imageUrl!, contentController.text, token);

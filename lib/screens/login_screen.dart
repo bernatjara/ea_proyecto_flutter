@@ -2,6 +2,7 @@ import 'package:ea_proyecto_flutter/api/services/userService.dart';
 import 'package:ea_proyecto_flutter/widgets/button.dart';
 import 'package:ea_proyecto_flutter/widgets/square_tile.dart';
 import 'package:ea_proyecto_flutter/widgets/text_field.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -9,6 +10,8 @@ import 'package:ea_proyecto_flutter/screens/news_screen.dart';
 import 'package:ea_proyecto_flutter/screens/register_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../api/services/auth_service.dart';
+import 'dart:html' as html;
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 class LoginScreen extends StatefulWidget {
   final Function()? onTap;
@@ -83,14 +86,26 @@ class _LoginScreenState extends State<LoginScreen> {
         //String image = '';
         String adminMode = '';
         SharedPreferences prefs = await SharedPreferences.getInstance();
-        prefs.setString('token', token);
-        prefs.setString('id', id);
-        prefs.setString('name', name);
-        prefs.setString('email', email);
-        prefs.setString('password', password);
-        prefs.setString('rol', rol);
-        prefs.setString('adminMode', adminMode);
-        prefs.setString('image', image);
+        if(kIsWeb){
+          html.window.localStorage['token'] = token;
+          html.window.localStorage['id'] = id;
+          html.window.localStorage['name'] = name;
+          html.window.localStorage['email'] = email;
+          html.window.localStorage['password'] = password;
+          html.window.localStorage['rol'] = rol;
+          html.window.localStorage['adminMode'] = adminMode;
+          html.window.localStorage['image'] = image;
+        }
+        else{
+          prefs.setString('token', token);
+          prefs.setString('id', id);
+          prefs.setString('name', name);
+          prefs.setString('email', email);
+          prefs.setString('password', password);
+          prefs.setString('rol', rol);
+          prefs.setString('adminMode', adminMode);
+          prefs.setString('image', image);
+        }
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
@@ -139,14 +154,26 @@ class _LoginScreenState extends State<LoginScreen> {
       //String image = '';
       String adminMode = '';
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      prefs.setString('token', token);
-      prefs.setString('id', id);
-      prefs.setString('name', name);
-      prefs.setString('email', email);
-      prefs.setString('password', password);
-      prefs.setString('rol', rol);
-      prefs.setString('adminMode', adminMode);
-      prefs.setString('image', image);
+      if(kIsWeb){
+          html.window.localStorage['token'] = token;
+          html.window.localStorage['id'] = id;
+          html.window.localStorage['name'] = name;
+          html.window.localStorage['email'] = email;
+          html.window.localStorage['password'] = password;
+          html.window.localStorage['rol'] = rol;
+          html.window.localStorage['adminMode'] = adminMode;
+          html.window.localStorage['image'] = image;
+        }
+        else{
+          prefs.setString('token', token);
+          prefs.setString('id', id);
+          prefs.setString('name', name);
+          prefs.setString('email', email);
+          prefs.setString('password', password);
+          prefs.setString('rol', rol);
+          prefs.setString('adminMode', adminMode);
+          prefs.setString('image', image);
+        }
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
