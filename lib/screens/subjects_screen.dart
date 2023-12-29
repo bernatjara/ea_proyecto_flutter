@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import '../widgets/navigation_drawer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ea_proyecto_flutter/api/services/asignaturaService.dart';
+import 'dart:html' as html;
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 class SubjectsScreen extends StatefulWidget {
   @override
@@ -22,7 +24,13 @@ class _SubjectsScreenState extends State<SubjectsScreen> {
 
   Future<List<NewItem>> _getasignaturas() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String storedId = prefs.getString('id') ?? '';
+    String storedId;
+    if(kIsWeb){
+      storedId = html.window.localStorage['id'] ?? '';
+    }
+    else{
+      storedId = prefs.getString('id') ?? '';
+    }
     return await asignaturaApiService.GetAsignaturasById(storedId);
   }
 

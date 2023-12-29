@@ -4,6 +4,8 @@ import 'package:timetable_view/timetable_view.dart';
 import 'package:ea_proyecto_flutter/api/services/asignaturaService.dart';
 import 'package:ea_proyecto_flutter/api/services/scheduleService.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:html' as html;
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 class ScheduleScreen2 extends StatefulWidget {
   @override
@@ -32,7 +34,13 @@ class _ScheduleScreenState extends State<ScheduleScreen2> {
 
   Future<List<NewItem>> _getasignaturas() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String storedId = prefs.getString('id') ?? '';
+    String storedId;
+    if(kIsWeb){
+      storedId = html.window.localStorage['id'] ?? '';
+    }
+    else{
+      storedId = prefs.getString('id') ?? '';
+    }
     return await asignaturaApiService.GetAsignaturasById(storedId);
   }
 

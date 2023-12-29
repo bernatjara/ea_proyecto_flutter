@@ -128,8 +128,12 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
         print('devuelve la URL: $_imageUrl');
       });
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      prefs.setString('image', _imageUrl!);
-
+      if(kIsWeb){
+        html.window.localStorage['image'] = _imageUrl!;
+      }
+      else{
+        prefs.setString('image', _imageUrl!);
+      }
       _updateUserImage();
     } catch (e) {
       print('Error uploading image to Cloudinary: $e');

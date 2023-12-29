@@ -2,9 +2,12 @@ import 'package:ea_proyecto_flutter/api/services/chatService.dart';
 import 'package:ea_proyecto_flutter/customUI/own_message_card.dart';
 import 'package:ea_proyecto_flutter/customUI/reply_card.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:html' as html;
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 class ChatScreen extends StatefulWidget {
   final String groupName;
@@ -32,7 +35,12 @@ class _ChatScreenState extends State<ChatScreen> {
 
   Future<void> _loadData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    userId = prefs.getString('id') ?? '';
+    if(kIsWeb){
+      userId = html.window.localStorage['id'] ?? '';
+    }
+    else{
+      userId = prefs.getString('id') ?? '';
+    }
   }
 
   @override

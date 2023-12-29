@@ -6,6 +6,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ea_proyecto_flutter/api/services/asignaturaService.dart';
 import 'package:ea_proyecto_flutter/api/services/userService.dart';
 //import '../api/models/user.dart';
+import 'dart:html' as html;
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 class EditSubjectsScreen extends StatefulWidget {
   @override
@@ -40,13 +42,24 @@ class _EditSubjectsScreenState extends State<EditSubjectsScreen> {
       i++;
     }
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    await userApiService.updateSubjects(
+    if(kIsWeb){
+      await userApiService.updateSubjects(
+        userId: html.window.localStorage['id'] ?? '',
+        username: html.window.localStorage['name'] ?? '',
+        email: html.window.localStorage['email'] ?? '',
+        password: html.window.localStorage['password'] ?? '',
+        token: html.window.localStorage['token'] ?? '',
+        asignatura: asignaturas);
+    }
+    else{
+      await userApiService.updateSubjects(
         userId: prefs.getString('id') ?? '',
         username: prefs.getString('name') ?? '',
         email: prefs.getString('email') ?? '',
         password: prefs.getString('password') ?? '',
         token: prefs.getString('token') ?? '',
         asignatura: asignaturas);
+    }
     Navigator.push(
         context,
         MaterialPageRoute(
