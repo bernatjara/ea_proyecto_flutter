@@ -17,7 +17,7 @@ class _ConfigurationScreenState extends State<ConfigurationScreen> {
 
   @override
   void initState() {
-    super.initState();
+    super.initState();  
     _loadConfigurationData();
   }
 
@@ -28,10 +28,10 @@ class _ConfigurationScreenState extends State<ConfigurationScreen> {
       darkMode = html.window.localStorage['darkMode'];
       rol = html.window.localStorage['rol'];
     } else {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    adminMode = prefs.getString('adminMode');
-    darkMode = prefs.getString('darkMode') ?? '0';
-    rol = prefs.getString('rol');
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      adminMode = prefs.getString('adminMode');
+      darkMode = prefs.getString('darkMode') ?? '0';
+      rol = prefs.getString('rol');
     }
     setState(() {});    
   }

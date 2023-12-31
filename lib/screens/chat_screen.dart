@@ -35,10 +35,9 @@ class _ChatScreenState extends State<ChatScreen> {
 
   Future<void> _loadData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    if(kIsWeb){
+    if (kIsWeb) {
       userId = html.window.localStorage['id'] ?? '';
-    }
-    else{
+    } else {
       userId = prefs.getString('id') ?? '';
     }
   }
@@ -46,7 +45,6 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[300],
       appBar: AppBar(
         backgroundColor: Color.fromRGBO(0, 125, 204, 1.0),
         title: Text(widget.groupName),

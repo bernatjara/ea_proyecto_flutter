@@ -6,6 +6,7 @@ import 'package:ea_proyecto_flutter/api/services/scheduleService.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:html' as html;
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:table_calendar/table_calendar.dart';
 
 class ScheduleScreen2 extends StatefulWidget {
   @override
@@ -17,6 +18,7 @@ class _ScheduleScreenState extends State<ScheduleScreen2> {
   late Future<List<NewItem>> futureAsignaturas;
   late Future<List<NewSchedule>> futureSchedules = Future.value([]);
   final ScheduleApiService scheduleApiService = ScheduleApiService();
+  String? darkMode;
 
   @override
   void initState() {
@@ -27,6 +29,12 @@ class _ScheduleScreenState extends State<ScheduleScreen2> {
   Future<void> _initializeData() async {
     futureAsignaturas = _getasignaturas();
     List<NewItem> asignaturas = await futureAsignaturas;
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (kIsWeb) {
+      darkMode = html.window.localStorage['darkMode'];
+    } else {
+      darkMode = prefs.getString('darkMode');
+    }
     setState(() {
       futureSchedules = _getSchedules();
     });
@@ -35,10 +43,9 @@ class _ScheduleScreenState extends State<ScheduleScreen2> {
   Future<List<NewItem>> _getasignaturas() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String storedId;
-    if(kIsWeb){
+    if (kIsWeb) {
       storedId = html.window.localStorage['id'] ?? '';
-    }
-    else{
+    } else {
       storedId = prefs.getString('id') ?? '';
     }
     return await asignaturaApiService.GetAsignaturasById(storedId);
@@ -68,12 +75,36 @@ class _ScheduleScreenState extends State<ScheduleScreen2> {
                 List<NewItem> newList = snapshot.data?[0] as List<NewItem>;
                 List<NewSchedule> newSchedule =
                     snapshot.data?[1] as List<NewSchedule>;
-                return TimetableView(
-                  laneEventsList: _buildLaneEvents(newList, newSchedule),
-                  onEventTap: onEventTapCallBack,
-                  timetableStyle: TimetableStyle(),
-                  onEmptySlotTap: onTimeSlotTappedCallBack,
-                );
+                if (darkMode == '1') {
+                  return TimetableView(
+                    laneEventsList: _buildLaneEvents(newList, newSchedule),
+                    onEventTap: onEventTapCallBack,
+                    timetableStyle: const TimetableStyle(
+                      startHour: 8,
+                      endHour: 21,
+                      mainBackgroundColor: Color.fromARGB(255, 65, 63, 63),
+                      laneColor: Color.fromARGB(255, 65, 63, 63),
+                      timelineColor: Color.fromARGB(255, 65, 63, 63),
+                      timelineItemColor: Color.fromARGB(255, 65, 63, 63),
+                      decorationLineBorderColor:
+                          Color.fromARGB(255, 65, 63, 63),
+                      timelineBorderColor: Colors.black,
+                      timeItemTextColor: Colors.blue,
+                      cornerColor: Colors.black,
+                    ),
+                    onEmptySlotTap: onTimeSlotTappedCallBack,
+                  );
+                } else {
+                  return TimetableView(
+                    laneEventsList: _buildLaneEvents(newList, newSchedule),
+                    onEventTap: onEventTapCallBack,
+                    timetableStyle: const TimetableStyle(
+                      startHour: 8,
+                      endHour: 21,
+                    ),
+                    onEmptySlotTap: onTimeSlotTappedCallBack,
+                  );
+                }
               }
             }));
   }
