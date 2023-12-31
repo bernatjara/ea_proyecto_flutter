@@ -29,7 +29,20 @@ class UserApiService {
       throw Exception('Error al conectar amb el servidor');
     }
   }
-
+  Future<List<dynamic>> readUser() async {
+    try {
+      final response = await http.get(
+        Uri.parse(_baseUrl),
+      );
+      if (response.statusCode == 200) {
+        return json.decode(response.body);
+      } else {
+        throw Exception('Credencials incorrectes');
+      }
+    } catch (e) {
+      throw Exception('Error al conectar amb el servidor');
+    }
+  }
   Future<Map<String, dynamic>> registerUser({
     required String username,
     required String email,

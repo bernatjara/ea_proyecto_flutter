@@ -8,6 +8,7 @@ import 'package:ea_proyecto_flutter/screens/activities_screen.dart';
 import 'package:ea_proyecto_flutter/screens/group_screen.dart';
 import 'dart:html' as html;
 import 'package:flutter/foundation.dart' show kIsWeb;
+import '../screens/estadistica_screen.dart';
 
 class NavBar extends StatefulWidget {
   @override
@@ -18,7 +19,7 @@ class _NavBarScreenState extends State<NavBar> {
   String storedName = '';
   String storedEmail = '';
   //String storedRol = '';
-  //String adminMode = '';
+  String adminMode = '';
 
   @override
   void initState() {
@@ -28,13 +29,13 @@ class _NavBarScreenState extends State<NavBar> {
 
   Future<void> _loadNavData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    if(kIsWeb){
+    if (kIsWeb) {
       storedEmail = html.window.localStorage['email'] ?? '';
       storedName = html.window.localStorage['name'] ?? '';
-    }
-    else{
+    } else {
       // Recupera los valores almacenados en SharedPreferences
-      storedName = prefs.getString('name') ?? ''; // Puedes establecer un valor predeterminado si es nulo
+      storedName = prefs.getString('name') ??
+          ''; // Puedes establecer un valor predeterminado si es nulo
       storedEmail = prefs.getString('email') ?? '';
       //storedRol = prefs.getString('rol') ?? '';
       //adminMode = prefs.getString('adminMode') ?? '';
@@ -126,6 +127,18 @@ class _NavBarScreenState extends State<NavBar> {
               ),
             ),
           ),
+          if (adminMode == '1')
+            Padding(
+              padding: const EdgeInsets.only(left: 25.0),
+              child: ListTile(
+                leading: Icon(Icons.list_alt),
+                title: Text('Estadistica'),
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => EstadisticaScreen()),
+                ),
+              ),
+            ),
           /*
           if (storedRol == 'admin')
             Padding(
