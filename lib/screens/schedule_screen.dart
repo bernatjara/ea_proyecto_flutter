@@ -145,29 +145,57 @@ class _ScheduleScreenState extends State<ScheduleScreen2> {
             eventsMap["Dijous"] = [];
             eventsMap["Divendres"] = [];
           }
-          eventsMap[day]!.add(
-            TableEvent(
-              title: asignatura.name,
-              backgroundColor: Color.fromARGB(255, 11, 10, 65),
-              eventId: i,
-              startTime: TableEventTime(hour: schedule.start, minute: 0),
-              endTime: TableEventTime(hour: schedule.finish, minute: 0),
-              laneIndex: i + 1,
-            ),
-          );
+          if (darkMode == '1') {
+            eventsMap[day]!.add(
+              TableEvent(
+                title: asignatura.name,
+                backgroundColor: Color.fromARGB(255, 11, 10, 65),
+                eventId: i,
+                startTime: TableEventTime(hour: schedule.start, minute: 0),
+                endTime: TableEventTime(hour: schedule.finish, minute: 0),
+                laneIndex: i + 1,
+              ),
+            );
+          } else {
+            eventsMap[day]!.add(
+              TableEvent(
+                title: asignatura.name,
+                eventId: i,
+                startTime: TableEventTime(hour: schedule.start, minute: 0),
+                endTime: TableEventTime(hour: schedule.finish, minute: 0),
+                laneIndex: i + 1,
+              ),
+            );
+          }
         }
       }
     }
 
     List<LaneEvents> laneEventsList = [];
-    eventsMap.forEach((day, events) {
-      laneEventsList.add(
-        LaneEvents(
-          lane: Lane(name: day, laneIndex: laneEventsList.length + 1),
-          events: events,
-        ),
-      );
-    });
+    if (darkMode == '1') {
+      eventsMap.forEach((day, events) {
+        laneEventsList.add(
+          LaneEvents(
+            lane: Lane(
+              name: day,
+              laneIndex: laneEventsList.length + 1,
+              backgroundColor: Color.fromARGB(255, 65, 63, 63),
+              textStyle: const TextStyle(color: Colors.white),
+            ),
+            events: events,
+          ),
+        );
+      });
+    } else {
+      eventsMap.forEach((day, events) {
+        laneEventsList.add(
+          LaneEvents(
+            lane: Lane(name: day, laneIndex: laneEventsList.length + 1),
+            events: events,
+          ),
+        );
+      });
+    }
     return laneEventsList;
   }
 
