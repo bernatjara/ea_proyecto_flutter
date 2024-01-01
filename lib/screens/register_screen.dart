@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:ea_proyecto_flutter/widgets/button.dart';
 import 'package:ea_proyecto_flutter/widgets/text_field.dart';
+import 'package:flutter_pw_validator/Resource/Strings.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import '../screens/login_screen.dart';
 import 'package:ea_proyecto_flutter/widgets/square_tile.dart';
@@ -16,6 +17,21 @@ class RegisterScreen extends StatefulWidget {
 
   @override
   State<RegisterScreen> createState() => _RegisterScreenState();
+}
+
+class CatalanStrings implements FlutterPwValidatorStrings {
+  @override
+  final String atLeast = '- Carácters com a mínim';
+  @override
+  final String uppercaseLetters = '- Lletres majuscules';
+  @override
+  final String numericCharacters = '- Números';
+  @override
+  final String lowercaseLetters = '- Lletres míniscules';
+  @override
+  final String normalLetters = '- Lletras normals';
+  @override
+  final String specialCharacters = '- Caracteres especiales';
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
@@ -63,14 +79,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
     }
   }
  */
-  String formatPasswordRequirements(
-      int minLength, int uppercaseCount, int numericCount, int lowercaseCount) {
-    return Intl.message(
-      'La contrasenya ha de tenir com a mínim $minLength caracters, $uppercaseCount majusculas, $numericCount números y $lowercaseCount minúsculas.',
-      name: 'formatPasswordRequirements',
-      args: [minLength, uppercaseCount, numericCount, lowercaseCount],
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -208,6 +216,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     lowercaseCharCount: 2,
                     width: 400,
                     height: 125,
+                    strings: CatalanStrings(),
                     onSuccess: () {
                       setState(() {
                         passwordValid = true;
