@@ -86,7 +86,7 @@ class _LoginScreenState extends State<LoginScreen> {
         //String image = '';
         String adminMode = '';
         SharedPreferences prefs = await SharedPreferences.getInstance();
-        if(kIsWeb){
+        if (kIsWeb) {
           html.window.localStorage['token'] = token;
           html.window.localStorage['id'] = id;
           html.window.localStorage['name'] = name;
@@ -95,8 +95,7 @@ class _LoginScreenState extends State<LoginScreen> {
           html.window.localStorage['rol'] = rol;
           html.window.localStorage['adminMode'] = adminMode;
           html.window.localStorage['image'] = image;
-        }
-        else{
+        } else {
           prefs.setString('token', token);
           prefs.setString('id', id);
           prefs.setString('name', name);
@@ -154,26 +153,25 @@ class _LoginScreenState extends State<LoginScreen> {
       //String image = '';
       String adminMode = '';
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      if(kIsWeb){
-          html.window.localStorage['token'] = token;
-          html.window.localStorage['id'] = id;
-          html.window.localStorage['name'] = name;
-          html.window.localStorage['email'] = email;
-          html.window.localStorage['password'] = password;
-          html.window.localStorage['rol'] = rol;
-          html.window.localStorage['adminMode'] = adminMode;
-          html.window.localStorage['image'] = image;
-        }
-        else{
-          prefs.setString('token', token);
-          prefs.setString('id', id);
-          prefs.setString('name', name);
-          prefs.setString('email', email);
-          prefs.setString('password', password);
-          prefs.setString('rol', rol);
-          prefs.setString('adminMode', adminMode);
-          prefs.setString('image', image);
-        }
+      if (kIsWeb) {
+        html.window.localStorage['token'] = token;
+        html.window.localStorage['id'] = id;
+        html.window.localStorage['name'] = name;
+        html.window.localStorage['email'] = email;
+        html.window.localStorage['password'] = password;
+        html.window.localStorage['rol'] = rol;
+        html.window.localStorage['adminMode'] = adminMode;
+        html.window.localStorage['image'] = image;
+      } else {
+        prefs.setString('token', token);
+        prefs.setString('id', id);
+        prefs.setString('name', name);
+        prefs.setString('email', email);
+        prefs.setString('password', password);
+        prefs.setString('rol', rol);
+        prefs.setString('adminMode', adminMode);
+        prefs.setString('image', image);
+      }
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
@@ -261,7 +259,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 10.0),
                         child: Text(
-                          'O contiunua amb',
+                          'O continua amb',
                           style: TextStyle(color: Colors.grey[700]),
                         ),
                       ),
@@ -312,7 +310,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      "¿No tens compte?",
+                      "No tens compte?",
                       style: TextStyle(
                         color: Colors.grey[700],
                       ),

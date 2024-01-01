@@ -210,7 +210,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     defaultColor: Colors.red,
                     successColor: Colors.green,
                     failureColor: Colors.red,
-                    minLength: 6,
+                    minLength: 8,
                     uppercaseCharCount: 1,
                     numericCharCount: 3,
                     lowercaseCharCount: 2,
@@ -325,7 +325,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        "¿Ja tens compte?",
+                        "Ja tens compte?",
                         style: TextStyle(
                           color: Colors.grey[700],
                         ),
