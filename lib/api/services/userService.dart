@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 //import '../models/user.dart'; // Encara no està implementat el model
 
 class UserApiService {
-  static const String _baseUrl = 'http://localhost:9191/users';
+  static const String _baseUrl = 'http://localhost:9090/users';
   //static const String _baseUrl = 'http://192.168.1.140:9191/users';
 
   Future<Map<String, dynamic>> loginUser(

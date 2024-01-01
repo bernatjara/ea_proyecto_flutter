@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import '../models/schedule.dart'; // Encara no està implementat el model
 
 class ScheduleApiService {
-  static const String _baseUrl = 'http://localhost:9191/schedules';
+  static const String _baseUrl = 'http://localhost:9090/schedules';
   //static const String _baseUrl = 'http://192.168.1.140:9090/schedules';
 
   Future<List<NewSchedule>> GetSchedulesById(String id) async {

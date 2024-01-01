@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:socket_io_client/socket_io_client.dart' as io;
 
 class ChatService {
-  static const String _baseUrl = 'http://localhost:9191';
+  static const String _baseUrl = 'http://localhost:9090';
 
   late io.Socket _socket;
 

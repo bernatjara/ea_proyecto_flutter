@@ -13,6 +13,24 @@ class ScheduleScreen2 extends StatefulWidget {
   _ScheduleScreenState createState() => _ScheduleScreenState();
 }
 
+class DayText extends StatelessWidget {
+  final String day;
+  final Color color;
+
+  DayText({required this.day, required this.color});
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      day,
+      style: TextStyle(
+        color: color,
+        fontSize: 18.0,
+      ),
+    );
+  }
+}
+
 class _ScheduleScreenState extends State<ScheduleScreen2> {
   final AsignaturaApiService asignaturaApiService = AsignaturaApiService();
   late Future<List<NewItem>> futureAsignaturas;
@@ -58,55 +76,56 @@ class _ScheduleScreenState extends State<ScheduleScreen2> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text('Horari'),
-        ),
-        body: FutureBuilder(
-            future: Future.wait([futureAsignaturas, futureSchedules]),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                // While waiting for the data to be fetched
-                return Center(child: CircularProgressIndicator());
-              } else if (snapshot.hasError) {
-                // If there's an error
-                return Center(child: Text('Error: ${snapshot.error}'));
-              } else {
-                // If the data has been successfully fetched
-                List<NewItem> newList = snapshot.data?[0] as List<NewItem>;
-                List<NewSchedule> newSchedule =
-                    snapshot.data?[1] as List<NewSchedule>;
-                if (darkMode == '1') {
-                  return TimetableView(
-                    laneEventsList: _buildLaneEvents(newList, newSchedule),
-                    onEventTap: onEventTapCallBack,
-                    timetableStyle: const TimetableStyle(
-                      startHour: 8,
-                      endHour: 21,
-                      mainBackgroundColor: Color.fromARGB(255, 65, 63, 63),
-                      laneColor: Color.fromARGB(255, 65, 63, 63),
-                      timelineColor: Color.fromARGB(255, 65, 63, 63),
-                      timelineItemColor: Color.fromARGB(255, 65, 63, 63),
-                      decorationLineBorderColor:
-                          Color.fromARGB(255, 65, 63, 63),
-                      timelineBorderColor: Colors.black,
-                      timeItemTextColor: Colors.blue,
-                      cornerColor: Colors.black,
-                    ),
-                    onEmptySlotTap: onTimeSlotTappedCallBack,
-                  );
-                } else {
-                  return TimetableView(
-                    laneEventsList: _buildLaneEvents(newList, newSchedule),
-                    onEventTap: onEventTapCallBack,
-                    timetableStyle: const TimetableStyle(
-                      startHour: 8,
-                      endHour: 21,
-                    ),
-                    onEmptySlotTap: onTimeSlotTappedCallBack,
-                  );
-                }
-              }
-            }));
+      appBar: AppBar(
+        title: Text('Horari'),
+      ),
+      body: FutureBuilder(
+        future: Future.wait([futureAsignaturas, futureSchedules]),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            // While waiting for the data to be fetched
+            return Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            // If there's an error
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else {
+            // If the data has been successfully fetched
+            List<NewItem> newList = snapshot.data?[0] as List<NewItem>;
+            List<NewSchedule> newSchedule =
+                snapshot.data?[1] as List<NewSchedule>;
+            if (darkMode == '1') {
+              return TimetableView(
+                laneEventsList: _buildLaneEvents(newList, newSchedule),
+                onEventTap: onEventTapCallBack,
+                timetableStyle: const TimetableStyle(
+                  startHour: 8,
+                  endHour: 21,
+                  mainBackgroundColor: Color.fromARGB(255, 65, 63, 63),
+                  laneColor: Color.fromARGB(255, 65, 63, 63),
+                  timelineColor: Color.fromARGB(255, 65, 63, 63),
+                  timelineItemColor: Color.fromARGB(255, 65, 63, 63),
+                  decorationLineBorderColor: Color.fromARGB(255, 65, 63, 63),
+                  timelineBorderColor: Colors.black,
+                  timeItemTextColor: Colors.blue,
+                  cornerColor: Colors.black,
+                ),
+                onEmptySlotTap: onTimeSlotTappedCallBack,
+              );
+            } else {
+              return TimetableView(
+                laneEventsList: _buildLaneEvents(newList, newSchedule),
+                onEventTap: onEventTapCallBack,
+                timetableStyle: const TimetableStyle(
+                  startHour: 8,
+                  endHour: 21,
+                ),
+                onEmptySlotTap: onTimeSlotTappedCallBack,
+              );
+            }
+          }
+        },
+      ),
+    );
   }
 
   List<LaneEvents> _buildLaneEvents(
@@ -129,6 +148,7 @@ class _ScheduleScreenState extends State<ScheduleScreen2> {
           eventsMap[day]!.add(
             TableEvent(
               title: asignatura.name,
+              backgroundColor: Color.fromARGB(255, 11, 10, 65),
               eventId: i,
               startTime: TableEventTime(hour: schedule.start, minute: 0),
               endTime: TableEventTime(hour: schedule.finish, minute: 0),
@@ -148,7 +168,6 @@ class _ScheduleScreenState extends State<ScheduleScreen2> {
         ),
       );
     });
-
     return laneEventsList;
   }
 
