@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 class OwnMessageCard extends StatelessWidget {
-  const OwnMessageCard({super.key});
+  final String msg;
+  const OwnMessageCard({super.key, required this.msg});
 
   @override
   Widget build(BuildContext context) {
@@ -15,8 +16,8 @@ class OwnMessageCard extends StatelessWidget {
             elevation: 1,
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-            color: Color.fromRGBO(99, 195, 255, 1),
-            margin: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+            color: const Color.fromRGBO(99, 195, 255, 1),
+            margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
             child: Stack(
               children: [
                 Padding(
@@ -24,11 +25,11 @@ class OwnMessageCard extends StatelessWidget {
                     left: 10,
                     right: 30,
                     top: 5,
-                    bottom: 20,
+                    bottom: 10,
                   ),
                   child: Text(
-                    'Hola',
-                    style: TextStyle(
+                    msg,
+                    style: const TextStyle(
                       fontSize: 16,
                     ),
                   ),

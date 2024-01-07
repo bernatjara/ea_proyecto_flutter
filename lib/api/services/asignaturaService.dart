@@ -45,13 +45,15 @@ class AsignaturaApiService {
 class NewItem {
   final String id;
   final String name;
+  final String chat;
 
-  NewItem({required this.id, required this.name});
+  NewItem({required this.id, required this.name, required this.chat});
 
   factory NewItem.fromJson(Map<String, dynamic> json) {
     return NewItem(
       id: json['_id'],
       name: json['name'],
+      chat: json['chat'],
     );
   }
 }
