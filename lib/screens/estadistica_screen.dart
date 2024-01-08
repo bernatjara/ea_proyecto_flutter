@@ -19,7 +19,6 @@ class _EstadisticaScreenState extends State<EstadisticaScreen> {
   List<dynamic> newsList = [];
   List<dynamic> userList = [];
   List<dynamic> asignaturaList = [];
-  
 
   @override
   void initState() {
@@ -48,6 +47,7 @@ class _EstadisticaScreenState extends State<EstadisticaScreen> {
       );
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -62,14 +62,16 @@ class _EstadisticaScreenState extends State<EstadisticaScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Número de Usuarios: ${userList.length}'),
-            Text('Número de Noticias: ${newsList.length}'),
-            Text('Número de Asignaturas: ${asignaturaList.length}'),
+            //Text('Número de Usuarios: ${userList.length}'),
+            //Text('Número de Noticias: ${newsList.length}'),
+            //Text('Número de Asignaturas: ${asignaturaList.length}'),
             SizedBox(height: 20),
-            Text('Gráfico de Usuarios, Noticias y Asignaturas'),
+            Text('Gráfico de Usuarios, Noticias y Asignaturas',
+                style: TextStyle(fontSize: 24.0)),
             _buildCombinedChart(),
             SizedBox(height: 20),
-            Text('Gráfico de Noticias por Mes'),
+            Text('Gráfico de Noticias por Mes',
+                style: TextStyle(fontSize: 24.0)),
             _buildMonthlyChart(),
             SizedBox(height: 20),
             //Text('Gráfico de Comentarios por Día de la Semana'),
@@ -80,136 +82,140 @@ class _EstadisticaScreenState extends State<EstadisticaScreen> {
     );
   }
 
-Widget _buildCombinedChart() {
-  return Container(
-    width: 300, // Ajusta el ancho según tus necesidades
-    height: 200, // Ajusta la altura según tus necesidades
-    child: BarChart(
-      BarChartData(
-        gridData: FlGridData(show: false),
-        titlesData: FlTitlesData(
-          show: true,
-          leftTitles: SideTitles(showTitles: false),
-          bottomTitles: SideTitles(
-            showTitles: true,
-            getTextStyles: (value, _) => const TextStyle(color: Colors.black),
-            margin: 16,
-            getTitles: (double value) {
-              // Retorna la leyenda para cada barra
-              switch (value.toInt()) {
-                case 0:
-                  return 'Usuarios';
-                case 1:
-                  return 'Noticias';
-                case 2:
-                  return 'Asignaturas';
-                default:
-                  return '';
-              }
-            },
+  Widget _buildCombinedChart() {
+    return Container(
+      width: 600, // Ajusta el ancho según tus necesidades
+      height: 300, // Ajusta la altura según tus necesidades
+      child: BarChart(
+        BarChartData(
+          gridData: FlGridData(show: false),
+          titlesData: FlTitlesData(
+            show: true,
+            leftTitles: SideTitles(showTitles: false),
+            topTitles: SideTitles(showTitles: false),
+            bottomTitles: SideTitles(
+              showTitles: true,
+              getTextStyles: (value, _) => const TextStyle(color: Colors.black),
+              margin: 16,
+              getTitles: (double value) {
+                // Retorna la leyenda para cada barra
+                switch (value.toInt()) {
+                  case 0:
+                    return 'Usuarios';
+                  case 1:
+                    return 'Noticias';
+                  case 2:
+                    return 'Asignaturas';
+                  default:
+                    return '';
+                }
+              },
+            ),
           ),
-        ),
-        borderData: FlBorderData(
-          show: true,
-          border: Border.all(color: const Color(0xff37434d), width: 1),
-        ),
-        barGroups: [
-          BarChartGroupData(
-            x: 0,
-            barRods: [
-              BarChartRodData(
-                y: userList.length.toDouble(),
-                colors: [Colors.blue],
-              ),
-            ],
+          borderData: FlBorderData(
+            show: true,
+            border: Border.all(color: const Color(0xff37434d), width: 1),
           ),
-          BarChartGroupData(
-            x: 1,
-            barRods: [
-              BarChartRodData(
-                y: newsList.length.toDouble(),
-                colors: [Colors.green],
-              ),
-            ],
-          ),
-          BarChartGroupData(
-            x: 2,
-            barRods: [
-              BarChartRodData(
-                y: asignaturaList.length.toDouble(),
-                colors: [Colors.orange],
-              ),
-            ],
-          ),
-        ],
-        groupsSpace: 4,
-        barTouchData: BarTouchData(
-          touchTooltipData: BarTouchTooltipData(
-            tooltipBgColor: Colors.blueAccent,
+          barGroups: [
+            BarChartGroupData(
+              x: 0,
+              barRods: [
+                BarChartRodData(
+                  y: userList.length.toDouble(),
+                  colors: [Colors.blue],
+                ),
+              ],
+            ),
+            BarChartGroupData(
+              x: 1,
+              barRods: [
+                BarChartRodData(
+                  y: newsList.length.toDouble(),
+                  colors: [Colors.green],
+                ),
+              ],
+            ),
+            BarChartGroupData(
+              x: 2,
+              barRods: [
+                BarChartRodData(
+                  y: asignaturaList.length.toDouble(),
+                  colors: [Colors.orange],
+                ),
+              ],
+            ),
+          ],
+          groupsSpace: 4,
+          barTouchData: BarTouchData(
+            touchTooltipData: BarTouchTooltipData(
+              tooltipBgColor: const Color.fromARGB(255, 0, 0, 0),
+            ),
           ),
         ),
       ),
-    ),
-  );
-}
-Widget _buildMonthlyChart() {
-  // Crear un mapa para contar noticias por mes
-  Map<String, int> monthlyCounts = {};
-
-  // Contar noticias por mes
-  for (var news in newsList) {
-    String month = news['mes']; // Ajusta según la estructura de tus datos
-    monthlyCounts[month] = (monthlyCounts[month] ?? 0) + 1;
+    );
   }
 
-  List<String> months = monthlyCounts.keys.toList();
-  List<int> counts = monthlyCounts.values.toList();
+  Widget _buildMonthlyChart() {
+    // Crear un mapa para contar noticias por mes
+    Map<String, int> monthlyCounts = {};
 
-  return Container(
-    width: 300, // Ajusta el ancho según tus necesidades
-    height: 200, // Ajusta la altura según tus necesidades
-    child: BarChart(
-      BarChartData(
-        gridData: FlGridData(show: false),
-        titlesData: FlTitlesData(
-          show: true,
-          leftTitles: SideTitles(showTitles: false),
-          bottomTitles: SideTitles(
-            showTitles: true,
-            getTextStyles: (value, _) => const TextStyle(color: Colors.black),
-            margin: 16,
-            getTitles: (double value) {
-              // Retorna la leyenda para cada barra
-              return months[value.toInt()];
-            },
+    // Contar noticias por mes
+    for (var news in newsList) {
+      String month = news['mes']; // Ajusta según la estructura de tus datos
+      monthlyCounts[month] = (monthlyCounts[month] ?? 0) + 1;
+    }
+
+    List<String> months = monthlyCounts.keys.toList();
+    List<int> counts = monthlyCounts.values.toList();
+
+    return Container(
+      width: 600, // Ajusta el ancho según tus necesidades
+      height: 300, // Ajusta la altura según tus necesidades
+      child: BarChart(
+        BarChartData(
+          gridData: FlGridData(show: false),
+          titlesData: FlTitlesData(
+            show: true,
+            leftTitles: SideTitles(showTitles: false),
+            rightTitles: SideTitles(showTitles: false),
+            topTitles: SideTitles(showTitles: false),
+            bottomTitles: SideTitles(
+              showTitles: true,
+              getTextStyles: (value, _) => const TextStyle(color: Colors.black),
+              margin: 16,
+              getTitles: (double value) {
+                // Retorna la leyenda para cada barra
+                return months[value.toInt()];
+              },
+            ),
           ),
-        ),
-        borderData: FlBorderData(
-          show: true,
-          border: Border.all(color: const Color(0xff37434d), width: 1),
-        ),
-        barGroups: List.generate(
-          months.length,
-          (index) => BarChartGroupData(
-            x: index,
-            barRods: [
-              BarChartRodData(
-                y: counts[index].toDouble(),
-                colors: [Colors.blue],
-              ),
-            ],
+          borderData: FlBorderData(
+            show: true,
+            border: Border.all(color: const Color(0xff37434d), width: 1),
           ),
-        ),
-        groupsSpace: 4,
-        barTouchData: BarTouchData(
-          touchTooltipData: BarTouchTooltipData(
-            tooltipBgColor: Colors.blueAccent,
+          barGroups: List.generate(
+            months.length,
+            (index) => BarChartGroupData(
+              x: index,
+              barRods: [
+                BarChartRodData(
+                  y: counts[index].toDouble(),
+                  colors: [Colors.blue],
+                ),
+              ],
+            ),
+          ),
+          groupsSpace: 4,
+          barTouchData: BarTouchData(
+            touchTooltipData: BarTouchTooltipData(
+              tooltipBgColor: const Color.fromARGB(255, 0, 0, 0),
+            ),
           ),
         ),
       ),
-    ),
-  );
-}
+    );
+  }
 /*Widget _buildDailyCommentsChart() {
   // Crear un mapa para contar comentarios por día de la semana
   Map<String, int> dailyCommentCounts = {

@@ -32,13 +32,14 @@ class _NavBarScreenState extends State<NavBar> {
     if (kIsWeb) {
       storedEmail = html.window.localStorage['email'] ?? '';
       storedName = html.window.localStorage['name'] ?? '';
+      adminMode = html.window.localStorage['adminMode'] ?? '';
     } else {
       // Recupera los valores almacenados en SharedPreferences
       storedName = prefs.getString('name') ??
           ''; // Puedes establecer un valor predeterminado si es nulo
       storedEmail = prefs.getString('email') ?? '';
       //storedRol = prefs.getString('rol') ?? '';
-      //adminMode = prefs.getString('adminMode') ?? '';
+      adminMode = prefs.getString('adminMode') ?? '';
       // Notifica al framework que el estado ha cambiado, para que se actualice en la pantalla
     }
     setState(() {});
