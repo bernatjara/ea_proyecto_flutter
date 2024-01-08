@@ -1,4 +1,6 @@
 import 'package:ea_proyecto_flutter/screens/schedule_screen.dart';
+import 'package:ea_proyecto_flutter/api/models/activity.dart';
+import 'package:ea_proyecto_flutter/api/services/activitiesService.dart';
 import 'package:ea_proyecto_flutter/screens/user_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -104,28 +106,31 @@ class _NavBarScreenState extends State<NavBar> {
               ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.only(left: 25.0),
-            child: ListTile(
-              leading: Icon(Icons.list_alt),
-              title: Text('Activitats'),
-              onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => MapScreen()),
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 25.0),
-            child: ListTile(
-              leading: Icon(Icons.access_time),
-              title: Text('Horari'),
-              onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => ScheduleScreen2()),
-              ),
-            ),
-          ),
+Padding(
+  padding: const EdgeInsets.only(left: 25.0),
+  child: ListTile(
+    leading: Icon(Icons.list_alt),
+    title: Text('Activitats'),
+    onTap: () => Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => FutureBuilder<List<ActivityModel>>(
+          future: ActivitiesApiService().getAllActivities(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return CircularProgressIndicator();
+            } else if (snapshot.hasError) {
+              return Text('Error: ${snapshot.error}');
+            } else {
+              return MapScreen(activityList: snapshot.data!);
+            }
+          },
+        ),
+      ),
+    ),
+  ),
+),
+
           /*
           if (storedRol == 'admin')
             Padding(
