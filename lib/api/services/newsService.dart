@@ -83,6 +83,7 @@ class NewsApiService {
         'title': title,
         'imageUrl': imageUrl,
         'content': content,
+        'mes': "Enero",
       };
       Map<String, String> headerContentType = {
         'Content-Type': 'application/json',
@@ -102,12 +103,13 @@ class NewsApiService {
   }
 
   Future<void> addCommentAndRating(String newsId, String text, double rating,
-      String? username, String token) async {
+      String? username, String token,) async {
     try {
       var data = {
         'username': username,
         'text': text,
         'rating': rating,
+        'dia': "Dimecres",
       };
       Map<String, String> headerContentType = {
         'Content-Type': 'application/json',
