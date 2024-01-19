@@ -8,6 +8,7 @@ import 'package:ea_proyecto_flutter/screens/news_screen.dart';
 import 'package:ea_proyecto_flutter/screens/subjects_screen.dart';
 import 'package:ea_proyecto_flutter/screens/activities_screen.dart';
 import 'package:ea_proyecto_flutter/screens/group_screen.dart';
+import 'package:ea_proyecto_flutter/screens/mapaguia_screen.dart';
 import 'package:universal_html/html.dart' as html;
 //import 'dart:html' as html;
 import 'package:flutter/foundation.dart' show kIsWeb;
@@ -156,6 +157,17 @@ class _NavBarScreenState extends State<NavBar> {
                 ),
               ),
             ),
+            Padding(
+            padding: const EdgeInsets.only(left: 25.0),
+            child: ListTile(
+              leading: Icon(Icons.list_alt),
+              title: Text('Mapa Guia'),
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => GuiaScreen()),
+              ),
+            ),
+          ),
           /*
           if (storedRol == 'admin')
             Padding(
