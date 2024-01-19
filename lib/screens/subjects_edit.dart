@@ -20,18 +20,32 @@ class _EditSubjectsScreenState extends State<EditSubjectsScreen> {
   final AsignaturaApiService asignaturaApiService = AsignaturaApiService();
   final UserApiService userApiService = UserApiService();
   late Future<List<NewItem>> futureAsignaturas;
+  late Future<List<NewItem>> futureAsignaturasUser;
   late List<NewItem> newList = [];
+  late List<NewItem> alreadyList = [];
   late List<bool> isCheckedList = [];
   late bool firstime = true;
 
   @override
   void initState() {
     futureAsignaturas = _getallasignaturas();
+    futureAsignaturasUser = _getallasginaturasuser();
     super.initState();
   }
 
   Future<List<NewItem>> _getallasignaturas() async {
     return await asignaturaApiService.GetAllAsignaturas();
+  }
+
+  Future<List<NewItem>> _getallasginaturasuser() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String storedId;
+    if (kIsWeb) {
+      storedId = html.window.localStorage['id'] ?? '';
+    } else {
+      storedId = prefs.getString('id') ?? '';
+    }
+    return await asignaturaApiService.GetAsignaturasById(storedId);
   }
 
   Future<void> _done() async {
@@ -74,8 +88,8 @@ class _EditSubjectsScreenState extends State<EditSubjectsScreen> {
       appBar: AppBar(
         title: Text('Editar Assignatures'),
       ),
-      body: FutureBuilder<List<NewItem>>(
-        future: futureAsignaturas,
+      body: FutureBuilder(
+        future: Future.wait([futureAsignaturas, futureAsignaturasUser]),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             // While waiting for the data to be fetched
@@ -86,8 +100,24 @@ class _EditSubjectsScreenState extends State<EditSubjectsScreen> {
           } else if (snapshot.hasData && snapshot.data != null) {
             // If the data has been successfully fetched
             if (firstime == true) {
-              newList = snapshot.data as List<NewItem>;
+              newList = snapshot.data?[0] as List<NewItem>;
+              alreadyList = snapshot.data?[1] as List<NewItem>;
               isCheckedList = List.generate(newList.length, (index) => false);
+              int i = 0;
+              int j = 0;
+              while (i < alreadyList.length) {
+                print("i $i");
+                while (j < newList.length) {
+                  if (alreadyList[i].name == newList[j].name) {
+                    print("true");
+                    isCheckedList[j] = true;
+                  }
+                  j++;
+                  print("j $j");
+                }
+                i++;
+                j = 0;
+              }
               firstime = false;
             }
             return Column(
