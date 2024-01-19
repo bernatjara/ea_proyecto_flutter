@@ -35,7 +35,7 @@ class _GuiaScreenState extends State<GuiaScreen> {
     currentTime = '${now.hour}:${now.minute}:${now.second}';
 
     // Obtener asignaturas del usuario
-    asignaturas = await asignaturaApiService.GetAsignaturasById(user.id); 
+    asignaturas = await asignaturaApiService.GetAsignaturasById('user.id'); 
 
     // Obtener horarios de cada asignatura
     for (NewItem asignatura in asignaturas) {
