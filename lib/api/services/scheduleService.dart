@@ -25,11 +25,12 @@ class ScheduleApiService {
     }
   }
 
-  Future<List<NewSchedule>> GetAllSchedules() async {
+  Future<List<NewSchedule>> GetAllSchedules(String year) async {
     List<NewSchedule> newList = [];
 
     try {
-      final response = await http.get(Uri.parse(_baseUrl));
+      String endpoint = '/$year';
+      final response = await http.get(Uri.parse(_baseUrl + endpoint));
       if (response.statusCode == 200) {
         final List<dynamic> responseData = json.decode(response.body);
         newList =

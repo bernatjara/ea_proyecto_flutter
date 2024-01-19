@@ -85,6 +85,7 @@ class _LoginScreenState extends State<LoginScreen> {
         final String image = userData['image'];
         //String image = '';
         String adminMode = '';
+        int year = 2023;
         SharedPreferences prefs = await SharedPreferences.getInstance();
         if (kIsWeb) {
           html.window.localStorage['token'] = token;
@@ -95,6 +96,7 @@ class _LoginScreenState extends State<LoginScreen> {
           html.window.localStorage['rol'] = rol;
           html.window.localStorage['adminMode'] = adminMode;
           html.window.localStorage['image'] = image;
+          html.window.localStorage['year'] = year.toString();
         } else {
           prefs.setString('token', token);
           prefs.setString('id', id);
@@ -104,6 +106,7 @@ class _LoginScreenState extends State<LoginScreen> {
           prefs.setString('rol', rol);
           prefs.setString('adminMode', adminMode);
           prefs.setString('image', image);
+          prefs.setString('year', year.toString());
         }
         Navigator.pushReplacement(
           context,
@@ -152,6 +155,7 @@ class _LoginScreenState extends State<LoginScreen> {
       final String image = userData['image'];
       //String image = '';
       String adminMode = '';
+      int year = 2023;
       SharedPreferences prefs = await SharedPreferences.getInstance();
       if (kIsWeb) {
         html.window.localStorage['token'] = token;
@@ -162,6 +166,7 @@ class _LoginScreenState extends State<LoginScreen> {
         html.window.localStorage['rol'] = rol;
         html.window.localStorage['adminMode'] = adminMode;
         html.window.localStorage['image'] = image;
+        html.window.localStorage['year'] = year.toString();
       } else {
         prefs.setString('token', token);
         prefs.setString('id', id);
@@ -171,6 +176,7 @@ class _LoginScreenState extends State<LoginScreen> {
         prefs.setString('rol', rol);
         prefs.setString('adminMode', adminMode);
         prefs.setString('image', image);
+        prefs.setString('year', year.toString());
       }
       Navigator.pushReplacement(
         context,

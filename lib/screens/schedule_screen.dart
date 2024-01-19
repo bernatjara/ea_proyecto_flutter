@@ -70,7 +70,14 @@ class _ScheduleScreenState extends State<ScheduleScreen2> {
   }
 
   Future<List<NewSchedule>> _getSchedules() async {
-    return await scheduleApiService.GetAllSchedules();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String storedYear;
+    if (kIsWeb) {
+      storedYear = html.window.localStorage['year'] ?? '2023';
+    } else {
+      storedYear = prefs.getString('year') ?? '2023';
+    }
+    return await scheduleApiService.GetAllSchedules(storedYear);
   }
 
   @override

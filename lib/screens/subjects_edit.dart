@@ -1,5 +1,6 @@
 import 'package:ea_proyecto_flutter/screens/subjects_screen.dart';
 import 'package:ea_proyecto_flutter/widgets/button.dart';
+import 'package:ea_proyecto_flutter/widgets/dropdown.dart';
 import 'package:flutter/material.dart';
 //import '../widgets/navigation_drawer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -42,23 +43,22 @@ class _EditSubjectsScreenState extends State<EditSubjectsScreen> {
       i++;
     }
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    if(kIsWeb){
+    if (kIsWeb) {
       await userApiService.updateSubjects(
-        userId: html.window.localStorage['id'] ?? '',
-        username: html.window.localStorage['name'] ?? '',
-        email: html.window.localStorage['email'] ?? '',
-        password: html.window.localStorage['password'] ?? '',
-        token: html.window.localStorage['token'] ?? '',
-        asignatura: asignaturas);
-    }
-    else{
+          userId: html.window.localStorage['id'] ?? '',
+          username: html.window.localStorage['name'] ?? '',
+          email: html.window.localStorage['email'] ?? '',
+          password: html.window.localStorage['password'] ?? '',
+          token: html.window.localStorage['token'] ?? '',
+          asignatura: asignaturas);
+    } else {
       await userApiService.updateSubjects(
-        userId: prefs.getString('id') ?? '',
-        username: prefs.getString('name') ?? '',
-        email: prefs.getString('email') ?? '',
-        password: prefs.getString('password') ?? '',
-        token: prefs.getString('token') ?? '',
-        asignatura: asignaturas);
+          userId: prefs.getString('id') ?? '',
+          username: prefs.getString('name') ?? '',
+          email: prefs.getString('email') ?? '',
+          password: prefs.getString('password') ?? '',
+          token: prefs.getString('token') ?? '',
+          asignatura: asignaturas);
     }
     Navigator.push(
         context,
@@ -107,6 +107,7 @@ class _EditSubjectsScreenState extends State<EditSubjectsScreen> {
                     },
                   ),
                 ),
+                MyDropdownButton(),
                 MyButton(
                   onTap: _done,
                   text: 'Editar',
