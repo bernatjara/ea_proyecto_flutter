@@ -53,7 +53,7 @@ class _EstadisticaScreenState extends State<EstadisticaScreen> {
     return Scaffold(
       drawer: NavBar(),
       appBar: AppBar(
-        title: Text('Estadísticas'),
+        title: Text('Estadístiques'),
         backgroundColor: Color.fromRGBO(0, 125, 204, 1.0),
         actions: [],
       ),
@@ -66,11 +66,11 @@ class _EstadisticaScreenState extends State<EstadisticaScreen> {
             //Text('Número de Noticias: ${newsList.length}'),
             //Text('Número de Asignaturas: ${asignaturaList.length}'),
             SizedBox(height: 20),
-            Text('Gráfico de Usuarios, Noticias y Asignaturas',
+            Text('Gràfic de Usuaris, Notícies i Asignatures',
                 style: TextStyle(fontSize: 24.0)),
             _buildCombinedChart(),
             SizedBox(height: 20),
-            Text('Gráfico de Noticias por Mes',
+            Text('Gràfic de Notícies per Mesos',
                 style: TextStyle(fontSize: 24.0)),
             _buildMonthlyChart(),
             SizedBox(height: 20),
@@ -101,11 +101,11 @@ class _EstadisticaScreenState extends State<EstadisticaScreen> {
                 // Retorna la leyenda para cada barra
                 switch (value.toInt()) {
                   case 0:
-                    return 'Usuarios';
+                    return 'Usuaris';
                   case 1:
-                    return 'Noticias';
+                    return 'Notícies';
                   case 2:
-                    return 'Asignaturas';
+                    return 'Asignatures';
                   default:
                     return '';
                 }

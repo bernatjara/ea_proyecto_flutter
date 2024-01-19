@@ -108,6 +108,7 @@ class _EditSubjectsScreenState extends State<EditSubjectsScreen> {
                     },
                   ),
                 ),
+                MyDropdownButton(),
                 MyButton(
                   onTap: _done,
                   text: 'Editar',

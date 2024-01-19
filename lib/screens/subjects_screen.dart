@@ -49,41 +49,39 @@ class _SubjectsScreenState extends State<SubjectsScreen> {
       appBar: AppBar(
         title: Text('Asignaturas'),
       ),
-      body: SingleChildScrollView(
-        child: FutureBuilder(
-          future: futureAsignaturas,
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              // While waiting for the data to be fetched
-              return Center(child: CircularProgressIndicator());
-            } else if (snapshot.hasError) {
-              // If there's an error
-              return Center(child: Text('Error: ${snapshot.error}'));
-            } else {
-              // If the data has been successfully fetched
-              List<NewItem> newList = snapshot.data as List<NewItem>;
-              return Column(
-                children: [
-                  Expanded(
-                    child: ListView.builder(
-                      itemCount: newList.length,
-                      itemBuilder: (context, index) {
-                        return ListTile(
-                          title: Text(newList[index].name),
-                          // Customize the ListTile as needed
-                        );
-                      },
-                    ),
+      body: FutureBuilder(
+        future: futureAsignaturas,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            // While waiting for the data to be fetched
+            return Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            // If there's an error
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else {
+            // If the data has been successfully fetched
+            List<NewItem> newList = snapshot.data as List<NewItem>;
+            return Column(
+              children: [
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: newList.length,
+                    itemBuilder: (context, index) {
+                      return ListTile(
+                        title: Text(newList[index].name),
+                        // Customize the ListTile as needed
+                      );
+                    },
                   ),
-                  MyButton(
-                    onTap: _editAsignatures,
-                    text: 'Editar Asignatures',
-                  ),
-                ],
-              );
-            }
-          },
-        ),
+                ),
+                MyButton(
+                  onTap: _editAsignatures,
+                  text: 'Editar Asignatures',
+                ),
+              ],
+            );
+          }
+        },
       ),
     );
   }

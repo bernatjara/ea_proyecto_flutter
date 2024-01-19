@@ -142,9 +142,7 @@ class _NewsScreenState extends State<NewsScreen> {
             ),
         ],
       ),
-      body: SingleChildScrollView(
-        child: _buildNewsList(),
-      ),
+      body: _buildNewsList(),
     );
   }
 
