@@ -5,7 +5,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../widgets/profile_menu_widget.dart';
 import 'package:ea_proyecto_flutter/screens/login_screen.dart';
 import '../screens/config_screen.dart';
-import 'dart:html' as html;
+import 'package:universal_html/html.dart' as html;
+//import 'dart:html' as html;
 import 'package:flutter/foundation.dart' show kIsWeb;
 import '../main.dart';
 

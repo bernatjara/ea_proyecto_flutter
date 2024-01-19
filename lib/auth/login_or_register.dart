@@ -3,7 +3,8 @@ import 'package:ea_proyecto_flutter/screens/register_screen.dart';
 import 'package:flutter/material.dart';
 import '../main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:html' as html;
+import 'package:universal_html/html.dart' as html;
+//import 'dart:html' as html;
 import 'package:flutter/foundation.dart' show kIsWeb;
 
 class LoginOrRegister extends StatefulWidget {
@@ -24,14 +25,14 @@ class _LoginOrRegisterState extends State<LoginOrRegister> {
       showLoginScreen = !showLoginScreen;
     });
   }
-  void _updateTheme() async{
+
+  void _updateTheme() async {
     String? darkModeValue;
 
     if (kIsWeb) {
       // Almacenamiento local para la web
       darkModeValue = html.window.localStorage['darkMode'];
-    } 
-    else {
+    } else {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       darkModeValue = prefs.getString('darkMode') ?? '0';
     }
@@ -46,6 +47,7 @@ class _LoginOrRegisterState extends State<LoginOrRegister> {
       MyApp.setTheme(context, ThemeData.light());
     }
   }
+
   @override
   Widget build(BuildContext context) {
     if (showLoginScreen) {

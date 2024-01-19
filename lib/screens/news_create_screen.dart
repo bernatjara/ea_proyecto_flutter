@@ -8,7 +8,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:io';
 import 'package:dotted_border/dotted_border.dart';
 import '../widgets/text_widget.dart';
-import 'dart:html' as html;
+import 'package:universal_html/html.dart' as html;
+//import 'dart:html' as html;
 import 'package:flutter/foundation.dart' show kIsWeb;
 
 class CreateNewsScreen extends StatefulWidget {
@@ -52,10 +53,9 @@ class _CreateNewsScreenState extends State<CreateNewsScreen> {
     }
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String token;
-    if(kIsWeb){
+    if (kIsWeb) {
       token = html.window.localStorage['token'] ?? '';
-    }
-    else{
+    } else {
       token = prefs.getString('token') ?? '';
     }
     try {
@@ -204,10 +204,11 @@ class _CreateNewsScreenState extends State<CreateNewsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text('Crear Noticia'),
-        ),
-        body: Padding(
+      appBar: AppBar(
+        title: Text('Crear Noticia'),
+      ),
+      body: SingleChildScrollView(
+        child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -258,15 +259,18 @@ class _CreateNewsScreenState extends State<CreateNewsScreen> {
               ),
             ],
           ),
-        ));
+        ),
+      ),
+    );
   }
 
   Widget dottedBorder({
     required Color color,
   }) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: DottedBorder(
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: DottedBorder(
           dashPattern: const [6.7],
           borderType: BorderType.RRect,
           color: color,
@@ -285,16 +289,19 @@ class _CreateNewsScreenState extends State<CreateNewsScreen> {
                   height: 20,
                 ),
                 TextButton(
-                    onPressed: (() {
-                      _pickImage();
-                    }),
-                    child: TextWidget(
-                      text: 'Choose an image',
-                      color: Colors.blue,
-                    ))
+                  onPressed: (() {
+                    _pickImage();
+                  }),
+                  child: TextWidget(
+                    text: 'Choose an image',
+                    color: Colors.blue,
+                  ),
+                ),
               ],
             ),
-          )),
+          ),
+        ),
+      ),
     );
   }
 }

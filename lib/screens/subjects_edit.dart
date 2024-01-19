@@ -5,8 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ea_proyecto_flutter/api/services/asignaturaService.dart';
 import 'package:ea_proyecto_flutter/api/services/userService.dart';
+import 'package:universal_html/html.dart' as html;
 //import '../api/models/user.dart';
-import 'dart:html' as html;
+//import 'dart:html' as html;
 import 'package:flutter/foundation.dart' show kIsWeb;
 
 class EditSubjectsScreen extends StatefulWidget {
@@ -42,23 +43,22 @@ class _EditSubjectsScreenState extends State<EditSubjectsScreen> {
       i++;
     }
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    if(kIsWeb){
+    if (kIsWeb) {
       await userApiService.updateSubjects(
-        userId: html.window.localStorage['id'] ?? '',
-        username: html.window.localStorage['name'] ?? '',
-        email: html.window.localStorage['email'] ?? '',
-        password: html.window.localStorage['password'] ?? '',
-        token: html.window.localStorage['token'] ?? '',
-        asignatura: asignaturas);
-    }
-    else{
+          userId: html.window.localStorage['id'] ?? '',
+          username: html.window.localStorage['name'] ?? '',
+          email: html.window.localStorage['email'] ?? '',
+          password: html.window.localStorage['password'] ?? '',
+          token: html.window.localStorage['token'] ?? '',
+          asignatura: asignaturas);
+    } else {
       await userApiService.updateSubjects(
-        userId: prefs.getString('id') ?? '',
-        username: prefs.getString('name') ?? '',
-        email: prefs.getString('email') ?? '',
-        password: prefs.getString('password') ?? '',
-        token: prefs.getString('token') ?? '',
-        asignatura: asignaturas);
+          userId: prefs.getString('id') ?? '',
+          username: prefs.getString('name') ?? '',
+          email: prefs.getString('email') ?? '',
+          password: prefs.getString('password') ?? '',
+          token: prefs.getString('token') ?? '',
+          asignatura: asignaturas);
     }
     Navigator.push(
         context,
@@ -73,50 +73,52 @@ class _EditSubjectsScreenState extends State<EditSubjectsScreen> {
       appBar: AppBar(
         title: Text('Editar Assignatures'),
       ),
-      body: FutureBuilder<List<NewItem>>(
-        future: futureAsignaturas,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            // While waiting for the data to be fetched
-            return Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            // If there's an error
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else if (snapshot.hasData && snapshot.data != null) {
-            // If the data has been successfully fetched
-            if (firstime == true) {
-              newList = snapshot.data as List<NewItem>;
-              isCheckedList = List.generate(newList.length, (index) => false);
-              firstime = false;
-            }
-            return Column(
-              children: [
-                Expanded(
-                  child: ListView.builder(
-                    itemCount: newList.length,
-                    itemBuilder: (context, index) {
-                      return CheckboxListTile(
-                        title: Text(newList[index].name),
-                        value: isCheckedList[index],
-                        onChanged: (value) {
-                          setState(() {
-                            isCheckedList[index] = value!;
-                          });
-                        },
-                      );
-                    },
+      body: SingleChildScrollView(
+        child: FutureBuilder<List<NewItem>>(
+          future: futureAsignaturas,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              // While waiting for the data to be fetched
+              return Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              // If there's an error
+              return Center(child: Text('Error: ${snapshot.error}'));
+            } else if (snapshot.hasData && snapshot.data != null) {
+              // If the data has been successfully fetched
+              if (firstime == true) {
+                newList = snapshot.data as List<NewItem>;
+                isCheckedList = List.generate(newList.length, (index) => false);
+                firstime = false;
+              }
+              return Column(
+                children: [
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: newList.length,
+                      itemBuilder: (context, index) {
+                        return CheckboxListTile(
+                          title: Text(newList[index].name),
+                          value: isCheckedList[index],
+                          onChanged: (value) {
+                            setState(() {
+                              isCheckedList[index] = value!;
+                            });
+                          },
+                        );
+                      },
+                    ),
                   ),
-                ),
-                MyButton(
-                  onTap: _done,
-                  text: 'Editar',
-                ),
-              ],
-            );
-          } else {
-            return Center(child: Text('No data available'));
-          }
-        },
+                  MyButton(
+                    onTap: _done,
+                    text: 'Editar',
+                  ),
+                ],
+              );
+            } else {
+              return Center(child: Text('No data available'));
+            }
+          },
+        ),
       ),
     );
   }

@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/cupertino.dart';
 import '../main.dart';
-import 'dart:html' as html;
+import 'package:universal_html/html.dart' as html;
+//import 'dart:html' as html;
 import 'package:flutter/foundation.dart' show kIsWeb;
 
 class ConfigurationScreen extends StatefulWidget {
@@ -17,7 +18,7 @@ class _ConfigurationScreenState extends State<ConfigurationScreen> {
 
   @override
   void initState() {
-    super.initState();  
+    super.initState();
     _loadConfigurationData();
   }
 
@@ -33,23 +34,20 @@ class _ConfigurationScreenState extends State<ConfigurationScreen> {
       darkMode = prefs.getString('darkMode') ?? '0';
       rol = prefs.getString('rol');
     }
-    setState(() {});    
+    setState(() {});
   }
 
   Future<void> _toggleAdminMode() async {
-     SharedPreferences prefs = await SharedPreferences.getInstance();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
     if (kIsWeb) {
-      html.window.localStorage['adminMode'] = adminMode == '1' ? '0' : '1';      
-    }
-    else{   
+      html.window.localStorage['adminMode'] = adminMode == '1' ? '0' : '1';
+    } else {
       prefs.setString('adminMode', adminMode == '1' ? '0' : '1');
     }
     setState(() {
       if (kIsWeb) {
         adminMode = html.window.localStorage['adminMode'];
-      }
-      else
-      {
+      } else {
         adminMode = prefs.getString('adminMode') ?? '0';
       }
     });
@@ -61,9 +59,9 @@ class _ConfigurationScreenState extends State<ConfigurationScreen> {
       // Almacenamiento local para la web
       html.window.localStorage['darkMode'] = darkMode == '1' ? '0' : '1';
     } else {
-      // Almacenamiento local para dispositivos móviles      
+      // Almacenamiento local para dispositivos móviles
       prefs.setString('darkMode', darkMode == '1' ? '0' : '1');
-    }    
+    }
     if (kIsWeb) {
       darkMode = html.window.localStorage['darkMode'] ?? '0';
     } else {
@@ -74,6 +72,7 @@ class _ConfigurationScreenState extends State<ConfigurationScreen> {
       _updateTheme();
     });
   }
+
   void _updateTheme() {
     bool isDarkModeEnabled = darkMode == '1';
     if (isDarkModeEnabled) {
@@ -84,6 +83,7 @@ class _ConfigurationScreenState extends State<ConfigurationScreen> {
       MyApp.setTheme(context, ThemeData.light());
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -98,32 +98,34 @@ class _ConfigurationScreenState extends State<ConfigurationScreen> {
           },
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            if(rol == "admin")
-            ListTile(
-              title: Text('Mode Admin'),
-              trailing: CupertinoSwitch(
-                value: adminMode == '1',
-                onChanged: (bool value){
-                  _toggleAdminMode();
-                },
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              if (rol == "admin")
+                ListTile(
+                  title: Text('Mode Admin'),
+                  trailing: CupertinoSwitch(
+                    value: adminMode == '1',
+                    onChanged: (bool value) {
+                      _toggleAdminMode();
+                    },
+                  ),
+                ),
+              SizedBox(height: 16.0),
+              ListTile(
+                title: Text('Mode Fosc'),
+                trailing: CupertinoSwitch(
+                  value: darkMode == '1',
+                  onChanged: (bool value) {
+                    _toggleDarkMode();
+                  },
+                ),
               ),
-            ),
-            SizedBox(height: 16.0),
-           ListTile(
-              title: Text('Mode Fosc'),
-              trailing: CupertinoSwitch(
-                value: darkMode == '1',
-                onChanged: (bool value){
-                  _toggleDarkMode();
-                },
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

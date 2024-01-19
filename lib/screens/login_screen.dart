@@ -10,7 +10,8 @@ import 'package:ea_proyecto_flutter/screens/news_screen.dart';
 import 'package:ea_proyecto_flutter/screens/register_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../api/services/auth_service.dart';
-import 'dart:html' as html;
+import 'package:universal_html/html.dart' as html;
+//import 'dart:html' as html;
 import 'package:flutter/foundation.dart' show kIsWeb;
 
 class LoginScreen extends StatefulWidget {
@@ -196,143 +197,146 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[300],
-      body: SafeArea(
-        child: Center(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 25.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                //logo
-                const Icon(
-                  Icons.lock_person_rounded,
-                  color: Color.fromRGBO(0, 125, 204, 1.0),
-                  size: 100,
-                ),
-
-                const SizedBox(height: 35),
-
-                //welcome back message
-                Text(
-                  "Hola de nou! Estem feliços de veure't",
-                  style: TextStyle(
-                    color: Colors.grey[700],
+      body: SingleChildScrollView(
+        child: SafeArea(
+          child: Center(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 25.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  //logo
+                  const Icon(
+                    Icons.lock_person_rounded,
+                    color: Color.fromRGBO(0, 125, 204, 1.0),
+                    size: 100,
                   ),
-                ),
 
-                const SizedBox(height: 30),
+                  const SizedBox(height: 35),
 
-                //email textfield
-                MyTextField(
-                    controller: usernameTextController,
-                    hintText: 'Nom de usuari',
-                    obscureText: false),
+                  //welcome back message
+                  Text(
+                    "Hola de nou! Estem feliços de veure't",
+                    style: TextStyle(
+                      color: Colors.grey[700],
+                    ),
+                  ),
 
-                const SizedBox(height: 25),
+                  const SizedBox(height: 30),
 
-                //password textfield
-                MyTextField(
-                    controller: passwordTextController,
-                    hintText: 'Contrasenya',
-                    obscureText: true),
+                  //email textfield
+                  MyTextField(
+                      controller: usernameTextController,
+                      hintText: 'Nom de usuari',
+                      obscureText: false),
 
-                const SizedBox(height: 25),
+                  const SizedBox(height: 25),
 
-                //Sign in button
-                MyButton(
-                  onTap: _loginUser,
-                  text: 'INICIAR SESSIÓ',
-                ),
+                  //password textfield
+                  MyTextField(
+                      controller: passwordTextController,
+                      hintText: 'Contrasenya',
+                      obscureText: true),
 
-                const SizedBox(height: 25),
+                  const SizedBox(height: 25),
 
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                  child: Row(
+                  //Sign in button
+                  MyButton(
+                    onTap: _loginUser,
+                    text: 'INICIAR SESSIÓ',
+                  ),
+
+                  const SizedBox(height: 25),
+
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Divider(
+                            thickness: 0.5,
+                            color: Colors.grey[400],
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                          child: Text(
+                            'O continua amb',
+                            style: TextStyle(color: Colors.grey[700]),
+                          ),
+                        ),
+                        Expanded(
+                          child: Divider(
+                            thickness: 0.5,
+                            color: Colors.grey[400],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  const SizedBox(height: 25),
+
+                  //google button
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Expanded(
-                        child: Divider(
-                          thickness: 0.5,
-                          color: Colors.grey[400],
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                        child: Text(
-                          'O continua amb',
-                          style: TextStyle(color: Colors.grey[700]),
-                        ),
-                      ),
-                      Expanded(
-                        child: Divider(
-                          thickness: 0.5,
-                          color: Colors.grey[400],
-                        ),
-                      ),
+                      // google button
+                      SquareTile(
+                          onTap: () async {
+                            try {
+                              final user = await AuthService.signInWithGoogle();
+                              if (user != null && mounted) {
+                                await _loginGoogleUser(user);
+                              }
+                            } on FirebaseAuthException catch (e) {
+                              print(e);
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(SnackBar(
+                                content:
+                                    Text(e.message ?? 'Unknown error occurred'),
+                              ));
+                            } catch (e) {
+                              print(e);
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text(e.toString())));
+                            }
+                          },
+                          imagePath: 'assets/images/google.png'),
                     ],
                   ),
-                ),
 
-                const SizedBox(height: 25),
+                  const SizedBox(height: 20),
 
-                //google button
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    // google button
-                    SquareTile(
-                        onTap: () async {
-                          try {
-                            final user = await AuthService.signInWithGoogle();
-                            if (user != null && mounted) {
-                              await _loginGoogleUser(user);
-                            }
-                          } on FirebaseAuthException catch (e) {
-                            print(e);
-                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                              content:
-                                  Text(e.message ?? 'Unknown error occurred'),
-                            ));
-                          } catch (e) {
-                            print(e);
-                            ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text(e.toString())));
-                          }
-                        },
-                        imagePath: 'assets/images/google.png'),
-                  ],
-                ),
-
-                const SizedBox(height: 20),
-
-                //go to register page
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      "No tens compte?",
-                      style: TextStyle(
-                        color: Colors.grey[700],
-                      ),
-                    ),
-                    const SizedBox(width: 4),
-                    GestureDetector(
-                      child: Text(
-                        "Registra't",
+                  //go to register page
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "No tens compte?",
                         style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.blue,
+                          color: Colors.grey[700],
                         ),
                       ),
-                      onTap: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => RegisterScreen()),
-                      ),
-                    )
-                  ],
-                ),
-              ],
+                      const SizedBox(width: 4),
+                      GestureDetector(
+                        child: Text(
+                          "Registra't",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.blue,
+                          ),
+                        ),
+                        onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => RegisterScreen()),
+                        ),
+                      )
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ),

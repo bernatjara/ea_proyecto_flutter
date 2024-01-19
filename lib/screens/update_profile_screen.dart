@@ -10,7 +10,8 @@ import 'package:image_picker/image_picker.dart';
 
 import '../api/services/userService.dart';
 import '../screens/user_screen.dart';
-import 'dart:html' as html;
+import 'package:universal_html/html.dart' as html;
+//import 'dart:html' as html;
 import 'package:flutter/foundation.dart' show kIsWeb;
 
 class UpdateProfileScreen extends StatefulWidget {
@@ -128,10 +129,9 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
         print('devuelve la URL: $_imageUrl');
       });
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      if(kIsWeb){
+      if (kIsWeb) {
         html.window.localStorage['image'] = _imageUrl!;
-      }
-      else{
+      } else {
         prefs.setString('image', _imageUrl!);
       }
       _updateUserImage();
@@ -142,7 +142,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
 
   Future<void> _loadUserData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    if(kIsWeb){
+    if (kIsWeb) {
       storedName = html.window.localStorage['name'] ?? '';
       //storedRol = html.window.localStorage['rol'] ?? '';
       storedEmail = html.window.localStorage['email'] ?? '';
@@ -150,10 +150,10 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
       storedId = html.window.localStorage['id'] ?? '';
       storedImage = html.window.localStorage['image'] ?? '';
       token = html.window.localStorage['token'] ?? '';
-    }
-    else{
+    } else {
       // Recupera los valores almacenados en SharedPreferences
-      storedName = prefs.getString('name') ?? ''; // Puedes establecer un valor predeterminado si es nulo
+      storedName = prefs.getString('name') ??
+          ''; // Puedes establecer un valor predeterminado si es nulo
       //storedRol = prefs.getString('rol') ?? '';
       storedEmail = prefs.getString('email') ?? '';
       storedPassword = prefs.getString('password') ?? '';
@@ -168,10 +168,9 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
   Future<void> _updateUserImage() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String newImage;
-    if(kIsWeb){
+    if (kIsWeb) {
       newImage = html.window.localStorage['image'] ?? '';
-    }
-    else{
+    } else {
       newImage = prefs.getString('image') ?? '';
     }
     try {
@@ -221,10 +220,9 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
       final String password = responseData['password'];
 
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      if(kIsWeb){
+      if (kIsWeb) {
         html.window.localStorage['password'] = password;
-      }
-      else{
+      } else {
         prefs.setString('password', password);
       }
 

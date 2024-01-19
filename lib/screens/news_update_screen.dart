@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:ea_proyecto_flutter/api/services/newsService.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../screens/news_screen.dart';
-import 'dart:html' as html;
+import 'package:universal_html/html.dart' as html;
+//import 'dart:html' as html;
 import 'package:flutter/foundation.dart' show kIsWeb;
 
 class NewsUpdateScreen extends StatefulWidget {
@@ -32,10 +33,9 @@ class _NewsUpdateScreenState extends State<NewsUpdateScreen> {
   Future<void> _updateNews() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String token;
-    if(kIsWeb){
+    if (kIsWeb) {
       token = html.window.localStorage['token'] ?? '';
-    }
-    else{
+    } else {
       token = prefs.getString('token') ?? '';
     }
     if (newTitleController.text.isEmpty) {
@@ -92,7 +92,7 @@ class _NewsUpdateScreenState extends State<NewsUpdateScreen> {
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.of(context).pop(),          
+          onPressed: () => Navigator.of(context).pop(),
         ),
         title: const Text('Editar notícia'),
         backgroundColor: const Color.fromRGBO(0, 125, 204, 1.0),

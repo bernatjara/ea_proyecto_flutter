@@ -7,7 +7,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 //import 'dart:convert';
 import 'package:ea_proyecto_flutter/screens/news_create_screen.dart';
 import '../widgets/news_item_card.dart';
-import 'dart:html' as html;
+import 'package:universal_html/html.dart' as html;
+//import 'dart:html' as html;
 import 'package:flutter/foundation.dart' show kIsWeb;
 
 class NewsScreen extends StatefulWidget {
@@ -28,18 +29,17 @@ class _NewsScreenState extends State<NewsScreen> {
 
   Future<void> _loadNewsData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    if(kIsWeb){
+    if (kIsWeb) {
       adminMode = html.window.localStorage['adminMode'];
       rol = html.window.localStorage['rol'];
-      if(rol != 'admin'){
+      if (rol != 'admin') {
         html.window.localStorage.remove('adminMode');
         html.window.localStorage.remove('rol');
       }
-    }
-    else{
+    } else {
       adminMode = prefs.getString('adminMode');
       rol = prefs.getString('rol');
-      if(rol != 'admin'){
+      if (rol != 'admin') {
         prefs.remove('adminMode');
         prefs.remove('rol');
       }
@@ -142,21 +142,21 @@ class _NewsScreenState extends State<NewsScreen> {
             ),
         ],
       ),
-      body: _buildNewsList(),
+      body: SingleChildScrollView(
+        child: _buildNewsList(),
+      ),
     );
   }
 
   Widget _buildNewsList() {
-      return ListView.builder(
-        itemCount: newsList.length,
-        itemBuilder: (context, index) {
-          return NewsItemCard(news: newsList[index]);
-        },
-      );
-    }
+    return ListView.builder(
+      itemCount: newsList.length,
+      itemBuilder: (context, index) {
+        return NewsItemCard(news: newsList[index]);
+      },
+    );
   }
-
-
+}
 
 class NewsItem {
   final String id;

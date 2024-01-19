@@ -6,7 +6,8 @@ import 'package:ea_proyecto_flutter/screens/news_screen.dart';
 import 'package:ea_proyecto_flutter/screens/subjects_screen.dart';
 import 'package:ea_proyecto_flutter/screens/activities_screen.dart';
 import 'package:ea_proyecto_flutter/screens/group_screen.dart';
-import 'dart:html' as html;
+import 'package:universal_html/html.dart' as html;
+//import 'dart:html' as html;
 import 'package:flutter/foundation.dart' show kIsWeb;
 
 class NavBar extends StatefulWidget {

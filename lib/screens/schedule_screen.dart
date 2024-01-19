@@ -4,7 +4,8 @@ import 'package:timetable_view/timetable_view.dart';
 import 'package:ea_proyecto_flutter/api/services/asignaturaService.dart';
 import 'package:ea_proyecto_flutter/api/services/scheduleService.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:html' as html;
+import 'package:universal_html/html.dart' as html;
+//import 'dart:html' as html;
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:table_calendar/table_calendar.dart';
 
