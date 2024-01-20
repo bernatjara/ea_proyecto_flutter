@@ -12,6 +12,9 @@ import 'package:universal_html/html.dart' as html;
 //import 'dart:html' as html;
 import 'package:flutter/foundation.dart' show kIsWeb;
 import '../screens/estadistica_screen.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:intl/intl.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class NavBar extends StatefulWidget {
   @override
@@ -69,7 +72,7 @@ class _NavBarScreenState extends State<NavBar> {
             padding: const EdgeInsets.only(left: 25.0),
             child: ListTile(
               leading: Icon(Icons.account_circle),
-              title: Text('Perfil'),
+              title: Text(AppLocalizations.of(context)!.profile),
               onTap: () => Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => UserScreen()),
@@ -80,7 +83,7 @@ class _NavBarScreenState extends State<NavBar> {
             padding: const EdgeInsets.only(left: 25.0),
             child: ListTile(
               leading: Icon(Icons.newspaper),
-              title: Text('Notícies'),
+              title: Text(AppLocalizations.of(context)!.news),
               onTap: () => Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => NewsScreen()),
@@ -91,7 +94,7 @@ class _NavBarScreenState extends State<NavBar> {
             padding: const EdgeInsets.only(left: 25.0),
             child: ListTile(
               leading: Icon(Icons.list_alt),
-              title: Text('Assignatures'),
+              title: Text(AppLocalizations.of(context)!.subjects),
               onTap: () => Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => SubjectsScreen()),
@@ -102,7 +105,7 @@ class _NavBarScreenState extends State<NavBar> {
             padding: const EdgeInsets.only(left: 25.0),
             child: ListTile(
               leading: Icon(Icons.chat),
-              title: Text('Xat'),
+              title: Text(AppLocalizations.of(context)!.chat),
               onTap: () => Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => GroupsScreen()),
@@ -113,7 +116,7 @@ class _NavBarScreenState extends State<NavBar> {
             padding: const EdgeInsets.only(left: 25.0),
             child: ListTile(
               leading: Icon(Icons.list_alt),
-              title: Text('Activitats'),
+              title: Text(AppLocalizations.of(context)!.activities),
               onTap: () => Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -137,7 +140,7 @@ class _NavBarScreenState extends State<NavBar> {
             padding: const EdgeInsets.only(left: 25.0),
             child: ListTile(
               leading: Icon(Icons.access_time),
-              title: Text('Horari'),
+              title: Text(AppLocalizations.of(context)!.schedule),
               onTap: () => Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => ScheduleScreen2()),
@@ -149,30 +152,13 @@ class _NavBarScreenState extends State<NavBar> {
               padding: const EdgeInsets.only(left: 25.0),
               child: ListTile(
                 leading: Icon(Icons.list_alt),
-                title: Text('Estadistica'),
+                title: Text(AppLocalizations.of(context)!.statistics),
                 onTap: () => Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => EstadisticaScreen()),
                 ),
               ),
             ),
-          /*
-          if (storedRol == 'admin')
-            Padding(
-              padding: const EdgeInsets.only(left: 25.0),
-              child: ListTile(
-                  leading: Icon(Icons.admin_panel_settings),
-                  title: Text('Modo admin'),
-                  onTap: () async {
-                    SharedPreferences prefs =
-                        await SharedPreferences.getInstance();
-                    prefs.setString('adminMode', adminMode == '1' ? '0' : '1');
-                    // Actualiza el estado con el nuevo valor
-                    setState(() {
-                      adminMode = prefs.getString('adminMode') ?? '0';
-                    });
-                  }),
-            ),*/
         ],
       ),
     );

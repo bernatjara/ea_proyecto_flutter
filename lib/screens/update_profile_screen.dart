@@ -1,18 +1,17 @@
 import 'dart:io';
 import 'dart:typed_data';
-
 import 'package:cloudinary/cloudinary.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:image_picker/image_picker.dart';
-
 import '../api/services/userService.dart';
 import '../screens/user_screen.dart';
 import 'package:universal_html/html.dart' as html;
 //import 'dart:html' as html;
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class UpdateProfileScreen extends StatefulWidget {
   const UpdateProfileScreen({super.key});
@@ -200,9 +199,9 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
     if (passwordController.text.isEmpty || newPasswordController.text.isEmpty) {
       // Muestra un mensaje de error si algún campo está vacío
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
+        SnackBar(
           backgroundColor: Colors.red,
-          content: Text('Sisplau, completa tots els camps'),
+          content: Text(AppLocalizations.of(context)!.complete),
         ),
       );
       return; // Sale de la función si algún campo está vacío
@@ -254,7 +253,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
           onPressed: () => Navigator.pop(context, true),
           icon: const Icon(Icons.arrow_back),
         ),
-        title: const Text('Editar perfil'),
+        title: Text(AppLocalizations.of(context)!.editProfile),
         backgroundColor: const Color.fromRGBO(0, 125, 204, 1.0),
       ),
       body: SingleChildScrollView(
@@ -319,7 +318,8 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                   children: [
                     TextFormField(
                       decoration: InputDecoration(
-                        labelText: 'Nom usuari: $storedName',
+                        labelText: AppLocalizations.of(context)!.usernameHint +
+                            ' $storedName',
                         prefixIcon: const Icon(Icons.person),
                       ),
                       enabled: false, // No se puede editar
@@ -330,7 +330,8 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                     const SizedBox(height: 10),
                     TextFormField(
                       decoration: InputDecoration(
-                        labelText: 'E-mail: $storedEmail',
+                        labelText: AppLocalizations.of(context)!.emailHint +
+                            ' $storedEmail',
                         prefixIcon: const Icon(Icons.email),
                       ),
                       enabled: false, // No se puede editar
@@ -343,7 +344,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                       controller: passwordController,
                       obscureText: !isPasswordVisible,
                       decoration: InputDecoration(
-                        labelText: 'Contrasenya',
+                        labelText: AppLocalizations.of(context)!.passwordHint,
                         prefixIcon: const Icon(Icons.fingerprint),
                         suffixIcon: IconButton(
                           icon: Icon(
@@ -365,7 +366,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                       controller: newPasswordController,
                       obscureText: !isNewPasswordVisible,
                       decoration: InputDecoration(
-                        labelText: 'Contrasenya nova',
+                        labelText: AppLocalizations.of(context)!.newPassword,
                         prefixIcon: const Icon(Icons.fingerprint),
                         suffixIcon: IconButton(
                           icon: Icon(
@@ -394,7 +395,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                               1.0), // Puedes ajustar el color según tus necesidades
                           shape: const StadiumBorder(),
                         ),
-                        child: const Text('Edit Profile',
+                        child: Text(AppLocalizations.of(context)!.editProfile,
                             style: TextStyle(color: Colors.white)),
                       ),
                     ),

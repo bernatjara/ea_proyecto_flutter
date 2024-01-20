@@ -5,6 +5,7 @@ import 'package:fl_chart/fl_chart.dart';
 import '../api/services/asignaturaService.dart';
 import '../api/services/newsService.dart';
 import '../api/services/userService.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class EstadisticaScreen extends StatefulWidget {
   @override
@@ -53,7 +54,7 @@ class _EstadisticaScreenState extends State<EstadisticaScreen> {
     return Scaffold(
       drawer: NavBar(),
       appBar: AppBar(
-        title: Text('Estadístiques'),
+        title: Text(AppLocalizations.of(context)!.statistics),
         backgroundColor: Color.fromRGBO(0, 125, 204, 1.0),
         actions: [],
       ),
@@ -66,11 +67,11 @@ class _EstadisticaScreenState extends State<EstadisticaScreen> {
             //Text('Número de Noticias: ${newsList.length}'),
             //Text('Número de Asignaturas: ${asignaturaList.length}'),
             SizedBox(height: 20),
-            Text('Gràfic de Usuaris, Notícies i Asignatures',
+            Text(AppLocalizations.of(context)!.graph1,
                 style: TextStyle(fontSize: 24.0)),
             _buildCombinedChart(),
             SizedBox(height: 20),
-            Text('Gràfic de Notícies per Mesos',
+            Text(AppLocalizations.of(context)!.graph2,
                 style: TextStyle(fontSize: 24.0)),
             _buildMonthlyChart(),
             SizedBox(height: 20),
@@ -101,11 +102,11 @@ class _EstadisticaScreenState extends State<EstadisticaScreen> {
                 // Retorna la leyenda para cada barra
                 switch (value.toInt()) {
                   case 0:
-                    return 'Usuaris';
+                    return AppLocalizations.of(context)!.users;
                   case 1:
-                    return 'Notícies';
+                    return AppLocalizations.of(context)!.news;
                   case 2:
-                    return 'Asignatures';
+                    return AppLocalizations.of(context)!.subjects;
                   default:
                     return '';
                 }

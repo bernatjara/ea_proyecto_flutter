@@ -5,14 +5,15 @@ import 'package:latlong2/latlong.dart';
 import 'package:flutter_map_marker_popup/flutter_map_marker_popup.dart';
 import 'package:ea_proyecto_flutter/api/services/activitiesService.dart';
 import '../widgets/marker_popup.dart';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: FutureBuilder<List<ActivityModel>>(
-        future: ActivitiesApiService().getAllActivities(), // Llama al método que obtiene todas las actividades
+        future: ActivitiesApiService()
+            .getAllActivities(), // Llama al método que obtiene todas las actividades
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return CircularProgressIndicator(); // Muestra un indicador de carga mientras se obtienen los datos
@@ -60,7 +61,7 @@ class MapScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Activitats'),
+        title: Text(AppLocalizations.of(context)!.activities),
       ),
       body: FlutterMap(
         options: MapOptions(
@@ -72,7 +73,8 @@ class MapScreen extends StatelessWidget {
             urlTemplate:
                 'https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=$mapboxAccessToken',
             additionalOptions: {
-              'id': 'mapbox/streets-v11', // Puedes cambiar el estilo del mapa aquí
+              'id':
+                  'mapbox/streets-v11', // Puedes cambiar el estilo del mapa aquí
             },
           ),
           MarkerLayer(markers: initMarkers()),

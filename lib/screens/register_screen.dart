@@ -10,16 +10,21 @@ import '../screens/login_screen.dart';
 import 'package:ea_proyecto_flutter/widgets/square_tile.dart';
 import 'package:flutter_pw_validator/flutter_pw_validator.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:intl/intl.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class RegisterScreen extends StatefulWidget {
   final Function()? onTap;
   const RegisterScreen({super.key, this.onTap});
-
   @override
   State<RegisterScreen> createState() => _RegisterScreenState();
 }
 
 class CatalanStrings implements FlutterPwValidatorStrings {
+  final Locale locale;
+
+  CatalanStrings(this.locale);
   @override
   final String atLeast = '- Carácters com a mínim';
   @override
@@ -29,9 +34,62 @@ class CatalanStrings implements FlutterPwValidatorStrings {
   @override
   final String lowercaseLetters = '- Lletres míniscules';
   @override
-  final String normalLetters = '- Lletras normals';
+  final String normalLetters = '- Lletres normals';
   @override
   final String specialCharacters = '- Caracteres especiales';
+}
+
+class EnglishStrings implements FlutterPwValidatorStrings {
+  final Locale locale;
+
+  EnglishStrings(this.locale);
+  @override
+  final String atLeast = '- Characters at least';
+  @override
+  final String uppercaseLetters = '- Uppercase Letters';
+  @override
+  final String numericCharacters = '- Numbers';
+  @override
+  final String lowercaseLetters = '- Lowercase Letters';
+  @override
+  final String normalLetters = '- Normal Letters';
+  @override
+  final String specialCharacters = '- Special characters';
+}
+
+class SpanishStrings implements FlutterPwValidatorStrings {
+  final Locale locale;
+
+  SpanishStrings(this.locale);
+
+  @override
+  final String atLeast = '- Caracteres como mínimo';
+  @override
+  final String uppercaseLetters = '- Letras mayúsculas';
+  @override
+  final String numericCharacters = '- Números';
+  @override
+  final String lowercaseLetters = '- Letras mínisculas';
+  @override
+  final String normalLetters = '- Letras normales';
+  @override
+  final String specialCharacters = '- Caracteres especiales';
+}
+
+class AppStrings {
+  static FlutterPwValidatorStrings getStrings(Locale locale) {
+    switch (locale.languageCode) {
+      case 'ca':
+        return CatalanStrings(locale);
+      case 'es':
+        return SpanishStrings(locale);
+      case 'en':
+        return EnglishStrings(locale);
+      // Añadir casos para otros idiomas si es necesario
+      default:
+        return CatalanStrings(locale); // Otras cadenas por defecto
+    }
+  }
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
@@ -45,41 +103,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final GlobalKey<FlutterPwValidatorState> pwValidatorKey =
       GlobalKey<FlutterPwValidatorState>();
 
-  /* Future<void> _registerWithGoogle() async {
-    try {
-      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-
-      if (googleUser == null) {
-        // El usuario cancela el registro con Google
-        return;
-      }
-
-      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
-      final String email = googleUser.email;
-      final String username = googleUser.displayName ?? email.split('@')[0]; // Si no me devuelve el nombre de usuario agarro hasta el @ del mail
-      final String password = ''; // Google no devuelve un password
-      await userApiService.registerWithGoogle( username: username,email:email,password:password);
-
-      Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const LoginScreen(),
-              ),
-            );
-
-    } catch (e) {
-      // Maneja errores
-      print('Error al registrar amb Google: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          backgroundColor: Colors.red,
-          content: Text('Error al registrar amb Google'),
-        ),
-      );
-    }
-  }
- */
-
   @override
   Widget build(BuildContext context) {
     // text editing controllers
@@ -91,9 +114,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
           confirmPasswordTextController.text.isEmpty) {
         // Muestra un mensaje de error si algún campo está vacío
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
+          SnackBar(
             backgroundColor: Colors.red,
-            content: Text('Sisplau, completa tots els camps'),
+            content: Text(AppLocalizations.of(context)!.complete),
           ),
         );
         return; // Sale de la función si algún campo está vacío
@@ -102,7 +125,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               backgroundColor: Colors.red,
-              content: Text('Les contrasenyes no coincideixen'),
+              content: Text(AppLocalizations.of(context)!.coincide),
             ),
           );
           return;
@@ -111,7 +134,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               backgroundColor: Colors.red,
-              content: Text('La contraseña no cumple con los requisitos.'),
+              content: Text(AppLocalizations.of(context)!.requirements),
             ),
           );
           return;
@@ -145,6 +168,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
       }
     }
 
+    final locale = Localizations.localeOf(context);
+    final strings = AppStrings.getStrings(locale);
     return GestureDetector(
       child: Scaffold(
         backgroundColor: Colors.grey[300],
@@ -167,7 +192,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
                     //welcome back message
                     Text(
-                      "Completa el següent formulari i disfruta de totes les funcions que tenim preparades per a tu.",
+                      AppLocalizations.of(context)!.completeForm,
                       style: TextStyle(
                         color: Colors.grey[700],
                       ),
@@ -178,7 +203,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     //username textfield
                     MyTextField(
                         controller: usernameTextController,
-                        hintText: 'Nom de usuari',
+                        hintText: AppLocalizations.of(context)!.usernameHint,
                         obscureText: false),
 
                     const SizedBox(height: 25),
@@ -186,7 +211,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     //email textfield
                     MyTextField(
                         controller: emailTextController,
-                        hintText: 'E-mail',
+                        hintText: AppLocalizations.of(context)!.emailHint,
                         obscureText: false),
 
                     const SizedBox(height: 25),
@@ -195,7 +220,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     MyTextField(
                       controller: passwordTextController,
                       obscureText: true,
-                      hintText: 'Contrasenya',
+                      hintText: AppLocalizations.of(context)!.passwordHint,
                     ),
 
                     const SizedBox(height: 25),
@@ -203,7 +228,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     //confirm password textfield
                     MyTextField(
                         controller: confirmPasswordTextController,
-                        hintText: 'Confirmar contrasenya',
+                        hintText: AppLocalizations.of(context)!.confirmPassword,
                         obscureText: true),
                     FlutterPwValidator(
                       key: pwValidatorKey,
@@ -217,7 +242,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       lowercaseCharCount: 2,
                       width: 400,
                       height: 125,
-                      strings: CatalanStrings(),
+                      strings: strings,
                       onSuccess: () {
                         setState(() {
                           passwordValid = true;
@@ -233,7 +258,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     //Sign up button
                     MyButton(
                       onTap: _registerUser,
-                      text: 'CREAR COMPTE',
+                      text: AppLocalizations.of(context)!.register,
                     ),
 
                     Padding(
@@ -250,7 +275,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             padding:
                                 const EdgeInsets.symmetric(horizontal: 10.0),
                             child: Text(
-                              'O contiunua amb',
+                              AppLocalizations.of(context)!.continueWith,
                               style: TextStyle(color: Colors.grey[700]),
                             ),
                           ),
@@ -329,7 +354,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          "Ja tens compte?",
+                          AppLocalizations.of(context)!.account,
                           style: TextStyle(
                             color: Colors.grey[700],
                           ),
@@ -337,7 +362,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         const SizedBox(width: 4),
                         GestureDetector(
                           child: Text(
-                            "Inicia sessió",
+                            AppLocalizations.of(context)!.signInButton,
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               color: Colors.blue,

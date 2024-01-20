@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import './chat_screen.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class GroupsScreen extends StatelessWidget {
   final List<String> groups = [
@@ -13,7 +14,7 @@ class GroupsScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color.fromRGBO(0, 125, 204, 1.0),
-        title: Text('Grups'),
+        title: Text(AppLocalizations.of(context)!.groups),
       ),
       body: ListView.builder(
         itemCount: groups.length,

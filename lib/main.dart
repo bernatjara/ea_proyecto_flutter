@@ -8,6 +8,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'screens/news_screen.dart';
 import 'package:universal_html/html.dart' as html;
 //import 'dart:html' as html;
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:intl/intl.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -53,6 +56,17 @@ class _MyAppState extends State<MyApp> {
     if (token != null) {
       return MaterialApp(
         title: 'EETAC App',
+        localizationsDelegates: [
+          AppLocalizations.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: [
+          const Locale('en', 'US'), // Inglés
+          const Locale('es', 'ES'), // Español
+          const Locale('ca', 'ES'), // Catalán
+        ], // Establece el idioma predeterminado
         theme: _currentTheme,
         home: NewsScreen(),
         debugShowCheckedModeBanner: false,
@@ -60,6 +74,17 @@ class _MyAppState extends State<MyApp> {
     } else {
       return MaterialApp(
         title: 'EETAC App',
+        localizationsDelegates: [
+          AppLocalizations.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: [
+          const Locale('en', 'US'), // Inglés
+          const Locale('es', 'ES'), // Español
+          const Locale('ca', 'ES'), // Catalán
+        ], // Establece el idioma predeterminado
         theme: _currentTheme,
         home: LoginOrRegister(),
         debugShowCheckedModeBanner: false,

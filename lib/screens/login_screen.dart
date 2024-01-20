@@ -13,6 +13,9 @@ import '../api/services/auth_service.dart';
 import 'package:universal_html/html.dart' as html;
 //import 'dart:html' as html;
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:intl/intl.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class LoginScreen extends StatefulWidget {
   final Function()? onTap;
@@ -29,40 +32,6 @@ class _LoginScreenState extends State<LoginScreen> {
   // text editing controllers
   final usernameTextController = TextEditingController();
   final passwordTextController = TextEditingController();
-
-  /* Future<UserCredential?> signInWithGoogle(BuildContext context) async {
-    try {
-      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-
-      final GoogleSignInAuthentication googleAuth =
-          await googleUser!.authentication;
-
-      final credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
-        idToken: googleAuth.idToken,
-      );
-
-      final UserCredential userCredential =
-          await FirebaseAuth.instance.signInWithCredential(credential);
-
-      final User? user = userCredential.user;
-
-      final bool isResgisterd = await userApiService.loginUserGoogle();
-      if (isResgisterd) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => NewsScreen(),
-          ),
-        );
-      }
-
-      return userCredential;
-    } catch (e) {
-      print('Login amb Google ha fallat: $e');
-      return null;
-    }
-  } */
 
   Future<void> _loginGoogleUser(User user) async {
     if (user.email != null) {
@@ -131,9 +100,9 @@ class _LoginScreenState extends State<LoginScreen> {
         passwordTextController.text.isEmpty) {
       // Muestra un mensaje de error si algún campo está vacío
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
+        SnackBar(
           backgroundColor: Colors.red,
-          content: Text('Sisplau, completa tots els camps'),
+          content: Text(AppLocalizations.of(context)!.complete),
         ),
       );
       return; // Sale de la función si algún campo está vacío
@@ -222,7 +191,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                   //welcome back message
                   Text(
-                    "Hola de nou! Estem feliços de veure't",
+                    AppLocalizations.of(context)!.welcomeBackMessage,
                     style: TextStyle(
                       color: Colors.grey[700],
                     ),
@@ -233,7 +202,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   //email textfield
                   MyTextField(
                       controller: usernameTextController,
-                      hintText: 'Nom de usuari',
+                      hintText: AppLocalizations.of(context)!.usernameHint,
                       obscureText: false),
 
                   const SizedBox(height: 25),
@@ -241,7 +210,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   //password textfield
                   MyTextField(
                       controller: passwordTextController,
-                      hintText: 'Contrasenya',
+                      hintText: AppLocalizations.of(context)!.passwordHint,
                       obscureText: true),
 
                   const SizedBox(height: 25),
@@ -249,7 +218,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   //Sign in button
                   MyButton(
                     onTap: _loginUser,
-                    text: 'INICIAR SESSIÓ',
+                    text: AppLocalizations.of(context)!.signInButton,
                   ),
 
                   const SizedBox(height: 25),
@@ -267,7 +236,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 10.0),
                           child: Text(
-                            'O continua amb',
+                            AppLocalizations.of(context)!.continueWith,
                             style: TextStyle(color: Colors.grey[700]),
                           ),
                         ),
@@ -319,7 +288,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        "No tens compte?",
+                        AppLocalizations.of(context)!.noAccount,
                         style: TextStyle(
                           color: Colors.grey[700],
                         ),
@@ -327,7 +296,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       const SizedBox(width: 4),
                       GestureDetector(
                         child: Text(
-                          "Registra't",
+                          AppLocalizations.of(context)!.register,
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             color: Colors.blue,

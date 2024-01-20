@@ -6,6 +6,7 @@ import '../screens/news_screen.dart';
 import 'package:universal_html/html.dart' as html;
 //import 'dart:html' as html;
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class NewsUpdateScreen extends StatefulWidget {
   final NewsItem news;
@@ -94,7 +95,7 @@ class _NewsUpdateScreenState extends State<NewsUpdateScreen> {
           icon: const Icon(Icons.arrow_back),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        title: const Text('Editar notícia'),
+        title: Text(AppLocalizations.of(context)!.editNew),
         backgroundColor: const Color.fromRGBO(0, 125, 204, 1.0),
       ),
       body: SingleChildScrollView(
@@ -110,7 +111,8 @@ class _NewsUpdateScreenState extends State<NewsUpdateScreen> {
                     TextFormField(
                       controller: newTitleController,
                       decoration: InputDecoration(
-                        labelText: 'Títul: $title',
+                        labelText:
+                            AppLocalizations.of(context)!.title + ' $title',
                         prefixIcon: const Icon(Icons.title),
                       ),
                       style: const TextStyle(
@@ -131,7 +133,8 @@ class _NewsUpdateScreenState extends State<NewsUpdateScreen> {
                     TextFormField(
                       controller: newContentController,
                       decoration: InputDecoration(
-                        labelText: 'Contenido: $content',
+                        labelText:
+                            AppLocalizations.of(context)!.content + ' $content',
                         prefixIcon: const Icon(Icons.content_copy_outlined),
                       ),
                       style: const TextStyle(
@@ -150,7 +153,7 @@ class _NewsUpdateScreenState extends State<NewsUpdateScreen> {
                               1.0), // Puedes ajustar el color según tus necesidades
                           shape: const StadiumBorder(),
                         ),
-                        child: const Text('Editar Notícia',
+                        child: Text(AppLocalizations.of(context)!.editNew,
                             style: TextStyle(color: Colors.white)),
                       ),
                     ),

@@ -10,6 +10,7 @@ import 'package:universal_html/html.dart' as html;
 //import '../api/models/user.dart';
 //import 'dart:html' as html;
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class EditSubjectsScreen extends StatefulWidget {
   @override
@@ -86,7 +87,7 @@ class _EditSubjectsScreenState extends State<EditSubjectsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Editar Assignatures'),
+        title: Text(AppLocalizations.of(context)!.editSubjects),
       ),
       body: FutureBuilder(
         future: Future.wait([futureAsignaturas, futureAsignaturasUser]),
@@ -106,14 +107,12 @@ class _EditSubjectsScreenState extends State<EditSubjectsScreen> {
               int i = 0;
               int j = 0;
               while (i < alreadyList.length) {
-                print("i $i");
+                ;
                 while (j < newList.length) {
                   if (alreadyList[i].name == newList[j].name) {
-                    print("true");
                     isCheckedList[j] = true;
                   }
                   j++;
-                  print("j $j");
                 }
                 i++;
                 j = 0;
@@ -141,7 +140,7 @@ class _EditSubjectsScreenState extends State<EditSubjectsScreen> {
                 MyDropdownButton(),
                 MyButton(
                   onTap: _done,
-                  text: 'Editar',
+                  text: AppLocalizations.of(context)!.edit,
                 ),
               ],
             );

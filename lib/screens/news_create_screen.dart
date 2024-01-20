@@ -11,6 +11,7 @@ import '../widgets/text_widget.dart';
 import 'package:universal_html/html.dart' as html;
 //import 'dart:html' as html;
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class CreateNewsScreen extends StatefulWidget {
   const CreateNewsScreen({super.key});
@@ -44,9 +45,9 @@ class _CreateNewsScreenState extends State<CreateNewsScreen> {
         contentController.text.isEmpty) {
       // Muestra un mensaje de error si algún campo está vacío
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
+        SnackBar(
           backgroundColor: Colors.red,
-          content: Text('Sisplau, completa tots els camps'),
+          content: Text(AppLocalizations.of(context)!.complete),
         ),
       );
       return;
@@ -65,8 +66,8 @@ class _CreateNewsScreenState extends State<CreateNewsScreen> {
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          title: Text('Noticia Creada'),
-          content: Text('La notícia sha creat correctament.'),
+          title: Text(AppLocalizations.of(context)!.newCreated),
+          content: Text(AppLocalizations.of(context)!.newCreatedSuccess),
           actions: [
             TextButton(
               onPressed: () {
@@ -88,8 +89,7 @@ class _CreateNewsScreenState extends State<CreateNewsScreen> {
         context: context,
         builder: (context) => AlertDialog(
           title: Text('Error'),
-          content: Text(
-              'Hi ha hagut un error al crear la notícia. Sisplau, intenteu de nou.'),
+          content: Text(AppLocalizations.of(context)!.createNewError),
           actions: [
             TextButton(
               onPressed: () {
@@ -168,30 +168,6 @@ class _CreateNewsScreenState extends State<CreateNewsScreen> {
     }
   }
 
-  /*Future<void> _updateNewsImage() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String newImage = prefs.getString('image') ?? '';
-    try {
-      await newsApiService.updateImage(
-        userId: storedId,
-        username: storedName,
-        email: storedEmail,
-        password: storedPassword,
-        image: newImage,
-      );
-    } catch (e) {
-      // Maneja errores de conexión o cualquier otra excepción
-      // ignore: avoid_print
-      print('Error image: $e');
-      // ignore: use_build_context_synchronously
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          backgroundColor: Colors.red,
-          content: Text(e.toString()),
-        ),
-      );
-    }
-  }*/
   void _clearForm() {
     titleController.clear();
     contentController.clear();
@@ -205,60 +181,60 @@ class _CreateNewsScreenState extends State<CreateNewsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Crear Noticia'),
+        title: Text(AppLocalizations.of(context)!.createNew),
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Expanded(
-                flex: 4,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Container(
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).scaffoldBackgroundColor,
-                        borderRadius: BorderRadius.circular(12.0),
-                      ),
-                      child: _imageFile == null
-                          ? dottedBorder(color: Colors.blue)
-                          : ClipRRect(
-                              borderRadius: BorderRadius.circular(12),
-                              child: kIsWeb
-                                  ? Image.memory(webImage, fit: BoxFit.fill)
-                                  : Image.file(_imageFile!, fit: BoxFit.fill),
-                            )),
-                ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Expanded(
+              flex: 4,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).scaffoldBackgroundColor,
+                      borderRadius: BorderRadius.circular(12.0),
+                    ),
+                    child: _imageFile == null
+                        ? dottedBorder(color: Colors.blue)
+                        : ClipRRect(
+                            borderRadius: BorderRadius.circular(12),
+                            child: kIsWeb
+                                ? Image.memory(webImage, fit: BoxFit.fill)
+                                : Image.file(_imageFile!, fit: BoxFit.fill),
+                          )),
               ),
-              Padding(
-                padding: const EdgeInsets.all(18.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    ElevatedButton(
-                        onPressed: _clearForm, child: Text('Clear form')),
-                  ],
-                ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(18.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  ElevatedButton(
+                      onPressed: _clearForm, child: Text('Clear form')),
+                ],
               ),
-              TextField(
-                controller: titleController,
-                decoration: InputDecoration(labelText: 'Títul'),
-              ),
-              SizedBox(height: 16),
-              TextField(
-                controller: contentController,
-                decoration: InputDecoration(labelText: 'Contingut'),
-                maxLines: 4,
-              ),
-              SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: _uploadImage,
-                child: Text('Crear Noticia'),
-              ),
-            ],
-          ),
+            ),
+            TextField(
+              controller: titleController,
+              decoration: InputDecoration(
+                  labelText: AppLocalizations.of(context)!.title),
+            ),
+            SizedBox(height: 16),
+            TextField(
+              controller: contentController,
+              decoration: InputDecoration(
+                  labelText: AppLocalizations.of(context)!.content),
+              maxLines: 4,
+            ),
+            SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: _uploadImage,
+              child: Text(AppLocalizations.of(context)!.createNew),
+            ),
+          ],
         ),
       ),
     );
