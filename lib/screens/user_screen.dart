@@ -9,6 +9,7 @@ import 'package:universal_html/html.dart' as html;
 //import 'dart:html' as html;
 import 'package:flutter/foundation.dart' show kIsWeb;
 import '../main.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class UserScreen extends StatefulWidget {
   const UserScreen({super.key});
@@ -68,7 +69,7 @@ class _UserScreenState extends State<UserScreen> {
     return Scaffold(
       drawer: NavBar(),
       appBar: AppBar(
-        title: const Text("Perfil"),
+        title: Text(AppLocalizations.of(context)!.profile),
         backgroundColor: const Color.fromRGBO(0, 125, 204, 1.0),
       ),
       body: SingleChildScrollView(
@@ -140,7 +141,7 @@ class _UserScreenState extends State<UserScreen> {
                       backgroundColor: const Color.fromRGBO(0, 125, 204, 1.0),
                       side: BorderSide.none,
                       shape: const StadiumBorder()),
-                  child: const Text('Editar perfil',
+                  child: Text(AppLocalizations.of(context)!.editProfile,
                       style:
                           TextStyle(color: Color.fromARGB(255, 255, 255, 255))),
                 ),
@@ -151,7 +152,7 @@ class _UserScreenState extends State<UserScreen> {
 
               //MENU
               ProfileMenuWidget(
-                title: "Configuració",
+                title: AppLocalizations.of(context)!.config,
                 icon: Icons.settings,
                 onPress: () {
                   Navigator.push(
@@ -166,13 +167,13 @@ class _UserScreenState extends State<UserScreen> {
               const SizedBox(height: 10),
 
               ProfileMenuWidget(
-                title: "Informació",
+                title: AppLocalizations.of(context)!.information,
                 icon: Icons.info_rounded,
                 onPress: () {},
               ),
 
               ProfileMenuWidget(
-                title: "Tancar sessió",
+                title: AppLocalizations.of(context)!.logOut,
                 icon: Icons.logout,
                 textColor: Colors.red,
                 endIcon: false,
@@ -181,13 +182,13 @@ class _UserScreenState extends State<UserScreen> {
                     context: context,
                     builder: (BuildContext context) {
                       return AlertDialog(
-                        title: const Text(
-                          "TANCAR SESSIÓ",
+                        title: Text(
+                          AppLocalizations.of(context)!.logOut,
                           style: TextStyle(fontSize: 20),
                         ),
-                        content: const Padding(
+                        content: Padding(
                           padding: EdgeInsets.symmetric(vertical: 15.0),
-                          child: Text("¿Estàs segur que vols sortir?"),
+                          child: Text(AppLocalizations.of(context)!.sureLogOut),
                         ),
                         actions: [
                           ElevatedButton(
@@ -204,13 +205,13 @@ class _UserScreenState extends State<UserScreen> {
                               backgroundColor: Colors.redAccent,
                               side: BorderSide.none,
                             ),
-                            child: const Text("Sí"),
+                            child: Text(AppLocalizations.of(context)!.yes),
                           ),
                           OutlinedButton(
                             onPressed: () {
                               Navigator.of(context).pop(); // Cierra el diálogo
                             },
-                            child: const Text("No"),
+                            child: Text(AppLocalizations.of(context)!.no),
                           ),
                         ],
                       );

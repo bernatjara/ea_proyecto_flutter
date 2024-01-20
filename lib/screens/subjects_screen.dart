@@ -7,6 +7,7 @@ import 'package:ea_proyecto_flutter/api/services/asignaturaService.dart';
 import 'package:universal_html/html.dart' as html;
 //import 'dart:html' as html;
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SubjectsScreen extends StatefulWidget {
   @override
@@ -47,7 +48,7 @@ class _SubjectsScreenState extends State<SubjectsScreen> {
     return Scaffold(
       drawer: NavBar(),
       appBar: AppBar(
-        title: Text('Asignaturas'),
+        title: Text(AppLocalizations.of(context)!.subjects),
       ),
       body: FutureBuilder(
         future: futureAsignaturas,
@@ -76,7 +77,7 @@ class _SubjectsScreenState extends State<SubjectsScreen> {
                 ),
                 MyButton(
                   onTap: _editAsignatures,
-                  text: 'Editar Asignatures',
+                  text: AppLocalizations.of(context)!.editSubjects,
                 ),
               ],
             );

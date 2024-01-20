@@ -5,6 +5,7 @@ import '../main.dart';
 import 'package:universal_html/html.dart' as html;
 //import 'dart:html' as html;
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ConfigurationScreen extends StatefulWidget {
   @override
@@ -88,7 +89,7 @@ class _ConfigurationScreenState extends State<ConfigurationScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Configuració'),
+        title: Text(AppLocalizations.of(context)!.config),
         backgroundColor: const Color.fromRGBO(0, 125, 204, 1.0),
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
@@ -106,7 +107,7 @@ class _ConfigurationScreenState extends State<ConfigurationScreen> {
             children: [
               if (rol == "admin")
                 ListTile(
-                  title: Text('Mode Admin'),
+                  title: Text(AppLocalizations.of(context)!.adminMode),
                   trailing: CupertinoSwitch(
                     value: adminMode == '1',
                     onChanged: (bool value) {
@@ -116,7 +117,7 @@ class _ConfigurationScreenState extends State<ConfigurationScreen> {
                 ),
               SizedBox(height: 16.0),
               ListTile(
-                title: Text('Mode Fosc'),
+                title: Text(AppLocalizations.of(context)!.darkMode),
                 trailing: CupertinoSwitch(
                   value: darkMode == '1',
                   onChanged: (bool value) {

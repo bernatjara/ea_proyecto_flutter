@@ -11,6 +11,9 @@ import 'package:universal_html/html.dart' as html;
 import 'package:flutter/foundation.dart' show Uint8List, kIsWeb;
 import 'package:cloudinary/cloudinary.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:table_calendar/table_calendar.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ScheduleScreen2 extends StatefulWidget {
   @override
@@ -98,7 +101,7 @@ class _ScheduleScreenState extends State<ScheduleScreen2> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Horari'),
+        title: Text(AppLocalizations.of(context)!.schedule),
       ),
       body: FutureBuilder(
         future: Future.wait([futureAsignaturas, futureSchedules]),

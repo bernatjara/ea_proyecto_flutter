@@ -9,6 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:universal_html/html.dart' as html;
 //import 'dart:html' as html;
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ChatScreen extends StatefulWidget {
   final String groupName;
@@ -82,7 +83,7 @@ class _ChatScreenState extends State<ChatScreen> {
                         minLines: 1,
                         decoration: InputDecoration(
                           border: InputBorder.none,
-                          hintText: "Escriu un missatge...",
+                          hintText: AppLocalizations.of(context)!.write,
                           prefixIcon: IconButton(
                             icon: Icon(Icons.emoji_emotions),
                             onPressed: () {},

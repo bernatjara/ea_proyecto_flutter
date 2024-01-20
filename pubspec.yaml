@@ -38,6 +38,9 @@ dependencies:
   flutter_pw_validator: ^1.4.2
   universal_html: ^2.0.8
   fl_chart: ^0.45.0
+  flutter_localizations:
+    sdk: flutter
+  intl: any
 
 dev_dependencies:
   flutter_test:
@@ -46,7 +49,7 @@ dev_dependencies:
   flutter_lints: ^2.0.0
 
 flutter:
-
+  generate: true
   uses-material-design: true
 
   assets:

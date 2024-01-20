@@ -10,6 +10,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:universal_html/html.dart' as html;
 //import 'dart:html' as html;
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class NewsDetailScreen extends StatefulWidget {
   final NewsItem news;
@@ -78,7 +79,7 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
     averageRating = ratingsSum / widget.news.ratings.length;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('Comentario añadido exitosamente'),
+        content: Text(AppLocalizations.of(context)!.succesfulComment),
         duration: Duration(seconds: 2),
       ),
     );
@@ -92,7 +93,7 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
     return Scaffold(
       drawer: NavBar(),
       appBar: AppBar(
-        title: Text('Notícies'),
+        title: Text(AppLocalizations.of(context)!.news),
         backgroundColor: Color.fromRGBO(0, 125, 204, 1.0),
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
@@ -111,14 +112,15 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
                       context: context,
                       builder: (BuildContext context) {
                         return AlertDialog(
-                          title: const Text(
-                            "Borrar Notícia",
+                          title: Text(
+                            AppLocalizations.of(context)!.deleteNew,
                             style: TextStyle(fontSize: 20),
                           ),
-                          content: const Padding(
+                          content: Padding(
                             padding: EdgeInsets.symmetric(vertical: 15.0),
                             child: Text(
-                                "¿Estàs segur que vols borrar la notícia?"),
+                              AppLocalizations.of(context)!.sureDeleteNew,
+                            ),
                           ),
                           actions: [
                             ElevatedButton(
@@ -134,14 +136,14 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
                                 backgroundColor: Colors.redAccent,
                                 side: BorderSide.none,
                               ),
-                              child: const Text("Sí"),
+                              child: Text(AppLocalizations.of(context)!.yes),
                             ),
                             OutlinedButton(
                               onPressed: () {
                                 Navigator.of(context)
                                     .pop(); // Cierra el diálogo
                               },
-                              child: const Text("No"),
+                              child: Text(AppLocalizations.of(context)!.no),
                             ),
                           ],
                         );
@@ -176,8 +178,8 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
                   children: [
                     TextFormField(
                       controller: commentController,
-                      decoration:
-                          InputDecoration(labelText: 'Afegeix un comentari'),
+                      decoration: InputDecoration(
+                          labelText: AppLocalizations.of(context)!.addComment),
                     ),
                     RatingBar.builder(
                       initialRating: userRating,
@@ -201,14 +203,14 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
                       onPressed: () {
                         _addCommentAndRating();
                       },
-                      child: Text('Afegeix el comentari'),
+                      child: Text(AppLocalizations.of(context)!.addComment),
                     ),
                   ],
                 ),
               ),
               if (widget.news.comments.isNotEmpty) ...[
                 SizedBox(height: 6),
-                Text('Comentaris:',
+                Text(AppLocalizations.of(context)!.comment,
                     style:
                         TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                 SizedBox(height: 6),
@@ -243,7 +245,9 @@ class _NewsDetailScreenState extends State<NewsDetailScreen> {
                   children: [
                     Icon(Icons.star, color: Colors.amber),
                     SizedBox(width: 8),
-                    Text('Valoració mitjana: $averageRating',
+                    Text(
+                        AppLocalizations.of(context)!.averageRating +
+                            ' $averageRating',
                         style: TextStyle(fontSize: 18)),
                   ],
                 ),

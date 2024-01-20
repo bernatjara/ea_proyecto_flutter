@@ -11,6 +11,7 @@ import '../widgets/text_widget.dart';
 import 'package:universal_html/html.dart' as html;
 //import 'dart:html' as html;
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class CreateNewsScreen extends StatefulWidget {
   const CreateNewsScreen({super.key});
@@ -44,9 +45,9 @@ class _CreateNewsScreenState extends State<CreateNewsScreen> {
         contentController.text.isEmpty) {
       // Muestra un mensaje de error si algún campo está vacío
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
+        SnackBar(
           backgroundColor: Colors.red,
-          content: Text('Sisplau, completa tots els camps'),
+          content: Text(AppLocalizations.of(context)!.complete),
         ),
       );
       return;
@@ -65,8 +66,8 @@ class _CreateNewsScreenState extends State<CreateNewsScreen> {
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          title: Text('Noticia Creada'),
-          content: Text('La notícia sha creat correctament.'),
+          title: Text(AppLocalizations.of(context)!.newCreated),
+          content: Text(AppLocalizations.of(context)!.newCreatedSuccess),
           actions: [
             TextButton(
               onPressed: () {
@@ -88,8 +89,7 @@ class _CreateNewsScreenState extends State<CreateNewsScreen> {
         context: context,
         builder: (context) => AlertDialog(
           title: Text('Error'),
-          content: Text(
-              'Hi ha hagut un error al crear la notícia. Sisplau, intenteu de nou.'),
+          content: Text(AppLocalizations.of(context)!.createNewError),
           actions: [
             TextButton(
               onPressed: () {
@@ -168,30 +168,6 @@ class _CreateNewsScreenState extends State<CreateNewsScreen> {
     }
   }
 
-  /*Future<void> _updateNewsImage() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String newImage = prefs.getString('image') ?? '';
-    try {
-      await newsApiService.updateImage(
-        userId: storedId,
-        username: storedName,
-        email: storedEmail,
-        password: storedPassword,
-        image: newImage,
-      );
-    } catch (e) {
-      // Maneja errores de conexión o cualquier otra excepción
-      // ignore: avoid_print
-      print('Error image: $e');
-      // ignore: use_build_context_synchronously
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          backgroundColor: Colors.red,
-          content: Text(e.toString()),
-        ),
-      );
-    }
-  }*/
   void _clearForm() {
     titleController.clear();
     contentController.clear();
@@ -205,7 +181,7 @@ class _CreateNewsScreenState extends State<CreateNewsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Crear Noticia'),
+        title: Text(AppLocalizations.of(context)!.createNew),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -243,18 +219,20 @@ class _CreateNewsScreenState extends State<CreateNewsScreen> {
             ),
             TextField(
               controller: titleController,
-              decoration: InputDecoration(labelText: 'Títul'),
+              decoration: InputDecoration(
+                  labelText: AppLocalizations.of(context)!.title),
             ),
             SizedBox(height: 16),
             TextField(
               controller: contentController,
-              decoration: InputDecoration(labelText: 'Contingut'),
+              decoration: InputDecoration(
+                  labelText: AppLocalizations.of(context)!.content),
               maxLines: 4,
             ),
             SizedBox(height: 16),
             ElevatedButton(
               onPressed: _uploadImage,
-              child: Text('Crear Noticia'),
+              child: Text(AppLocalizations.of(context)!.createNew),
             ),
           ],
         ),

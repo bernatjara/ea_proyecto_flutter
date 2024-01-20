@@ -10,6 +10,9 @@ import '../widgets/news_item_card.dart';
 import 'package:universal_html/html.dart' as html;
 //import 'dart:html' as html;
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:intl/intl.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class NewsScreen extends StatefulWidget {
   @override
@@ -62,70 +65,12 @@ class _NewsScreenState extends State<NewsScreen> {
     }
   }
 
-  /*@override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      drawer: NavBar(),
-      appBar: AppBar(
-        title: Text('Notícies'),
-        backgroundColor: Color.fromRGBO(0, 125, 204, 1.0),
-        actions: [
-          if (adminMode == '1')
-            IconButton(
-              icon: Icon(Icons.add),
-              onPressed: () {
-                // Navega a la pantalla de creación de noticias cuando se hace clic en el botón
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => CreateNewsScreen(),
-                  ),
-                );
-              },
-            ),
-        ],
-      ),
-      body: ListView.builder(
-        itemCount: newsList.length,
-        itemBuilder: (context, index) {
-          return GestureDetector(
-            onTap: () {
-              // Navega a la pantalla de detalles cuando se hace clic en una noticia
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => NewsDetailScreen(news: newsList[index]),
-                ),
-              );
-            },
-            child: Card(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Image.network(newsList[index].imageUrl,
-                      height: 200, fit: BoxFit.cover),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      newsList[index].title,
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          );
-        },
-      ),
-    );
-  }*/
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: NavBar(),
       appBar: AppBar(
-        title: Text('Notícies'),
+        title: Text(AppLocalizations.of(context)!.news),
         backgroundColor: Color.fromRGBO(0, 125, 204, 1.0),
         actions: [
           if (adminMode == '1')
