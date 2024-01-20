@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:ea_proyecto_flutter/api/models/schedule.dart';
 import 'package:flutter/material.dart';
 import 'package:timetable_view/timetable_view.dart';
@@ -6,8 +8,9 @@ import 'package:ea_proyecto_flutter/api/services/scheduleService.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:universal_html/html.dart' as html;
 //import 'dart:html' as html;
-import 'package:flutter/foundation.dart' show kIsWeb;
-import 'package:table_calendar/table_calendar.dart';
+import 'package:flutter/foundation.dart' show Uint8List, kIsWeb;
+import 'package:cloudinary/cloudinary.dart';
+import 'package:image_picker/image_picker.dart';
 
 class ScheduleScreen2 extends StatefulWidget {
   @override
@@ -38,11 +41,20 @@ class _ScheduleScreenState extends State<ScheduleScreen2> {
   late Future<List<NewSchedule>> futureSchedules = Future.value([]);
   final ScheduleApiService scheduleApiService = ScheduleApiService();
   String? darkMode;
+  Cloudinary? cloudinary;
+  File? _imageFile;
+  Uint8List webImage = Uint8List(8);
+  String? _imageUrl;
 
   @override
   void initState() {
     _initializeData();
     super.initState();
+    cloudinary = Cloudinary.signedConfig(
+      apiKey: '248635653313453',
+      apiSecret: 'mATgE6us-MJeNRGD29Y-dkR9tE0',
+      cloudName: 'db2guqknt',
+    );
   }
 
   Future<void> _initializeData() async {
@@ -81,6 +93,7 @@ class _ScheduleScreenState extends State<ScheduleScreen2> {
     return await scheduleApiService.GetAllSchedules(storedYear);
   }
 
+  bool showProfileImage = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -207,14 +220,63 @@ class _ScheduleScreenState extends State<ScheduleScreen2> {
     return laneEventsList;
   }
 
-  void onEventTapCallBack(TableEvent event) {
-    print(
-        "Event Clicked!! LaneIndex ${event.laneIndex} Title: ${event.title} StartHour: ${event.startTime.hour} EndHour: ${event.endTime.hour}");
-  }
-
   void onTimeSlotTappedCallBack(
       int laneIndex, TableEventTime start, TableEventTime end) {
     print(
         "Empty Slot Clicked !! LaneIndex: $laneIndex StartHour: ${start.hour} EndHour: ${end.hour}");
+  }
+
+  void onEventTapCallBack(TableEvent event) async {
+    List<NewItem> asignaturas = await futureAsignaturas;
+    List<NewSchedule> schedules = await futureSchedules;
+
+    if (event.eventId >= 0 && event.eventId < asignaturas.length) {
+      NewItem asignatura = asignaturas[event.eventId];
+
+      NewSchedule schedule = schedules.firstWhere(
+        (s) => s.name == asignatura.name,
+        orElse: () => NewSchedule(
+            id: '', name: '', start: 0, finish: 0, day: '', clase: ''),
+      );
+
+      String className = schedule.clase;
+      String imageName = showProfileImage
+          ? className.substring(0, 3) +
+              className.substring(3).toLowerCase() +
+              '-perfil.png'
+          : className.substring(0, 3) +
+              className.substring(3).toLowerCase() +
+              '.png';
+
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text(asignatura.name),
+            content: SingleChildScrollView(
+              child: Column(
+                children: [
+                  Image.network(
+                      'https://res.cloudinary.com/db2guqknt/image/upload/v1705746536/clase/$imageName'),
+                  ElevatedButton(
+                    onPressed: () {
+                      // Cambiar entre la imagen original y la de perfil
+                      setState(() {
+                        showProfileImage = !showProfileImage;
+                      });
+                      Navigator.of(context).pop();
+
+                      // Volver a abrir el diálogo con la nueva imagen
+                      onEventTapCallBack(event);
+                    },
+                    child: Text('Canviar imatge'),
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      );
+    }
   }
 }

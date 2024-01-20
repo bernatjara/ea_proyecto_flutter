@@ -4,8 +4,8 @@ import 'package:http/http.dart' as http;
 //import '../models/news.dart'; // Encara no està implementat el model
 
 class NewsApiService {
-  static const String _baseUrl = 'http://localhost:9191/news';
-  //static const String _baseUrl = 'http://192.168.1.140:9191/news';
+  //static const String _baseUrl = 'http://localhost:9191/news';
+  static const String _baseUrl = 'http://147.83.7.155:9191/news';
 
   Future<void> createNews(
       String title, String imageUrl, String content, String token) async {
@@ -102,8 +102,13 @@ class NewsApiService {
     }
   }
 
-  Future<void> addCommentAndRating(String newsId, String text, double rating,
-      String? username, String token,) async {
+  Future<void> addCommentAndRating(
+    String newsId,
+    String text,
+    double rating,
+    String? username,
+    String token,
+  ) async {
     try {
       var data = {
         'username': username,

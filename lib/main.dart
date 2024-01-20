@@ -48,23 +48,31 @@ Future<void> _loadInitData() async {
 }
 
 class _MyAppState extends State<MyApp> {
+  bool isLoggedIn = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkLoggedInStatus();
+  }
+
+  Future<void> _checkLoggedInStatus() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (kIsWeb) {
+      isLoggedIn = html.window.localStorage.containsKey('token');
+    } else {
+      isLoggedIn = prefs.containsKey('token');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    if (token != null) {
-      return MaterialApp(
-        title: 'EETAC App',
-        theme: _currentTheme,
-        home: NewsScreen(),
-        debugShowCheckedModeBanner: false,
-      );
-    } else {
-      return MaterialApp(
-        title: 'EETAC App',
-        theme: _currentTheme,
-        home: LoginOrRegister(),
-        debugShowCheckedModeBanner: false,
-      );
-    }
+    return MaterialApp(
+      title: 'EETAC App',
+      theme: _currentTheme,
+      home: isLoggedIn ? NewsScreen() : LoginOrRegister(),
+      debugShowCheckedModeBanner: false,
+    );
   }
 
   void setTheme(ThemeData theme) {

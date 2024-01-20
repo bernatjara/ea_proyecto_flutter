@@ -3,8 +3,8 @@ import 'package:http/http.dart' as http;
 import '../models/schedule.dart'; // Encara no està implementat el model
 
 class ScheduleApiService {
-  static const String _baseUrl = 'http://localhost:9191/schedules';
-  //static const String _baseUrl = 'http://192.168.1.140:9090/schedules';
+  //static const String _baseUrl = 'http://localhost:9191/schedules';
+  static const String _baseUrl = 'http://147.83.7.155:9191/schedules';
 
   Future<List<NewSchedule>> GetSchedulesById(String id) async {
     String endpoint = '/asignatura/$id';
@@ -51,13 +51,15 @@ class NewSchedule {
   final int start;
   final int finish;
   final String day;
+  final String clase;
 
   NewSchedule(
       {required this.id,
       required this.name,
       required this.start,
       required this.finish,
-      required this.day});
+      required this.day,
+      required this.clase});
 
   factory NewSchedule.fromJson(Map<String, dynamic> json) {
     return NewSchedule(
@@ -66,6 +68,7 @@ class NewSchedule {
       start: json['start'],
       finish: json['finish'],
       day: json['day'],
+      clase: json['clase'],
     );
   }
 }
