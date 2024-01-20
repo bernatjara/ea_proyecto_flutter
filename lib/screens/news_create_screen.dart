@@ -207,58 +207,56 @@ class _CreateNewsScreenState extends State<CreateNewsScreen> {
       appBar: AppBar(
         title: Text('Crear Noticia'),
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Expanded(
-                flex: 4,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Container(
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).scaffoldBackgroundColor,
-                        borderRadius: BorderRadius.circular(12.0),
-                      ),
-                      child: _imageFile == null
-                          ? dottedBorder(color: Colors.blue)
-                          : ClipRRect(
-                              borderRadius: BorderRadius.circular(12),
-                              child: kIsWeb
-                                  ? Image.memory(webImage, fit: BoxFit.fill)
-                                  : Image.file(_imageFile!, fit: BoxFit.fill),
-                            )),
-                ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Expanded(
+              flex: 4,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).scaffoldBackgroundColor,
+                      borderRadius: BorderRadius.circular(12.0),
+                    ),
+                    child: _imageFile == null
+                        ? dottedBorder(color: Colors.blue)
+                        : ClipRRect(
+                            borderRadius: BorderRadius.circular(12),
+                            child: kIsWeb
+                                ? Image.memory(webImage, fit: BoxFit.fill)
+                                : Image.file(_imageFile!, fit: BoxFit.fill),
+                          )),
               ),
-              Padding(
-                padding: const EdgeInsets.all(18.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    ElevatedButton(
-                        onPressed: _clearForm, child: Text('Clear form')),
-                  ],
-                ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(18.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  ElevatedButton(
+                      onPressed: _clearForm, child: Text('Clear form')),
+                ],
               ),
-              TextField(
-                controller: titleController,
-                decoration: InputDecoration(labelText: 'Títul'),
-              ),
-              SizedBox(height: 16),
-              TextField(
-                controller: contentController,
-                decoration: InputDecoration(labelText: 'Contingut'),
-                maxLines: 4,
-              ),
-              SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: _uploadImage,
-                child: Text('Crear Noticia'),
-              ),
-            ],
-          ),
+            ),
+            TextField(
+              controller: titleController,
+              decoration: InputDecoration(labelText: 'Títul'),
+            ),
+            SizedBox(height: 16),
+            TextField(
+              controller: contentController,
+              decoration: InputDecoration(labelText: 'Contingut'),
+              maxLines: 4,
+            ),
+            SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: _uploadImage,
+              child: Text('Crear Noticia'),
+            ),
+          ],
         ),
       ),
     );
