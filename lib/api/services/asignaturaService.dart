@@ -41,6 +41,20 @@ class AsignaturaApiService {
       throw Exception('Error al conectar amb el servidor');
     }
   }
+
+  Future<Map<String, dynamic>> getAsignatura(String id) async {
+    try {
+      final response = await http.get(Uri.parse('$_baseUrl/$id'));
+
+      if (response.statusCode == 200) {
+        return json.decode(response.body);
+      } else {
+        throw Exception('Error al carregar la asignatura');
+      }
+    } catch (e) {
+      throw Exception('Error al conectar amb el servidor');
+    }
+  }
 }
 
 class NewItem {
