@@ -13,8 +13,10 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 class ChatScreen extends StatefulWidget {
   final String groupName;
   final String roomId;
+  final String chatId;
 
-  ChatScreen({required this.groupName, required this.roomId});
+  ChatScreen(
+      {required this.groupName, required this.roomId, required this.chatId});
 
   @override
   _ChatScreenState createState() => _ChatScreenState();
@@ -26,12 +28,14 @@ class _ChatScreenState extends State<ChatScreen> {
   String userId = "";
   String senderName = "";
   late IO.Socket socket;
-  List <MsgModel>listMsgs = []; // Lista de mensajes
+  List<MsgModel> listMsgs = []; // Lista de mensajes
+  ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
     _loadData();
+    loadChat(widget.chatId);
     socket = IO.io('http://localhost:9191', <String, dynamic>{
       'transports': ['websocket'],
     });
@@ -46,27 +50,65 @@ class _ChatScreenState extends State<ChatScreen> {
     });
     socket.on('message', (data) {
       print('Mensaje recibido: $data');
-      if(data['userId'] != userId && data['message'] != listMsgs.last.message){
-        setState(() {
-          MsgModel msg = MsgModel(idUser: data['userId'] ?? '', senderName: data['senderName'] ?? '', message: data['message'] ?? '');
-          listMsgs.add(msg);
-        }); 
+      if (data['idUser'] != userId) {
+        if (mounted) {
+          setState(() {
+            MsgModel msg = MsgModel(
+                idUser: data['userId'] ?? '',
+                senderName: data['senderName'] ?? '',
+                message: data['message'] ?? '');
+            listMsgs.add(msg);
+
+            // Scroll hasta el final de la lista
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              _scrollController
+                  .jumpTo(_scrollController.position.maxScrollExtent);
+            });
+          });
+        }
       }
     });
   }
 
-  void sendMessage(String message){
-    MsgModel ownMsg = MsgModel(idUser: userId, senderName: senderName, message: message);
-    setState(() {
-      listMsgs.add(ownMsg);
-    });
-    final data = {
-      'room': widget.roomId,
-      'userId': userId,
-      'senderName': senderName,
-      'message': message,
-    };
-    socket.emit('message', data);
+  Future<void> loadChat(String chatId) async {
+    try {
+      List<MsgModel> chatMessages = await _chatService.getChatMessages(chatId);
+      print(chatMessages);
+      setState(() {
+        listMsgs = chatMessages;
+      });
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+      });
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  void sendMessage(String message) {
+    MsgModel ownMsg =
+        MsgModel(idUser: userId, senderName: senderName, message: message);
+    if (socket.connected && mounted) {
+      setState(() {
+        listMsgs.add(ownMsg);
+      });
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+      });
+      final data = {
+        'room': widget.roomId,
+        'userId': userId,
+        'senderName': senderName,
+        'message': message,
+      };
+      socket.emit('message', data);
+    } else {
+      // logica de reconexión
+      print('socket not connected');
+      socket.connect();
+      socket.onConnect((_) =>
+          {print('Reconectado al servidor SocketIO'), sendMessage(message)});
+    }
   }
 
   Future<void> _loadData() async {
@@ -93,15 +135,20 @@ class _ChatScreenState extends State<ChatScreen> {
         child: Stack(
           children: [
             SizedBox(
-              height: MediaQuery.of(context).size.height - 140,
-              child: ListView.builder(shrinkWrap: true, itemCount: listMsgs.length,itemBuilder: (context, index) {
-                if(listMsgs[index].idUser == userId){
-                  return OwnMessageCard(msg: listMsgs[index].message);
-                }else{
-                  return ReplyCard(msg: listMsgs[index].message, sender: listMsgs[index].senderName);
-                }
-              })
-            ),
+                height: MediaQuery.of(context).size.height - 140,
+                child: ListView.builder(
+                    controller: _scrollController,
+                    shrinkWrap: true,
+                    itemCount: listMsgs.length,
+                    itemBuilder: (context, index) {
+                      if (listMsgs[index].idUser == userId) {
+                        return OwnMessageCard(msg: listMsgs[index].message);
+                      } else {
+                        return ReplyCard(
+                            msg: listMsgs[index].message,
+                            sender: listMsgs[index].senderName);
+                      }
+                    })),
             Align(
               alignment: Alignment.bottomCenter,
               child: Row(
@@ -109,7 +156,8 @@ class _ChatScreenState extends State<ChatScreen> {
                   SizedBox(
                     width: MediaQuery.of(context).size.width - 60,
                     child: Card(
-                      margin: const EdgeInsets.only(left: 2, right: 2, bottom: 8),
+                      margin:
+                          const EdgeInsets.only(left: 2, right: 2, bottom: 8),
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(25)),
                       child: TextFormField(
@@ -118,27 +166,10 @@ class _ChatScreenState extends State<ChatScreen> {
                         keyboardType: TextInputType.multiline,
                         maxLines: 5,
                         minLines: 1,
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           border: InputBorder.none,
                           hintText: "Escriu un missatge...",
-                          prefixIcon: IconButton(
-                            icon: const Icon(Icons.emoji_emotions),
-                            onPressed: () {},
-                          ),
-                          suffixIcon: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              IconButton(
-                                icon: const Icon(Icons.attach_file),
-                                onPressed: () {},
-                              ),
-                              IconButton(
-                                icon: const Icon(Icons.camera_alt),
-                                onPressed: () {},
-                              )
-                            ],
-                          ),
-                          contentPadding: const EdgeInsets.all(5),
+                          contentPadding: EdgeInsets.all(20),
                         ),
                       ),
                     ),
@@ -157,10 +188,25 @@ class _ChatScreenState extends State<ChatScreen> {
                           Icons.send,
                           color: Colors.white,
                         ),
-                        onPressed: () {
+                        onPressed: () async {
                           if (_msgController.text.isNotEmpty) {
-                            sendMessage(_msgController.text);
-                            _msgController.clear();
+                            try {
+                              await _chatService.sendMessage(
+                                  widget.chatId,
+                                  widget.roomId,
+                                  userId,
+                                  senderName,
+                                  _msgController.text);
+                              sendMessage(_msgController.text);
+                              _msgController.clear();
+                            } catch (e) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  backgroundColor: Colors.red,
+                                  content: Text('Error al enviar el missatge'),
+                                ),
+                              );
+                            }
                           }
                         },
                       ),

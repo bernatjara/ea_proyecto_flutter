@@ -23,13 +23,31 @@ class _GroupsScreenState extends State<GroupsScreen> {
     groups = _getAsignaturas();
   }
 
+  Future<Map<String, dynamic>> _fetchAsignatura(String id) async {
+    try {
+      final responseData = await asignaturaApiService.getAsignatura(id);
+      final hasChat = responseData['chat'] != null;
+      return {
+        'asignatura': responseData,
+        'hasChat': hasChat,
+      };
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Colors.red,
+          content: Text(e.toString()),
+        ),
+      );
+      throw Exception('Error al cargar la asignatura');
+    }
+  }
+
   Future<List<NewItem>> _getAsignaturas() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String storedId;
-    if(kIsWeb){
+    if (kIsWeb) {
       storedId = html.window.localStorage['id'] ?? '';
-    }
-    else{
+    } else {
       storedId = prefs.getString('id') ?? '';
     }
     return await asignaturaApiService.GetAsignaturasById(storedId);
@@ -62,23 +80,44 @@ class _GroupsScreenState extends State<GroupsScreen> {
                     itemBuilder: (context, index) {
                       return ListTile(
                         title: Text(newList[index].name),
-                        onTap: () {
-                          if(newList[index].chat.isNotEmpty){
+                        onTap: () async {
+                          Map<String, dynamic> result =
+                              await _fetchAsignatura(newList[index].id);
+                          bool hasChat = result['hasChat'];
+                          if (hasChat) {
+                            String chatId = result['asignatura']['chat'];
                             Navigator.push(
-                            context,
+                              context,
                               MaterialPageRoute(
                                 builder: (context) => ChatScreen(
                                   groupName: newList[index].name,
                                   roomId: newList[index].id,
-                                )
-                              )
+                                  chatId: chatId,
+                                ),
+                              ),
                             );
-                          }else{
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('No hay chat disponible'),
-                              )
-                            );
+                          } else {
+                            try {
+                              String chatId = await chatService
+                                  .createEmptyChat(newList[index].id);
+                              print(newList[index].id);
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ChatScreen(
+                                    groupName: newList[index].name,
+                                    roomId: newList[index].id,
+                                    chatId: chatId,
+                                  ),
+                                ),
+                              );
+                            } catch (e) {
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(SnackBar(
+                                backgroundColor: Colors.red,
+                                content: Text(e.toString()),
+                              ));
+                            }
                           }
                         },
                       );
