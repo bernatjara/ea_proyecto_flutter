@@ -5,6 +5,7 @@ class ActivityModel {
   final String name;
   final String day;
   final String time;
+  final String location;
 
   ActivityModel({
     required this.id,
@@ -13,6 +14,7 @@ class ActivityModel {
     required this.name,
     required this.day,
     required this.time,
+    required this.location,
   });
 
   factory ActivityModel.fromJson(Map<String, dynamic> json) {
@@ -22,7 +24,8 @@ class ActivityModel {
       long:json['long'],
       name: json['name'],
       day:json['day'],
-      time:json['time'],      
+      time:json['time'],  
+      location:json['location'],    
     );
   }
 
@@ -34,6 +37,7 @@ class ActivityModel {
       'name': name,
       'day': day,
       'time': time,
+      'location': location,
     };
   }
 }

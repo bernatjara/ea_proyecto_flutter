@@ -60,7 +60,16 @@ class _ExamplePopupState extends State<ExamplePopup> {
               ),
             ),
             Text(
-              '${activity.day} de ${activity.time}',
+              '${activity.day} a les ${activity.time}',
+              overflow: TextOverflow.fade,
+              softWrap: false,
+              style: TextStyle(
+                fontWeight: FontWeight.w500,
+                fontSize: 14.0,
+              ),
+            ),
+            Text(
+              activity.location,
               overflow: TextOverflow.fade,
               softWrap: false,
               style: TextStyle(
