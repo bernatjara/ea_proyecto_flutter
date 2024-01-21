@@ -118,7 +118,6 @@ class _UserScreenState extends State<UserScreen> {
               Text(storedName,
                   style: Theme.of(context).textTheme.headlineMedium),
               Text(storedEmail, style: Theme.of(context).textTheme.bodyMedium),
-              Text(storedRol, style: Theme.of(context).textTheme.bodyMedium),
               const SizedBox(height: 20),
 
               //BUTTON

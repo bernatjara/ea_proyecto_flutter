@@ -14,7 +14,7 @@
     "coincide": "Les contrasenyes no coincideixen",
     "requirements": "La contraseña no compleix amb els requisits.",
     "completeForm": "Completa el següent formulari i disfruta de totes les funcions que tenim preparades per a tu.",
-    "atLeast": "- Carácters com a mínim",
+    "atLeast": "- Caràcters com a mínim",
     "uppercaseLetters" : "- Lletres majuscules",
     "numericCharacters" : "- Números",
     "lowercaseLetters" : "- Lletres míniscules",
@@ -57,5 +57,7 @@
     "newCreatedSuccess": "La noticia se ha creado correctamente.",
     "createNewError": "Ha habido un error al crear la noticia. Por favor, inténtelo de nuevo.",
     "createNew": "Crear noticia",
-    "language": "Idioma"
-  }
+    "language": "Idioma",
+    "acceptTerms": "Acceptar Termes i Condicions",
+    "acceptTermsMessage": "1. Accés a l'Aplicació:\n\nL'aplicació està destinada exclusivament a utilitzar la comunitat universitària de la UPC.\nEls usuaris han de tenir un compte vàlid de la UPC per accedir a certes funcions de l'aplicació.\n\n2. Privadesa i Dades Personals:\n\nL'aplicació recopila informació personal limitada per proporcionar serveis específics, i els usuaris consenten el processament d'aquesta informació.\nLa UPC es compromet a protegir la privadesa dels usuaris ia complir les lleis de protecció de dades aplicables.\n\n3. Ús Adequat:\n\nEls usuaris han d'utilitzar l'aplicació de manera ètica i respectuosa.\nNo es permet l'ús indegut de l'aplicació per a activitats il·legals o violatòries de les polítiques de la universitat.\n\n4. Actualitzacions i Manteniment:\n\nLa UPC es reserva el dret de realitzar actualitzacions i manteniment a l'aplicació sense avís previ.\nLa universitat no garanteix la disponibilitat ininterrompuda de l'aplicació i no es fa responsable de qualsevol interrupció temporal.\n\n5. Contingut Generat per l'Usuari:\n\nEls usuaris són responsables del contingut que generen dins de l'aplicació.\nNo es permet publicar contingut difamatori, ofensiu o que violi els drets de propietat intel·lectual.\n\n6. Notificacions i Comunicacions:\n\nEls usuaris poden rebre notificacions i comunicacions relacionades amb l'aplicació i els serveis de la UPC.\nPodeu optar per no rebre certes comunicacions, segons ho permetin les configuracions de l'aplicació.\n\n7. Seguretat:\n\nEls usuaris han de prendre mesures per garantir la seguretat de les credencials d'accés.\nNo han de compartir les credencials amb tercers i han d'informar qualsevol activitat sospitosa.\n\n8. Drets de Propietat Intel·lectual:\n\nL'aplicació i el contingut estan protegits per drets de propietat intel·lectual.\nEls usuaris han de respectar els drets d'autor i no copiar, modificar o distribuir el contingut de l'aplicació sense autorització.\n\n9. Terminació de Compte:\n\nLa UPC es reserva el dret d'acabar el compte d'un usuari en cas d'incompliment dels termes i les condicions.\nEls usuaris poden tancar els comptes en qualsevol moment segons les opcions proporcionades per l'aplicació.\n\nÉs important personalitzar aquests termes i condicions segons les polítiques específiques de la UPC i les lleis aplicables. Es recomana cercar assessorament legal per garantir la conformitat."
+}

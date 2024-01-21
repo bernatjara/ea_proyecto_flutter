@@ -95,6 +95,8 @@ class AppStrings {
 class _RegisterScreenState extends State<RegisterScreen> {
   // api controller
   bool passwordValid = false;
+  bool termsAndConditionsAccepted = false;
+  bool termsAndConditionsVisible = false;
   final UserApiService userApiService = UserApiService();
   final usernameTextController = TextEditingController();
   final emailTextController = TextEditingController();
@@ -102,6 +104,61 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final confirmPasswordTextController = TextEditingController();
   final GlobalKey<FlutterPwValidatorState> pwValidatorKey =
       GlobalKey<FlutterPwValidatorState>();
+  Widget _buildTermsAndConditions() {
+    return Scaffold(
+      appBar: AppBar(
+        actions: [
+          IconButton(
+            icon: Icon(Icons.close),
+            onPressed: _closeTermsAndConditions,
+          ),
+        ],
+      ),
+      body: SingleChildScrollView(
+        padding: EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Agrega aquí tus widgets para mostrar los términos y condiciones
+            // Puedes usar Text, RichText, etc.
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _closeTermsAndConditions() {
+    setState(() {
+      termsAndConditionsVisible = false;
+    });
+  }
+
+  void _showTermsAndConditions() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Términos y Condiciones'),
+          content: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(AppLocalizations.of(context)!.acceptTermsMessage)
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Cerrar el diálogo
+              },
+              child: Text('Cerrar'),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -126,6 +183,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
             SnackBar(
               backgroundColor: Colors.red,
               content: Text(AppLocalizations.of(context)!.coincide),
+            ),
+          );
+          return;
+        }
+        if (!termsAndConditionsAccepted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              backgroundColor: Colors.red,
+              content: Text(AppLocalizations.of(context)!.acceptTermsMessage),
             ),
           );
           return;
@@ -255,11 +321,37 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       },
                     ),
                     const SizedBox(height: 25),
-                    //Sign up button
+                    Row(
+                      children: [
+                        Checkbox(
+                          value: termsAndConditionsAccepted,
+                          onChanged: (value) {
+                            setState(() {
+                              termsAndConditionsAccepted = value ?? false;
+                            });
+                          },
+                        ),
+                        InkWell(
+                          onTap: _showTermsAndConditions,
+                          child: MouseRegion(
+                            cursor: SystemMouseCursors.click,
+                            child: Text(
+                              AppLocalizations.of(context)!.acceptTerms,
+                              style: TextStyle(
+                                color: Colors.blue,
+                                decoration: TextDecoration.underline,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 20),
                     MyButton(
                       onTap: _registerUser,
                       text: AppLocalizations.of(context)!.register,
                     ),
+                    const SizedBox(height: 20),
 
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 25.0),
