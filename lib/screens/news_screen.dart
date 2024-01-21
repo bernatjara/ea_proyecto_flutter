@@ -39,6 +39,7 @@ class _NewsScreenState extends State<NewsScreen> {
     } else {
       adminMode = prefs.getString('adminMode');
       rol = prefs.getString('rol');
+      String? token = prefs.getString('token');
       if (rol != 'admin') {
         prefs.remove('adminMode');
         prefs.remove('rol');
