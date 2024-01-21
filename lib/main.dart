@@ -7,6 +7,7 @@ import 'firebase_options.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'screens/news_screen.dart';
 import 'package:universal_html/html.dart' as html;
+import 'api/services/userService.dart';
 //import 'dart:html' as html;
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/intl.dart';
@@ -18,7 +19,6 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   runApp(MyApp());
-  _loadInitData();
 }
 
 class MyApp extends StatefulWidget {
@@ -31,24 +31,11 @@ class MyApp extends StatefulWidget {
   }
 }
 
-String? token;
+String token = '';
 String? darkMode;
-ThemeData? _currentTheme;
-Future<void> _loadInitData() async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  if (kIsWeb) {
-    token = html.window.localStorage['token'];
-    darkMode = html.window.localStorage['darkMode'];
-  } else {
-    token = prefs.getString('token');
-    darkMode = prefs.getString('darkMode');
-  }
-  if (darkMode == '1') {
-    _currentTheme = ThemeData.dark();
-  } else {
-    _currentTheme = ThemeData.light();
-  }
-}
+String id = '';
+ThemeData _currentTheme = ThemeData.light();
+final UserApiService userApiService = UserApiService();
 
 class _MyAppState extends State<MyApp> {
   bool isLoggedIn = false;
@@ -60,11 +47,34 @@ class _MyAppState extends State<MyApp> {
   }
 
   Future<void> _checkLoggedInStatus() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    if (kIsWeb) {
-      isLoggedIn = html.window.localStorage.containsKey('token');
-    } else {
-      isLoggedIn = prefs.containsKey('token');
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      if (kIsWeb) {
+        token = await html.window.localStorage['token'] ?? '';
+        darkMode = await html.window.localStorage['darkMode'];
+        isLoggedIn = await html.window.localStorage.containsKey('token');
+        id = html.window.localStorage['id'] ?? '';
+      } else {
+        token = await prefs.getString('token') ?? '';
+        darkMode = await prefs.getString('darkMode');
+        isLoggedIn = await prefs.containsKey('token');
+        id = prefs.getString('id') ?? '';
+      }
+      if ((id != null) && (id != '')) {
+        final responseData = await userApiService.validateToken(
+          token,
+          id,
+        );
+      }
+      if (darkMode == '1') {
+        _currentTheme = await ThemeData.dark();
+      } else {
+        _currentTheme = await ThemeData.light();
+      }
+      setTheme(_currentTheme);
+      setState(() {});
+    } catch (e) {
+      isLoggedIn = false;
     }
   }
 

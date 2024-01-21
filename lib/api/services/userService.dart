@@ -4,8 +4,9 @@ import 'package:http/http.dart' as http;
 //import '../models/user.dart'; // Encara no està implementat el model
 
 class UserApiService {
-  static const String _baseUrl = 'http://localhost:9191/users';
+  //static const String _baseUrl = 'http://localhost:9191/users';
   //static const String _baseUrl = 'http://147.83.7.155:9191/users';
+  static const String _baseUrl = 'http://192.168.1.136:9191/users';
 
   Future<Map<String, dynamic>> loginUser(
       String username, String password) async {
@@ -24,6 +25,24 @@ class UserApiService {
         return json.decode(response.body);
       } else {
         throw Exception('Credencials incorrectes');
+      }
+    } catch (e) {
+      throw Exception('Error al conectar amb el servidor');
+    }
+  }
+
+  Future<Map<String, dynamic>> validateToken(String token, String id) async {
+    try {
+      Map<String, String> headerContentType = {
+        'Content-Type': 'application/json',
+        'Authorization': token,
+      };
+      final response = await http.post(Uri.parse('$_baseUrl/validateToken/$id'),
+          headers: headerContentType);
+      if (response.statusCode == 200) {
+        return json.decode(response.body);
+      } else {
+        throw Exception('Error al valdiar el token');
       }
     } catch (e) {
       throw Exception('Error al conectar amb el servidor');
