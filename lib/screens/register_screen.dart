@@ -138,7 +138,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Términos y Condiciones'),
+          title: Text(AppLocalizations.of(context)!.acceptTermsTitle),
           content: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
