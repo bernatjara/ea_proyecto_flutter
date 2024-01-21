@@ -4,9 +4,8 @@ import 'package:http/http.dart' as http;
 //import '../models/activities.dart'; // Encara no està implementat el model
 
 class ActivitiesApiService {
-  static const String _baseUrl = 'http://localhost:9191/activities';
-  //static const String _baseUrl = 'http://147.83.7.155:9191/activities';
-  //static const String _baseUrl = 'http://192.168.1.136:9191/activities';
+  //static const String _baseUrl = 'http://localhost:9191/activities';
+  static const String _baseUrl = 'http://147.83.7.155:9191/activities';
 
   Future<List<ActivityModel>> getAllActivities() async {
     //String endpoint = '/activity/getAll';

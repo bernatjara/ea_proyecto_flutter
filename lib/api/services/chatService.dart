@@ -3,7 +3,9 @@ import 'package:ea_proyecto_flutter/api/models/message.dart';
 import 'package:http/http.dart' as http;
 
 class ChatService {
-  static const String _baseUrl = 'http://localhost:9191/chats';
+  //static const String _baseUrl = 'http://localhost:9191/chats';
+  static const String _baseUrl = 'http://147.83.7.155:9191/chats';
+
 
   Future<String> createEmptyChat(String roomId) async {
     final url = Uri.parse(_baseUrl);

@@ -38,7 +38,7 @@ class _ChatScreenState extends State<ChatScreen> {
     super.initState();
     _loadData();
     loadChat(widget.chatId);
-    socket = IO.io('http://localhost:9191', <String, dynamic>{
+    socket = IO.io('http://147.83.7.155:9191', <String, dynamic>{
       'transports': ['websocket'],
     });
     socket.onConnect((_) {
